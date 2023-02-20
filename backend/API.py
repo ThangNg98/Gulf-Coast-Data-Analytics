@@ -28,9 +28,9 @@ def add_volunteer():
     phone_number = request_data['phone_number']
 
     
-    ### user can select an existing destination from the destination table ###
+    ### query for inserting data ###
     query = "INSERT INTO volunteers (first_name, last_name, phone) VALUES ('%s', '%s', '%s')" \
-        % (first_name, last_name, phone_number) # inserts new entry in trip table
+        % (first_name, last_name, phone_number) # inserts new entry in volunteers table
    
     execute_query(conn, query)
 
