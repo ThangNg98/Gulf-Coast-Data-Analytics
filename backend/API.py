@@ -13,14 +13,14 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 ##### returns all the volunteers in the volunteers table ######
-@app.route('/', methods = ['GET']) # http://127.0.0.1:5000/api/
+@app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
 def home():
     
     query = "SELECT volunteers.first_name, volunteers.last_name, volunteers.phone FROM volunteers" 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/api/add_volunteer
+@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
 def add_volunteer():
     request_data = request.get_json() # stores json input into variables
     first_name = request_data['first_name']
