@@ -8,7 +8,13 @@ const router = createRouter({
       name: 'Home',
       props: true,
       component: () => import('../components/Home.vue')
-  },
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      props: true,
+      component: () => import('../components/Register.vue')
+    },
   ]
 })
 

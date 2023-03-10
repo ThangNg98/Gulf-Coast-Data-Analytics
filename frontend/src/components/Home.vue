@@ -1,20 +1,17 @@
 <template>
     <main>
+    <div class="container">
     <div>
-        <h1 style="text-align: center"> {{ msg }}</h1>
-        <p style="text-align:center"> Create a user below </p>
+        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
     <div style="text-align:center"> 
-        <form>
-            <label for="fname">First name:</label><br>
-            <input type="text" id="fname" name="fname"><br>
-            <label for="lname">Last name:</label><br>
-            <input type="text" id="lname" name="lname"><br>
-            <label for="phone">Phone:</label><br>
-            <input type="text" id="phone" name="phone"> <br><br>
-            <input type="submit" value="Submit">
-
-        </form>
+        <h2> New volunteer?</h2>
+        <p> Click <router-link to="/register"> here</router-link> to register</p>
+    </div>
+    <div style="text-align:center"> 
+        <h2> Existing volunteer?</h2>
+        <p> Click <router-link to="/register"> here</router-link> to sign-in</p>
+    </div>
     </div>
     </main>
 </template>
@@ -31,3 +28,10 @@ export default {
     }
 }
 </script>
+
+<style>
+.container {
+  margin: auto;
+
+}
+</style>
