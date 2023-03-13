@@ -10,7 +10,7 @@
     </div>
     <div style="text-align:center"> 
         <h2> Existing volunteer?</h2>
-        <p> Click <router-link to="/register"> here</router-link> to sign-in</p>
+        <p> Click <router-link to="/login"> here</router-link> to sign-in</p>
     </div>
     </div>
     </main>
