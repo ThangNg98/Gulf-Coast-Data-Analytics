@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!--Header-->
-    <h1 class="text-center my-5">Administrator Login</h1>
+    <h1 class="text-center my-5">Employee Login</h1>
     <!--Form for Admin Login-->
     <form @submit.prevent="handleLogin">
       <!--User Name input field-->

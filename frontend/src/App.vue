@@ -18,7 +18,7 @@
                   <router-link class="nav-link" to="/register"> Volunteer Sign-in </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link class="nav-link" to="/adminlogin"> Admin </router-link>
+                  <router-link class="nav-link" to="/employeelogin"> Employee </router-link>
                 </li>
                 
               </ul>
