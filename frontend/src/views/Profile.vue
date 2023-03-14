@@ -14,7 +14,7 @@
         <div class="mt-3">
             <label for="orgSelect"><h4>Organization</h4></label>
             <select class="form-select border-2 border-dark rounded-0 mb-3 ms-2 w-auto d-inline-block" aria-label="Org Select" name="orgSelect" v-model="inputOrg">
-                <option selected>None</option>
+                <option selected value="none">None</option>
                 <option v-for="org in orgNames">{{ org }}</option>
             </select>
         </div>
@@ -22,7 +22,7 @@
         <div class="mt-3">
             <label for="eventSelect"><h4>Event</h4></label>
             <select class="form-select border-2 border-dark rounded-0 mb-3 ms-2 w-auto d-inline-block" aria-label="Event Select" name="eventSelect" v-model="inputEvent">
-                <option selected>None</option>
+                <option selected value="none">None</option>
                 <option v-for="event in eventNames">{{ event }}</option>
             </select>
         </div>
