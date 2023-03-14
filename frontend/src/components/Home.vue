@@ -4,16 +4,21 @@
         <div class="text-center mt-5">
           <h1>{{ msg }}</h1>
         </div>
+        <!--Form for submitting phone number-->
         <form class="mt-5" @submit.prevent="handleSubmitForm">
+          <!--Header-->
           <div class="form-group text-center">
             <h2>Enter Phone Number</h2>
           </div>
+          <!--Phone number input field-->
           <div class="form-group">
             <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber">
+            <!--If phone number input is not exactly 10 digits upon submit, this error message appears-->
             <div class="invalid-feedback" v-if="error">
               Phone number must be 10 digits.
             </div>
           </div>
+          <!--Submit button-->
           <div class="text-center">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
@@ -28,7 +33,9 @@
     data() {
       return {
         msg : "Welcome to The Living Legacy Center",
+        //variable to hold the phoneNumber
         phoneNumber: null,
+        //variable that represents an array of accepted keys. Input in the phone number field only occurs when one of these keys are pressed
         acceptedKeys: [
           "0",
           "1",
@@ -46,19 +53,25 @@
           "ArrowRight",
           "Enter"
         ],
+        //variable that determines whether the error message shows
         error: false
       }
     },
     methods: {
+      //method called when form submits
       handleSubmitForm() {
-        const phoneNumberRegex = /^\d{10}$/; // regular expression to match 10 digits
+        // error checking - if phone number is not exactly 10 digits, then error variable is set to true, revealing the error message
+        const phoneNumberRegex = /^\d{10}$/
+        // input is 10 digits, form is submitted
         if (phoneNumberRegex.test(this.phoneNumber)) {
           this.error = false
-          alert('Submitted');
+          alert('Submitted')
+        // input is not 10 digits, form is not submitted and error is revealed
         } else {
           this.error = true
         }
       },
+      // whenever a keydown event occurs, this checks which key was pressed. If it was anything other than what it is included in the acceptedKeys array, then the input is prevented
       reviewKey(e) {
         if (!this.acceptedKeys.includes(e.key)) {
           e.preventDefault()
