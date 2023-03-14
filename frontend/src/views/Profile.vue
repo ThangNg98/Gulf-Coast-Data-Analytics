@@ -3,11 +3,11 @@
         <h1>Profile</h1> <!--header-->
         <!--checkin checkout box-->
         <div class="border border-dark px-1 py-3" style="width:30%; margin-left: 35%;">
-            <div>
-                You are checked in <button type="button">Check Out</button>
+            <div :class="{ 'text-muted': !checkedIn }">
+                You are checked in <button type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button>
             </div>
-            <div>
-                You are checked out <button type="button">Check In</button>
+            <div :class="{ 'text-muted': checkedIn }">
+                You are checked out <button type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button>
             </div>
         </div>
         <!--org selection-->
@@ -32,6 +32,7 @@
     export default {
         data() {
             return {
+                checkedIn: true, //checked in state
                 inputOrg:"", //currently selected organization
                 orgNames: ['org1', 'org2', 'org3'], //placeholder for org names list from api
                 inputEvent:"", //currently selected event
