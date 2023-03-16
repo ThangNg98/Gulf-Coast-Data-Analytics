@@ -1,13 +1,13 @@
 <template>
     <main class="text-center w-100">
-        <h1>Profile</h1> <!--header-->
+        <h1 style="margin-top: 2rem; margin-bottom: 2rem">Profile</h1> <!--header-->
         <!--checkin checkout box-->
-        <div class="border border-dark px-1 py-3" style="width:30%; margin-left: 35%;">
-            <div :class="{ 'text-muted': !checkedIn }">
-                You are checked in <button type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button>
+        <div class="border border-dark ps-1 py-3" style="width:25%; margin-left: 37.5%;">
+            <div :class="{ 'text-muted': !checkedIn }" class="row">
+                <div class="col">You are checked in </div><div class="col"><button class="w-75" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
             </div>
-            <div :class="{ 'text-muted': checkedIn }">
-                You are checked out <button type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button>
+            <div :class="{ 'text-muted': checkedIn }" class="row">
+                <div class="col">You are checked out </div><div class="col"><button class="w-75" type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
             </div>
         </div>
         <!--org selection-->
