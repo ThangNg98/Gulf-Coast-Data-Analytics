@@ -19,7 +19,21 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       props: true,
-      component: () => import('../views/Profile.vue')
+      component: () => import('../views/Profile.vue'),
+      children: [
+        {
+          path: '/checkin',
+          component: () => import('@/components/Checkin.vue')
+        },
+        {
+          path: '/history',
+          component: () => import('@/components/History.vue')
+        },
+        {
+          path: '/update',
+          component: () => import('@/components/UpdateProfile.vue')
+        }
+      ]
     },
   ]
 })
