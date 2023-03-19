@@ -1,0 +1,54 @@
+<template>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th scope="col">Event</th>
+                <th scope="col">Organization</th>
+                <th scope="col">Total Hours</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(session, index) in this.sessions">
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{session.eventName}}</td>
+                <td>{{session.orgName}}</td>
+                <td>{{session.hours}}</td>
+                <td>{{ formatDate(session.date) }}</td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+<script>
+    export default {
+        data() {
+            return {
+                sessions: [ //use axios to get a list of session information
+                {
+                    eventName: 'Sample Event',
+                    orgName: 'Sample Organization',
+                    hours: 5,
+                    date: new Date(),
+                },
+                {
+                    eventName: 'Sample Event 2',
+                    orgName: 'Sample Organization 2',
+                    hours: 10,
+                    date: new Date(2023, 1, 5),
+                }
+            ]
+            }
+        },
+        methods: {
+            formatDate(current) {
+                const newDate = `${current.getMonth()+1}/${current.getDate()}/${current.getFullYear()}`;
+                return newDate;
+            },
+            test() {
+                const text = 'test';
+                return text;
+            }
+        }
+    }
+</script>
