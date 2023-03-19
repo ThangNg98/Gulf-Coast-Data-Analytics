@@ -23,7 +23,7 @@ const router = createRouter({
       children: [
         {
           path: '/checkin',
-          component: () => import('@/components/Checkin.vue')
+          component: () => import('@/components/CheckIn.vue')
         },
         {
           path: '/history',

@@ -1,4 +1,5 @@
 <template>
+    <div class="mb-4"><h5>Total Hours Overall: </h5></div>
     <table class="table">
         <thead>
             <tr>
@@ -16,6 +17,13 @@
                 <td>Sample Organization</td>
                 <td>Sample Hours</td>
                 <td>Sample Date</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Sample Event 2</td>
+                <td>Sample Organization 2</td>
+                <td>Sample Hours 2</td>
+                <td>Sample Date 2</td>
             </tr>
         </tbody>
     </table>
