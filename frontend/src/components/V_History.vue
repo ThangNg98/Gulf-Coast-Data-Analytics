@@ -27,4 +27,18 @@
             </tr>
         </tbody>
     </table>
+    <HoursPerOrg></HoursPerOrg>
 </template>
+<script>
+import HoursPerOrg from './V_HoursPerOrgChart.vue';
+    export default {
+        components: {
+            HoursPerOrg
+        },
+        data() {
+            return {
+                
+            }
+        },
+    }
+</script>

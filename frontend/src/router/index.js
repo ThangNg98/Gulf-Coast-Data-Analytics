@@ -23,15 +23,15 @@ const router = createRouter({
       children: [
         {
           path: '/checkin',
-          component: () => import('@/components/CheckIn.vue')
+          component: () => import('@/components/V_CheckIn.vue')
         },
         {
           path: '/history',
-          component: () => import('@/components/History.vue')
+          component: () => import('@/components/V_History.vue')
         },
         {
           path: '/update',
-          component: () => import('@/components/UpdateProfile.vue')
+          component: () => import('@/components/V_UpdateProfile.vue')
         }
       ]
     },

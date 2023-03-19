@@ -15,11 +15,7 @@
     </main>
 </template>
 <script>
-import CheckIn from '@/components/CheckIn.vue';
     export default {
-        components: {
-            CheckIn
-        },
         data() {
             return {
                 
