@@ -10,6 +10,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- for each session, print event name, org name, hours, and formatted date-->
             <tr v-for="(session, index) in this.sessions">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{session.eventName}}</td>
@@ -41,7 +42,7 @@
             }
         },
         methods: {
-            formatDate(current) {
+            formatDate(current) { //assuming Date method, returns formatted date string
                 const newDate = `${current.getMonth()+1}/${current.getDate()}/${current.getFullYear()}`;
                 return newDate;
             },
