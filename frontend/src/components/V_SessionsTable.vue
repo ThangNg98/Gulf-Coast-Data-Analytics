@@ -1,25 +1,25 @@
 <template>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th scope="col">Event</th>
-                <th scope="col">Organization</th>
-                <th scope="col">Total Hours</th>
-                <th scope="col">Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- for each session, print event name, org name, hours, and formatted date-->
-            <tr v-for="(session, index) in this.sessions">
-                <th scope="row">{{ index + 1 }}</th>
-                <td>{{session.eventName}}</td>
-                <td>{{session.orgName}}</td>
-                <td>{{session.hours}}</td>
-                <td>{{ formatDate(session.date) }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Event</th>
+                    <th scope="col">Organization</th>
+                    <th scope="col">Total Hours</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- for each session, print event name, org name, hours, and formatted date-->
+                <tr v-for="session in this.sessions">
+                    <td>{{session.eventName}}</td>
+                    <td>{{session.orgName}}</td>
+                    <td>{{session.hours}}</td>
+                    <td>{{ formatDate(session.date) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 <script>
     export default {

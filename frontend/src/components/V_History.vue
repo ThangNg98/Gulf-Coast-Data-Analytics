@@ -3,7 +3,7 @@
     <SessionsTable></SessionsTable>
     <div>
         <div class="mt-5"><HoursPerOrg></HoursPerOrg></div>
-        <div><HoursPerYear></HoursPerYear></div>
+        <div class="mt-5"><HoursPerYear></HoursPerYear></div>
     </div>
 </template>
 <script>

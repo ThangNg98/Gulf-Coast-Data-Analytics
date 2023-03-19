@@ -1,12 +1,12 @@
 <template>
     <h5>Hours Per Organization</h5>
-    <canvas id="myChart"></canvas>
+    <canvas id="hoursPerOrg"></canvas>
 </template>
 <script>
 import Chart from 'chart.js/auto';
 export default {
     mounted() {
-        const ctx = document.getElementById('myChart');
+        const ctx = document.getElementById('hoursPerOrg');
 
         new Chart(ctx, {
         type: 'bar',
@@ -34,5 +34,4 @@ export default {
         }
     }
 }
-
 </script>
