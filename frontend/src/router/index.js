@@ -15,6 +15,24 @@ const router = createRouter({
       props: true,
       component: () => import('../views/Register.vue')
     },
+    {
+      path: '/events',
+      name: 'Events',
+      props: true,
+      component: () => import('../components/Events.vue')
+    },
+    {
+      path: '/update_event',
+      name: 'EventsUpdate',
+      props: true,
+      component: () => import('../components/EventsUpdate.vue')
+    },
+    {
+      path: '/create_event',
+      name: 'EventsCreate',
+      props: true,
+      component: () => import('../components/EventsCreate.vue')
+    },
   ]
 })
 
