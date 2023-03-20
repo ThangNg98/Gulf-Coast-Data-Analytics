@@ -39,6 +39,18 @@ const router = createRouter({
       props: true,
       component: () => import('../components/OrgsUpdate.vue')
     },
+    {
+      path: '/volunteers',
+      name: 'Volunteers',
+      props: true,
+      component: () => import('../components/Volunteers.vue')
+    },
+    {
+      path: '/update_volunteer',
+      name: 'VolunteersUpdate',
+      props: true,
+      component: () => import('../components/VolunteersUpdate.vue')
+    },
   ]
 })
 
