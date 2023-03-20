@@ -21,6 +21,24 @@ const router = createRouter({
       props: true,
       component: () => import('../views/AdminDash.vue')
     },
+    {
+      path: '/orgs',
+      name: 'Orgs',
+      props: true,
+      component: () => import('../components/Orgs.vue')
+    },
+    {
+      path: '/create_org',
+      name: 'OrgsCreate',
+      props: true,
+      component: () => import('../components/OrgsCreate.vue')
+    },
+    {
+      path: '/update_org',
+      name: 'OrgsUpdate',
+      props: true,
+      component: () => import('../components/OrgsUpdate.vue')
+    },
   ]
 })
 
