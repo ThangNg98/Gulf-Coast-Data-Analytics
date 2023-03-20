@@ -1,7 +1,7 @@
 <template>
     <div class="table-responsive">
+            <h6>Monthly History</h6>
             <table class="table w-100">
-                <caption class="ms-5">Monthly History</caption>
                 <thead>
                     <tr>
                     <th scope="col">Month, Year</th>

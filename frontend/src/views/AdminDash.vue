@@ -2,23 +2,24 @@
 <template>
     <main class="text-center">
         <div>
-            <h1 style="margin-top: 2rem; margin-bottom: 2rem">Admin Dashboard</h1>
+            <nav class="nav justify-content-center mb-3" style="margin-top: 2rem; margin-bottom: 2rem">
+                <router-link class="nav-link" to="/admindashview">Dashboard</router-link>
+                <router-link class="nav-link" to="/events">Events</router-link>
+                <router-link class="nav-link" to="/orgs">Organizations</router-link>
+                <router-link class="nav-link" to="/volunteers">Volunteers</router-link>
+                <a class="nav-link">Sessions</a>
+            </nav>
         </div>
-        <!--monthly history table-->
-        <MonthlyTable></MonthlyTable>
-        <MonthlyHoursChart></MonthlyHoursChart>
-        <MonthlyUniqueVolunteersChart></MonthlyUniqueVolunteersChart>
+        <div>
+            <router-view></router-view>
+        </div>
     </main>
 </template>
 <script>
-import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
-import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
-import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
+import AdminDashView from "@/components/AdminDashView.vue"
     export default {
         components: {
-            MonthlyTable,
-            MonthlyHoursChart,
-            MonthlyUniqueVolunteersChart
+            AdminDashView,
         }
     }
 </script>
