@@ -42,9 +42,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col"> 
+                    <div class="col-sm-4"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="1234567890" v-model="volunteers.emergency_contact_phone">
+                        <input type="text" class="form-control" style="max-width: 47%" id="exampleFormControlInput1" placeholder="1234567890" v-model="volunteers.emergency_contact_phone">
                     </div>
                 </div>
                 
