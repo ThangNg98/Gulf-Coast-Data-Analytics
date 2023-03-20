@@ -1,6 +1,7 @@
 <template>
     <div class="table-responsive">
-            <table class="table">
+            <table class="table w-100">
+                <caption class="ms-5">Monthly History</caption>
                 <thead>
                     <tr>
                     <th scope="col">Month, Year</th>
@@ -41,6 +42,18 @@
                         year: 2023,
                         totalHours: 150,
                         totalUniqueVolunteers: 35
+                    },
+                    {
+                        month: 'April',
+                        year: 2023,
+                        totalHours: 100,
+                        totalUniqueVolunteers: 10
+                    },
+                    {
+                        month: 'May',
+                        year: 2023,
+                        totalHours: 250,
+                        totalUniqueVolunteers: 45
                     }
                 ]
             }

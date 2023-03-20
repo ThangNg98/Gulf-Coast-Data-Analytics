@@ -6,13 +6,19 @@
         </div>
         <!--monthly history table-->
         <MonthlyTable></MonthlyTable>
+        <MonthlyHoursChart></MonthlyHoursChart>
+        <MonthlyUniqueVolunteersChart></MonthlyUniqueVolunteersChart>
     </main>
 </template>
 <script>
 import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
+import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
+import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
     export default {
         components: {
-            MonthlyTable
+            MonthlyTable,
+            MonthlyHoursChart,
+            MonthlyUniqueVolunteersChart
         }
     }
 </script>
