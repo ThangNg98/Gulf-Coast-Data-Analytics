@@ -16,8 +16,8 @@
             <br>
             <div style="text-align:right; margin-top: 2rem;">
                 <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/orgs"> Back to Organizations</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" >Update</button>
-                <button type="submit" class="btn btn-danger" >Delete</button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem">Delete</button>
+                <button type="submit" class="btn btn-primary" >Update </button>
             </div>
         </form>
         <div class="table-responsive-md">
@@ -45,7 +45,7 @@
 import axios from "axios";
 
 export default {
-    name: 'Orgs Update',
+    name: 'OrgsUpdate',
     data() {
         return {
             msg : "Update Organization",
