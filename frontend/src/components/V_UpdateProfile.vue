@@ -1,6 +1,6 @@
 <template>
     <div class="container"> 
-        <h3> Volunteer</h3>
+        <h3>Volunteer</h3>
         <form @submit.prevent="submitForm">
             <div>
                 <div class="row">

@@ -1,9 +1,16 @@
 <template>
-    <div class="mb-3"><h5>Total Hours Overall: </h5></div>
-    <SessionsTable></SessionsTable>
-    <div>
-        <div class="mt-5"><HoursPerOrg></HoursPerOrg></div>
-        <div class="mt-5"><HoursPerYear></HoursPerYear></div>
+    <div class="container">
+        <h3>Total Hours Overall: {{ totalHours }}</h3>
+        <div><SessionsTable></SessionsTable></div>
+        <br>
+
+        <h3>Total Hours per Organization</h3>
+        <div><HoursPerOrg></HoursPerOrg></div>
+        <br>
+
+        <h3>Total Hours Per Year</h3>
+        <div><HoursPerYear></HoursPerYear></div>
+        
     </div>
 </template>
 <script>
@@ -18,7 +25,7 @@
         },
         data() {
             return {
-                
+                totalHours: 15 //use axios to get total hours
             }
         },
     }

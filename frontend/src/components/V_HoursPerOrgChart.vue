@@ -1,5 +1,4 @@
 <template>
-    <h5>Hours Per Organization</h5>
     <canvas id="hoursPerOrg"></canvas>
 </template>
 <script>

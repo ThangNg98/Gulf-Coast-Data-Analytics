@@ -1,30 +1,37 @@
 <template>
-    <!--event selection-->
-    <div class="mb-3">
-        <label for="eventSelect"><h4>Event</h4></label>
-        <select class="form-select border-2 border-dark rounded-0 mb-3 ms-2 w-auto d-inline-block" aria-label="Event Select" name="eventSelect" v-model="inputEvent">
-            <option selected value="none">None</option>
-            <option v-for="event in eventNames">{{ event }}</option>
-        </select>
-    </div>
-    <!--org selection-->
-    <div class="mb-3">
-        <label for="orgSelect"><h4>Organization</h4></label>
-        <select class="form-select border-2 border-dark rounded-0 mb-3 ms-2 w-auto d-inline-block" aria-label="Org Select" name="orgSelect" v-model="inputOrg">
-            <option selected value="none">None</option>
-            <option v-for="org in orgNames">{{ org }}</option>
-        </select>
-    </div>
-    <!--checkin checkout-->
+    <div class="container">
     <div class="d-flex justify-content-center">
-        <div class="border border-dark text-start">
-            <div :class="{ 'text-muted': !checkedIn }" class="row">
-                <div class="col ps-4">You are checked in </div><div class="col"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
+        <div class="d-inline-flex flex-column w-25 text-start" style="min-width:300px">
+            <!--event selection-->
+            <div class="mb-3 d-flex justify-content-between">
+                <label for="eventSelect" class="text-start"><h4>Event</h4></label>
+                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" v-model="inputEvent">
+                    <option selected value="none">None</option>
+                    <option v-for="event in eventNames">{{ event }}</option>
+                </select>
             </div>
-            <div :class="{ 'text-muted': checkedIn }" class="row">
-                <div class="col ps-4">You are checked out </div><div class="col"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
+            <!--org selection-->
+            <div class="d-flex justify-content-between">
+                <label for="orgSelect"><h4>Organization</h4></label>
+                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="inputOrg">
+                    <option selected value="none">None</option>
+                    <option v-for="org in orgNames">{{ org }}</option>
+                </select>
             </div>
         </div>
+    </div>
+    <br>
+    <!--checkin checkout-->
+    <div class="d-flex justify-content-center">
+        <div class="d-inline-flex flex-column border border-dark w-50" style="min-width:300px;">
+                <div :class="{ 'text-muted': checkedIn }" class="border border-dark float-start">
+                    <div class="d-inline-block float-start">You are checked out</div><div class="d-inline-block float-end w-50"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
+                </div>
+                <div :class="{ 'text-muted': !checkedIn }" class="border border-dark float-end">
+                    <div class="d-inline-block float-start">You are checked in</div><div class="d-inline-block float-end w-50"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
+                </div>
+        </div>
+    </div>
     </div>
 </template>
 <script>
