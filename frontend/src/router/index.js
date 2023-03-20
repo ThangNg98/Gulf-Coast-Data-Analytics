@@ -15,6 +15,12 @@ const router = createRouter({
       props: true,
       component: () => import('../views/Register.vue')
     },
+    {
+      path: '/admindash',
+      name: 'Admin Dashboard',
+      props: true,
+      component: () => import('../views/AdminDash.vue')
+    },
   ]
 })
 
