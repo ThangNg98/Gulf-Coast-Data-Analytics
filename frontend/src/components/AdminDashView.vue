@@ -17,6 +17,7 @@ import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
 import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
 import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
     export default {
+        name: 'Admin Dashboard View',
         components: {
             MonthlyTable,
             MonthlyHoursChart,
