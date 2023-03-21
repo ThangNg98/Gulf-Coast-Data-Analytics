@@ -16,6 +16,24 @@ const router = createRouter({
       component: () => import('../views/Register.vue')
     },
     {
+      name: 'Profile',
+      props: true,
+      component: () => import('../views/Profile.vue'),
+      children: [
+        {
+          path: '/profile/checkin',
+          component: () => import('@/components/V_CheckIn.vue')
+        },
+        {
+          path: '/profile/history',
+          component: () => import('@/components/V_History.vue')
+        },
+        {
+          path: '/profile/update',
+          component: () => import('@/components/V_UpdateProfile.vue')
+        }
+      ]
+    },
       path: '/admindash',
       name: 'Admin Dashboard',
       props: true,
