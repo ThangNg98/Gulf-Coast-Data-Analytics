@@ -49,10 +49,28 @@
                 </div>
                 
             </div>
-            <div style="text-align:right; margin-top: 2rem">
-                <button type="submit" class="btn btn-primary" >Register</button>
-          </div>
+            <div style="text-align:right; margin-top: 2rem;">
+                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/volunteers"> Back to Volunteers</router-link></button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem">Delete</button>
+                <button type="submit" class="btn btn-primary" >Update </button>
+            </div>
         </form>
+        <div class="table-responsive-md">
+            <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
+                    <thead>
+                        <tr>
+                        <th scope="col">Total Hours</th>
+                        <th scope="col">Waiver Signed Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>[hours]</td>
+                            <td>[Date]</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
     </div>
     </main>
 </template>
@@ -64,7 +82,7 @@ export default {
     name: 'Register',
     data() {
         return {
-            msg : "Volunteer Registration Form",
+            msg : "Update Volunteer",
             volunteers: {
                 first_name: '',
                 last_name: '',
@@ -81,14 +99,6 @@ export default {
     },
     methods: {
         submitForm() {
-            axios
-                .post('http://127.0.0.1:5000/add_volunteer', this.volunteers)
-                .then(() => {
-                    this.volunteers = {}
-                })
-                .catch((error) => {
-                    console.log(error);
-          });
 
         }
 

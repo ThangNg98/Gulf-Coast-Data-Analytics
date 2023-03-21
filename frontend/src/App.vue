@@ -2,28 +2,34 @@
   <main class="flex flex-row">
     <div id="_container" class="h-auto">
       <header class="w-full">
-        <section class="float-left" style="margin-left: 5rem; margin-top: 2rem">
-          <img class="" style="width: 300px; margin-bottom: 0px" src="@\assets\llc_logo.png" />
-          <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #060f3f;">
-          <div class="container-fluid " >
-            <div class="collapse navbar-collapse" id="navbarSupportedContent " >
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <router-link class="nav-link" to="/"> Home </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link class="nav-link" to="/register"> Register </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link class="nav-link" to="/register"> Volunteer Sign-in </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link class="nav-link" to="/register"> Admin </router-link>
-                </li>
-                
-              </ul>
+        <section style="margin-left: 2rem; margin-top: 2rem">
+          <nav class="navbar navbar-expand-lg navbar-dark navbar-brand" style="background-color: #060f3f; margin-bottom:1rem">
+            <img class="img-fluid" style="max-width: 100%; margin-bottom: 0px" src="@\assets\llc_logo.png" />
+            <button
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              class="navbar-toggler"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation" style="margin-top:1rem;">
+              
+              <span class="navbar-toggler-icon"></span> Menu
+            </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 flex-wrap">
+                  <li class="nav-item">
+                    <router-link class="nav-link" to="/"> Home </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link" to="/register"> Register </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link" to="/checkin"> Volunteer Profile </router-link>
+                  </li>
+                  
+                </ul>
             </div>
-          </div>
       </nav>
         </section>
       </header>
@@ -55,5 +61,9 @@ export default {
   background-color: #060f3f;
   color: white;
   padding: 18px;
+}
+.container_home {
+  display:flex;
+  margin: auto;
 }
 </style>
