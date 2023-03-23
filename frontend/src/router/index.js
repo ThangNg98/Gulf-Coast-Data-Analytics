@@ -34,6 +34,7 @@ const router = createRouter({
         }
       ]
     },
+    {
       path: '/admindash',
       name: 'Admin Dashboard',
       props: true,
