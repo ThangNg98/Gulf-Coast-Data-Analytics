@@ -17,6 +17,7 @@ const router = createRouter({
     },
     {
       name: 'Profile',
+      path: '/profile',
       props: true,
       component: () => import('../views/Profile.vue'),
       children: [
@@ -34,6 +35,7 @@ const router = createRouter({
         }
       ]
     },
+    {
       path: '/admindash',
       name: 'Admin Dashboard',
       props: true,
