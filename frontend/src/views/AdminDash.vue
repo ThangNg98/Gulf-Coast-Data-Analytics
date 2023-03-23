@@ -7,7 +7,7 @@
                 <router-link class="nav-link" to="/events">Events</router-link>
                 <router-link class="nav-link" to="/orgs">Organizations</router-link>
                 <router-link class="nav-link" to="/volunteers">Volunteers</router-link>
-                <a class="nav-link">Sessions</a>
+                <router-link class="nav-link" to="/sessions_list">Sessions</router-link>
             </nav>
         </div>
         <div>
