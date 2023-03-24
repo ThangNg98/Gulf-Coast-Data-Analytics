@@ -16,61 +16,61 @@ const router = createRouter({
       component: () => import('../views/Register.vue')
     },
     {
-      path: '/admindash',
       name: 'Admin Dashboard',
+      path: '/admin',
       props: true,
       component: () => import('../views/AdminDash.vue'),
       children: [
         {
-          path: '/admindashview',
+          path: '/admin/dash',
           name: 'Admin Dashboard View',
           props: true,
           component: () => import('../components/AdminDashView.vue')
         },
         {
-          path: '/orgs',
+          path: '/admin/orgs',
           name: 'Orgs',
           props: true,
           component: () => import('../components/Orgs.vue')
         },
         {
-          path: '/create_org',
+          path: '/admin/create_org',
           name: 'OrgsCreate',
           props: true,
           component: () => import('../components/OrgsCreate.vue')
         },
         {
-          path: '/update_org',
+          path: '/admin/update_org',
           name: 'OrgsUpdate',
           props: true,
           component: () => import('../components/OrgsUpdate.vue')
         },
         {
-          path: '/volunteers',
+          path: '/admin/volunteers',
           name: 'Volunteers',
           props: true,
           component: () => import('../components/Volunteers.vue')
         },
         {
-          path: '/update_volunteer',
+          path: '/admin/update_volunteer',
           name: 'VolunteersUpdate',
           props: true,
           component: () => import('../components/VolunteersUpdate.vue')
         },
         {
-          path: '/events',
+          path: '/admin/events',
           name: 'Events',
           props: true,
           component: () => import('../components/Events.vue')
         },
         {
-          path: '/update_event',
+          path: '/admin/update_event',
           name: 'EventsUpdate',
           props: true,
           component: () => import('../components/EventsUpdate.vue')
         },
         {
-          path: '/create_event',
+          path: '/admin/create_event',
           name: 'EventsCreate',
           props: true,
           component: () => import('../components/EventsCreate.vue')
