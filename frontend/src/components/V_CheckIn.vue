@@ -38,7 +38,7 @@
 export default {
     data() {
         return {
-            checkedIn: true, //checked in state
+            checkedIn: false, //checked in state
             inputOrg:"", //currently selected organization
             orgNames: ['org1', 'org2', 'org3'], //placeholder for org names list from api
             inputEvent:"", //currently selected event
