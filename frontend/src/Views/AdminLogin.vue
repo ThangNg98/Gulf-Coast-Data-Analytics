@@ -7,6 +7,7 @@
       <!--User Name input field-->
       <div class="form-group">
         <label for="username">User Name</label>
+        <object type="image/svg+xml" :data="personIcon" class="icon fa-la"></object>
         <input type="text" class="form-control" id="username" v-model="username">
       </div>
       <!--Password Input Field-->
@@ -32,6 +33,9 @@
 //Import "useAdminLoginStore" to save logged in status as session
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
 
+import personIcon from 'bootstrap-icons/icons/person-square.svg';
+
+
 export default {
   data() {
     return {
@@ -40,6 +44,7 @@ export default {
       //variable to hold password - need to store as hash
       password: 'admin1',
       errorMessage: null,
+      personIcon: personIcon
     }
   },
   methods: {
@@ -64,5 +69,14 @@ export default {
 .container {
   max-width: 500px;
   margin: auto;
+}
+
+.form-floating {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  top: calc(50%);
 }
 </style>
