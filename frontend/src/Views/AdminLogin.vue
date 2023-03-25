@@ -20,6 +20,11 @@
           <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
+    <p>username: {{ username }}</p>
+    <p>password: {{ password }}</p>
+    <div v-if="errorMessage" class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
@@ -31,22 +36,25 @@ export default {
   data() {
     return {
       //variable to hold username
-      username: '',
+      username: 'admin1',
       //variable to hold password - need to store as hash
-      password: ''
-    }
-  },
-  computed: {
-    // code to check if admin is logged in - used to redirect user later to admin dashboard
-    isLoggedIn() {
-      useAdminLoginStore().isLoggedIn
+      password: 'admin1',
+      errorMessage: null,
     }
   },
   methods: {
     //method to log admin in
     handleLogin() {
-      //calls the "login()" action from the store file, which sets isLoggedIn state to true
-      useAdminLoginStore().login()
+      if (this.username == 'admin1' && this.password == 'admin1') {
+        //calls the "login()" action from the store file, which sets isLoggedIn state to true
+        console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
+        useAdminLoginStore().login()
+        console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
+        this.$router.push('/admindash')
+      }
+      else {
+        this.errorMessage = 'Login Failed'
+      }
     }
   }
 }
