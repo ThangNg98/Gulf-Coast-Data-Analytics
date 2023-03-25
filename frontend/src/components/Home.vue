@@ -1,73 +1,110 @@
 <template>
     <main>
-    <div class="container">
-        <div>
-            <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+      <div class="container">
+        <div class="text-center mt-5">
+          <h1>{{ msg }}</h1>
         </div>
-        <form style="text-align: center;" @submit.prevent="handleSubmitForm">
-            <div style="text-align: center">
-                <h2>Enter Phone Number</h2>
+        <!--Form for submitting phone number-->
+        <form class="mt-5" @submit.prevent="handleSubmitForm">
+          <!--Header-->
+          <div class="form-group text-center">
+            <h2>Enter Phone Number</h2>
+          </div>
+          <!--Phone number input field-->
+          <div class="form-group">
+            <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber">
+            <!--If phone number input is not exactly 10 digits upon submit, this error message appears-->
+            <div class="invalid-feedback" v-if="error">
+              Phone number must be 10 digits.
             </div>
-            <input type="tel" required style="width: 50%" @keydown="reviewKey" v-model="phoneNumber">
-            <p v-if="error" style="color: red">
-                Phone number must be 10 digits.
-            </p>
+          </div>
+          <!--Submit button-->
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
         </form>
-    </div>
+      </div>
     </main>
-</template>
-
-<script>
-
-export default {
+  </template>
+  
+  <script>
+  export default {
     name: 'Home',
     data() {
-        return {
-            msg : "Welcome to The Living Legacy Center",
-            phoneNumber: null,
-            acceptedKeys: [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "Backspace",
-                "Delete",
-                "ArrowLeft",
-                "ArrowRight",
-                "Enter"
-            ],
-            error: false
-        }
+      return {
+        msg : "Welcome to The Living Legacy Center",
+        //variable to hold the phoneNumber
+        phoneNumber: null,
+        //variable that represents an array of accepted keys. Input in the phone number field only occurs when one of these keys are pressed
+        acceptedKeys: [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "Backspace",
+          "Delete",
+          "ArrowLeft",
+          "ArrowRight",
+          "Enter"
+        ],
+        //variable that determines whether the error message shows
+        error: false
+      }
     },
     methods: {
-        handleSubmitForm() {
-            const phoneNumberRegex = /^\d{10}$/; // regular expression to match 10 digits
-            if (phoneNumberRegex.test(this.phoneNumber)) {
-                this.error = false
-                alert('Submitted');
-            } else {
-                this.error = true
-            }
-        },
-        reviewKey(e) {
-            console.log(e)
-            if (!this.acceptedKeys.includes(e.key)) {
-                e.preventDefault()
-            }
+      //method called when form submits
+      handleSubmitForm() {
+        // error checking - if phone number is not exactly 10 digits, then error variable is set to true, revealing the error message
+        const phoneNumberRegex = /^\d{10}$/
+        // input is 10 digits, form is submitted
+        if (phoneNumberRegex.test(this.phoneNumber)) {
+          this.error = false
+          alert('Submitted')
+        // input is not 10 digits, form is not submitted and error is revealed
+        } else {
+          this.error = true
         }
+      },
+      // whenever a keydown event occurs, this checks which key was pressed. If it was anything other than what it is included in the acceptedKeys array, then the input is prevented
+      reviewKey(e) {
+        if (!this.acceptedKeys.includes(e.key)) {
+          e.preventDefault()
+        }
+      }
     }
-}
-</script>
-
-<style>
-.container {
-  margin: auto;
-
-}
-</style>
+  }
+  </script>
+  
+  <style scoped>
+  .container {
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+  }
+  
+  .invalid-feedback {
+    display: block;
+    margin-top: 0.5rem;
+    color: #dc3545;
+  }
+  
+  .btn-primary {
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+  }
+  
+  .btn-primary:hover {
+    background-color: #303f9f;
+    border-color: #303f9f;
+  }
+  </style>
+  
