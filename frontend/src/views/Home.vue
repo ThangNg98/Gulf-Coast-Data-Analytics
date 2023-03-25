@@ -24,10 +24,14 @@
           </div>
         </form>
       </div>
+      hello
+      <p>Volunteers: {{ volunteers }}</p>
+      <p>hello</p>
     </main>
   </template>
   
-  <script>
+<script>
+  import axios from 'axios'  
   export default {
     name: 'Home',
     data() {
@@ -54,8 +58,19 @@
           "Enter"
         ],
         //variable that determines whether the error message shows
-        error: false
+        error: false,
+        volunteers: [],
       }
+    },
+    mounted() {
+      axios
+        .get('http://127.0.0.1:5000/')
+        .then(response => {
+          this.volunteers = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        })
     },
     methods: {
       //method called when form submits
