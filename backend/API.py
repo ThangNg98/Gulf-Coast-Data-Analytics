@@ -42,5 +42,24 @@ def add_volunteer():
 
     return "Add request successful"
 
+
+@app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
+def home():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    time_in = request_data['time_in']
+    time_out = request_data['time_out']
+    session_date = request_data['session_date']
+    session_comment = request_data['session_comment']
+    org_id = request_data['org_id']
+    event_id = request_data['event_id']
+    session_status_id = request_data['session_status_id']
+    
+    query = "INSERT INTO session (session_id, time_in, time_out, session_date, session_comment, org_id, event_id, session_status_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+        % (session_id, time_in, time_out, session_date, session_comment, org_id, event_id, session_status_id)
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
+
 if __name__ == "__main__":
     app.run()
