@@ -1,6 +1,6 @@
 <!--'/admindashview'-->
 <template>
-    <main class="text-center">
+        <div class="container text-center">
         <div>
             <h1 style="margin-top: 2rem; margin-bottom: 2rem">Admin Dashboard</h1>
         </div>
@@ -10,7 +10,7 @@
             <div class="mb-3"><MonthlyHoursChart></MonthlyHoursChart></div>
             <div class="mb-3"><MonthlyUniqueVolunteersChart></MonthlyUniqueVolunteersChart></div>
         </div>
-    </main>
+    </div>
 </template>
 <script>
 import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
