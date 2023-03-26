@@ -29,7 +29,7 @@
                     <router-link class="nav-link text-primary" to="/admin/volunteers">Volunteers</router-link>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-primary">Sessions</a>
+                    <router-link class="nav-link text-primary" to="/admin/sessions_list">Sessions</router-link>
                   </li>
                   
                 </ul>

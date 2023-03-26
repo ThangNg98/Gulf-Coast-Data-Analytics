@@ -97,13 +97,13 @@ const router = createRouter({
           component: () => import('../components/EventsCreate.vue')
         },
         {
-          path: '/sessions_list',
+          path: '/admin/sessions_list',
           name: 'SessionsList',
           props: true,
           component: () => import('../components/SessionsList.vue')
         },
         {
-          path: '/update_sessions',
+          path: '/admin/update_sessions',
           name: 'SessionsUpdate',
           props: true,
           component: () => import('../components/SessionsUpdate.vue')
