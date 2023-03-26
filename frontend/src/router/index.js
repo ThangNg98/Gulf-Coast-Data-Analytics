@@ -17,7 +17,8 @@ const router = createRouter({
     },
     {
       name: 'Profile',
-      path:'/profile',
+      path: '/profile',
+
       props: true,
       component: () => import('../views/Profile.vue'),
       children: [
@@ -94,6 +95,18 @@ const router = createRouter({
           name: 'EventsCreate',
           props: true,
           component: () => import('../components/EventsCreate.vue')
+        },
+        {
+          path: '/sessions_list',
+          name: 'SessionsList',
+          props: true,
+          component: () => import('../components/SessionsList.vue')
+        },
+        {
+          path: '/update_sessions',
+          name: 'SessionsUpdate',
+          props: true,
+          component: () => import('../components/SessionsUpdate.vue')
         }
       ]}
     ]

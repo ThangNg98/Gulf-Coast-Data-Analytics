@@ -14,12 +14,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td> <router-link class="nav-link" to="/update_org"> Boy Scouts </router-link></td>
-                            <td> <router-link class="nav-link" to="/update_org"> 123 Boy Scout St. </router-link></td>
+                            <td> <router-link class="nav-link" to="/update_org"> UH Garden </router-link></td>
+                            <td> <router-link class="nav-link" to="/update_org"> University of Houston, Houston, Texas 77204  </router-link></td>
                         </tr>
                         <tr>
-                            <td>Girl Scouts</td>
-                            <td>321 Girl Scouts</td>
+                            <td>UH Tech</td>
+                            <td>University of Houston, Houston, Texas 77204 </td>
                         </tr>
 
                     </tbody>
