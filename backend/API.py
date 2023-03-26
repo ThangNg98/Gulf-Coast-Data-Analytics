@@ -18,7 +18,7 @@ app.config["DEBUG"] = True
 @app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
 def home():
     
-    query = "SELECT volunteer.first_name, volunteer.last_name, volunteer.phone, volunteer.email, volunteer.emergency_contact_fname, emergency_contact_lname, emergency_contact_phone FROM volunteer" 
+    query = "SELECT * FROM volunteer" 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
