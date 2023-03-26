@@ -58,7 +58,7 @@ def home():
     query = "INSERT INTO session (session_id, time_in, time_out, session_date, session_comment, org_id, event_id, session_status_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
         % (session_id, time_in, time_out, session_date, session_comment, org_id, event_id, session_status_id)
     rows = execute_read_query(conn,query)
-    return jsonify(rows)
+    return "Add session request successful"
 
 
 if __name__ == "__main__":
