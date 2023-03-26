@@ -32,6 +32,15 @@ def add_volunteer():
     emergency_contact_fname = request_data['emergency_contact_fname']
     emergency_contact_lname = request_data['emergency_contact_lname']
     emergency_contact_phone = request_data['emergency_contact_phone']
+    address_line_1 = request_data['address_line_1']
+    address_line_2 = request_data['address_line_2']
+    city = request_data['city']
+    state_id = request_data['state_id']
+    date_created = request_data['date_created']
+    volunteer_status_id = request_data['volunteer_status_id']
+    rel_status_id = request_data['rel_status_id']
+    waiver_signed = request_data['waiver_signed']
+    date_waived_signed = request_data['date_waived_signed']
 
     
     ### query for inserting data ###
