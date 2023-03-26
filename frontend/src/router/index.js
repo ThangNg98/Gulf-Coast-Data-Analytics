@@ -33,6 +33,18 @@ const router = createRouter({
       props: true,
       component: () => import('../components/OrgsUpdate.vue')
     },
+    {
+      path: '/organizations',
+      name: 'ListofOrganizations',
+      props: true,
+      component: () => import('../components/Orgs.vue')
+    },
+    {
+      path: '/update_organization',
+      name: 'UpdateOrganization',
+      props: true,
+      component: () => import('../components/OrgsUpdate.vue')
+    },
   ]
 })
 
