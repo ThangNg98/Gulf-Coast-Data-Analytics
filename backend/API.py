@@ -14,11 +14,11 @@ app = flask.Flask(__name__)
 CORS(app)
 app.config["DEBUG"] = True
 
-##### returns all the volunteers in the volunteers table ######
+##### returns all the volunteers in the volunteer table ######
 @app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
 def home():
     
-    query = "SELECT volunteers.first_name, volunteers.last_name, volunteers.phone, volunteers.email, volunteers.emergency_contact_fname, emergency_contact_lname, emergency_contact_phone FROM volunteers" 
+    query = "SELECT volunteer.first_name, volunteer.last_name, volunteer.phone, volunteer.email, volunteer.emergency_contact_fname, emergency_contact_lname, emergency_contact_phone FROM volunteer" 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -35,8 +35,8 @@ def add_volunteer():
 
     
     ### query for inserting data ###
-    query = "INSERT INTO volunteers (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) # inserts new entry in volunteers table
+    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) # inserts new entry in volunteer table
    
     execute_query(conn, query)
 
