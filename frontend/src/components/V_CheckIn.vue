@@ -25,7 +25,7 @@
     <div class="d-flex justify-content-center mb-4">
         <div class="d-inline-flex flex-column border border-dark" style="width:300px;">
                 <div :class="{ 'text-muted': checkedIn }" class="p-2 float-start">
-                    <div class="d-inline-block float-start p-2">You are checked out</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
+                    <div class="d-inline-block float-start p-2">You are checked out</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="create_session(); checkedIn = !checkedIn;" :disabled="checkedIn">Check In</button></div>
                 </div>
                 <div :class="{ 'text-muted': !checkedIn }" class="p-2 float-end">
                     <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
@@ -44,6 +44,11 @@ export default {
             inputEvent:"", //currently selected event
             eventNames: ['event1', 'event2', 'event3'], //placeholder for event names list from api
 
+        }
+    },
+    methods: {
+        create_session() {
+            
         }
     }
 }
