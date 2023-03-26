@@ -16,6 +16,27 @@ const router = createRouter({
       component: () => import('../views/Register.vue')
     },
     {
+      name: 'Profile',
+      path: '/profile',
+
+      props: true,
+      component: () => import('../views/Profile.vue'),
+      children: [
+        {
+          path: '/profile/checkin',
+          component: () => import('@/components/V_CheckIn.vue')
+        },
+        {
+          path: '/profile/history',
+          component: () => import('@/components/V_History.vue')
+        },
+        {
+          path: '/profile/update',
+          component: () => import('@/components/V_UpdateProfile.vue')
+        }
+      ]
+    },
+    {
       name: 'Admin Dashboard',
       path: '/admin',
       props: true,
@@ -74,6 +95,18 @@ const router = createRouter({
           name: 'EventsCreate',
           props: true,
           component: () => import('../components/EventsCreate.vue')
+        },
+        {
+          path: '/sessions_list',
+          name: 'SessionsList',
+          props: true,
+          component: () => import('../components/SessionsList.vue')
+        },
+        {
+          path: '/update_sessions',
+          name: 'SessionsUpdate',
+          props: true,
+          component: () => import('../components/SessionsUpdate.vue')
         }
       ]}
     ]

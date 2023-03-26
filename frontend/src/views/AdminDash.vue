@@ -75,3 +75,13 @@
 
     }
 </style>
+
+<script>
+import AdminDashView from "@/components/AdminDashView.vue"
+    export default {
+        name: 'Admin Dashboard',
+        components: {
+            AdminDashView,
+        }
+    }
+</script>
