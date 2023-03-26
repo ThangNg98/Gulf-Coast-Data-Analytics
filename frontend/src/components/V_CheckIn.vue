@@ -35,6 +35,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -43,12 +44,25 @@ export default {
             orgNames: ['org1', 'org2', 'org3'], //placeholder for org names list from api
             inputEvent:"", //currently selected event
             eventNames: ['event1', 'event2', 'event3'], //placeholder for event names list from api
-
+            //test data
+            time_in: "",
+            time_out: "",
+            session_date: "2023-03-26", 
+            session_comment: "CURRENT TEST",
+            org_id: "1", 
+            event_id: "2", 
+            session_staus_id: "1"
         }
     },
     methods: {
         create_session() {
-            
+            console.log("create_session")
+            this.create_session_axios();
+        },
+        async create_session_axios(time_in, time_out, session_date, session_comment, org_id, event_id, session_staus_id) {
+            const response = await axios.post('http://localhost:5000/create_session', {time_in, time_out, session_date, session_comment, org_id, event_id, session_staus_id});
+            console.log(response.data);
+            return response.data;
         }
     }
 }
