@@ -7,11 +7,11 @@
         <form @submit.prevent="submitForm">
             <div>
                 <label for="exampleFormControlInput1" class="form-label">Event Name</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="events.event_name">
+                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="this.events.event_name">
 
     
                 <label for="exampleFormControlInput1" class="form-label"> Description</label>
-                <textarea class="form-control" id="exampleFormControlInput1" v-model="events.event_description"></textarea>
+                <textarea class="form-control" id="exampleFormControlInput1" v-model="this.events.event_description"></textarea>
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
@@ -50,14 +50,20 @@ export default {
         return {
             msg : "Update Event",
             events: {
-                event_id: 2,
-                event_name: 'Oasis',
-                event_description: 'Blah blah blah'
+                event_id: '',
+                event_name: '',
+                event_description: ''
             },
             updateButtonClicked: false,
             deleteButtonClicked: false
         };
 
+    },
+    created() {
+    axios.get(`http://127.0.0.1:5000/get_event/${this.$route.params.event_id}`).then(response => {
+        this.events = response.data[0];
+        // console.log(response.data[0]);
+    });
     },
     methods: {
         submitForm() {
@@ -68,7 +74,7 @@ export default {
                 .then(() =>{
                     this.events={}
                     alert('Event Updated')
-                    this.$router.push('/events')
+                    this.$router.push('/admin/events')
                 })
                 .catch((error)=>{
                     console.log(error);
@@ -81,7 +87,7 @@ export default {
                 .then(() =>{
                     this.events={}
                     alert('Event Deleted')
-                    this.$router.push('/events')
+                    this.$router.push('/admin/events')
                 })
                 .catch((error)=>{
                     console.log(error);

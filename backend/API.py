@@ -52,10 +52,19 @@ def add_volunteer():
     return "Add request successful"
 
 ############# EVENTS ###############
+
+# this api will get an event by id
+@app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
+def get_event(event_id): # returns all the events in the events table that have active status "1"
+    query = "SELECT * FROM event WHERE event.event_id = %s" % event_id
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
+
 @app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
 def read_events(): # returns all the events in the events table that have active status "1"
     
-    query = "SELECT event.event_name, event.event_description, event.event_status_id FROM event WHERE event.event_status_id = 1" 
+    query = "SELECT * FROM event WHERE event.event_status_id = 1" 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 

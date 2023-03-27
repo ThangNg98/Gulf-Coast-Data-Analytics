@@ -13,7 +13,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="event in events">
+                        <tr 
+                        @click="editEvent(event.event_id)"
+                        v-for="event in events" >
                             <td>{{ event.event_name }}</td>
                             <td>{{ event.event_description }}</td>
                         </tr>
@@ -53,6 +55,10 @@ export default {
             .catch(error => {
                 console.log(error);
             });
+        },
+        editEvent(event_id) {
+            this.$router.push({ name: 'EventsUpdate', params: 
+            { event_id: event_id } });
         }
     },
     mounted() {
