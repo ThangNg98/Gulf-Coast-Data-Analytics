@@ -22,6 +22,15 @@ def home():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
+@app.route('/volunteer_phone/', methods = ['GET'])
+def volunteer_phone():
+    query = """
+        SELECT phone
+        FROM volunteer
+    """
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
 @app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
 def add_volunteer():
     request_data = request.get_json() # stores json input into variables
