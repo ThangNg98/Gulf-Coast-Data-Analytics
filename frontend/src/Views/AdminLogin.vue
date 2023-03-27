@@ -56,7 +56,7 @@ export default {
         console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
         useAdminLoginStore().login()
         console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
-        this.$router.push('/admindashview')
+        this.$router.push('/admin/dash')
       }
       else {
         this.errorMessage = 'Login Failed'

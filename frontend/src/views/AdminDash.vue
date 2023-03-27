@@ -31,7 +31,9 @@
                   <li class="nav-item">
                     <router-link class="nav-link text-primary" to="/admin/sessions_list">Sessions</router-link>
                   </li>
-                  
+                  <li class="nav-item">
+                    <router-link class="nav-link" to="/adminlogin" @click="handleLogout">Logout</router-link>
+                  </li>
                 </ul>
             </div>
       </nav>
