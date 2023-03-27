@@ -69,6 +69,36 @@ def delete_event():
 
     return "Delete request successful"
 
+@app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: http://127.0.0.1:5000/update_organization
+def update_organization():
+    request_data = request.get_json() # stores json input into variables
+    org_id = request_data['org_id']
+    new_name = request_data['org_name']
+    new_address_1 = request_data['address_line_1']
+    new_address_2 = request_data['address_line_2']
+    new_city = request_data['city']
+    new_state_id = request_data['state_id']
+    new_zip = request_data['zip']
 
+    ### query for updating data ###
+    query = "UPDATE organization SET org_name='%s', address_line_1='%s', address_line_2='%s',city='%s',state_id=%s,zip=%s WHERE org_id=%s"%(new_name,new_address_1,new_address_2,new_city,new_state_id,new_zip,org_id)
+
+    execute_query(conn, query)
+
+    return "Update request successful"
+
+@app.route('/delete_organization', methods =['POST']) # API allows user to delete an organization to the database: http://127.0.0.1:5000/delete_organization
+def delete_organization():
+    request_data = request.get_json() # stores json input into variables
+    org_id = request_data['org_id']
+    new_status_id = 2 
+
+    ### query for updating data ###
+    query = "UPDATE organization SET org_status_id=%s WHERE org_id=%s"%(new_status_id,org_id)
+
+    execute_query(conn, query)
+
+    return "Delete request successful"
+    
 if __name__ == "__main__":
     app.run()
