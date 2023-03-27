@@ -18,8 +18,14 @@ app.config["DEBUG"] = True
 @app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
 def home():
     
-    query = "SELECT volunteers.first_name, volunteers.last_name, volunteers.phone, volunteers.email, volunteers.emergency_contact_fname, emergency_contact_lname, emergency_contact_phone FROM volunteers" 
+    query = "SELECT * FROM volunteer" 
     rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
+@app.route('/volunteer_phone', methods = ['GET'])
+def volunteer_phone():
+    query = "SELECT phone FROM volunteer"
+    rows = execute_read_query(conn, query)
     return jsonify(rows)
 
 @app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
@@ -41,6 +47,10 @@ def add_volunteer():
     execute_query(conn, query)
 
     return "Add request successful"
+
+
+
+
 
 if __name__ == "__main__":
     app.run()

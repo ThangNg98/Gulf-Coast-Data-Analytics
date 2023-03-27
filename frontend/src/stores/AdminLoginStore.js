@@ -15,5 +15,8 @@ export const useAdminLoginStore = defineStore('adminlogin', {
     logout() {
       this.isLoggedIn = false
     }
+  },
+  persist: {
+    enabled: true
   }
 })

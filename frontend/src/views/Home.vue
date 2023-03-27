@@ -9,22 +9,24 @@
           <!--Header-->
           <div class="form-group text-center">
             <h2>Enter Phone Number</h2>
-          </div>
-          <!--Phone number input field-->
-          <div class="form-group">
-            <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber">
             <!--If phone number input is not exactly 10 digits upon submit, this error message appears-->
             <div class="invalid-feedback" v-if="error">
               Phone number must be 10 digits.
             </div>
           </div>
+          <!--Phone number input field-->
+          <div class="form-group">
+            <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber">
+
+          </div>
+          <br>
           <!--Submit button-->
           <div class="text-center">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </form>
       </div>
-      hello
+      hello hello
       <p>Volunteers: {{ volunteers }}</p>
       <p>hello</p>
     </main>
@@ -32,6 +34,8 @@
   
 <script>
   import axios from 'axios'  
+  import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore'
+
   export default {
     name: 'Home',
     data() {
@@ -64,8 +68,9 @@
     },
     mounted() {
       axios
-        .get('http://127.0.0.1:5000/')
+        .get('http://127.0.0.1:5000/volunteer_phone')
         .then(response => {
+          console.log('response')
           this.volunteers = response.data;
         })
         .catch(error => {
@@ -80,7 +85,11 @@
         // input is 10 digits, form is submitted
         if (phoneNumberRegex.test(this.phoneNumber)) {
           this.error = false
-          alert('Submitted')
+          console.log('Submitted')
+          console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
+          useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber)
+          this.$router.push('/profile/checkin')
+          console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
         // input is not 10 digits, form is not submitted and error is revealed
         } else {
           this.error = true

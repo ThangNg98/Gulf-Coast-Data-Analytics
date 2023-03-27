@@ -4,37 +4,39 @@
     <h1 class="text-center my-5">Administrator Login</h1>
     <!--Form for Admin Login-->
     <form @submit.prevent="handleLogin">
-      <!--User Name input field-->
-      <div class="form-group">
-        <label for="username">User Name</label>
-        <object type="image/svg+xml" :data="personIcon" class="icon fa-la"></object>
-        <input type="text" class="form-control" id="username" v-model="username">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">
+            <i class="bi bi-person-fill"></i>
+          </span>
+        </div>
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="username">
       </div>
-      <!--Password Input Field-->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" v-model="password">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+        </div>
+        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" v-model="password">
       </div>
       <br>
       <!--Submit Button-->
       <div class="text-center">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary">Login</button>
       </div>
     </form>
-    <p>username: {{ username }}</p>
-    <p>password: {{ password }}</p>
+    <div></div>
     <div v-if="errorMessage" class="alert alert-danger" role="alert">
       {{ errorMessage }}
     </div>
+
   </div>
 </template>
 
 <script>
 //Import "useAdminLoginStore" to save logged in status as session
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
-
-import personIcon from 'bootstrap-icons/icons/person-square.svg';
-
 
 export default {
   data() {
@@ -43,8 +45,7 @@ export default {
       username: 'admin1',
       //variable to hold password - need to store as hash
       password: 'admin1',
-      errorMessage: null,
-      personIcon: personIcon
+      errorMessage: null
     }
   },
   methods: {
@@ -55,12 +56,15 @@ export default {
         console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
         useAdminLoginStore().login()
         console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
-        this.$router.push('/admindash')
+        this.$router.push('/admindashview')
       }
       else {
         this.errorMessage = 'Login Failed'
       }
     }
+  },
+  mounted() {
+    console.log('mounted isLoggedIn: ', useAdminLoginStore().isLoggedIn)
   }
 }
 </script>
@@ -69,14 +73,5 @@ export default {
 .container {
   max-width: 500px;
   margin: auto;
-}
-
-.form-floating {
-  position: relative;
-}
-
-.icon {
-  position: absolute;
-  top: calc(50%);
 }
 </style>
