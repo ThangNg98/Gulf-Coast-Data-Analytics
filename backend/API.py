@@ -169,6 +169,14 @@ def delete_volunteer():
     execute_query(conn, query)
 
     return "Delete request successful"
+
+############# SESSIONS ###############
+@app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
+def read_sessions():
     
+    query = "SELECT * FROM session"
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
 if __name__ == "__main__":
     app.run()
