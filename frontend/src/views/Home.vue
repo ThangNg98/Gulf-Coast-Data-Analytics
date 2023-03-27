@@ -16,8 +16,7 @@
           </div>
           <!--Phone number input field-->
           <div class="form-group">
-            <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber">
-
+            <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber" maxlength="10">
           </div>
           <br>
           <!--Submit button-->
@@ -26,9 +25,6 @@
           </div>
         </form>
       </div>
-      hello hello
-      <p>Volunteers: {{ volunteers }}</p>
-      <p>hello</p>
     </main>
   </template>
   
@@ -59,19 +55,23 @@
           "Delete",
           "ArrowLeft",
           "ArrowRight",
-          "Enter"
+          "Enter",
+          "Shift",
+          "Alt",
+          "Home",
+          "End"
         ],
         //variable that determines whether the error message shows
         error: false,
-        volunteers: [],
+        volunteerPhoneList: [],
       }
     },
     mounted() {
       axios
-        .get('http://127.0.0.1:5000/volunteer_phone')
+        .get(`http://127.0.0.1:5000/volunteer_phone/`)
         .then(response => {
           console.log('response')
-          this.volunteers = response.data;
+          this.volunteerPhoneList = response.data;
         })
         .catch(error => {
           console.log(error);
@@ -82,23 +82,44 @@
       handleSubmitForm() {
         // error checking - if phone number is not exactly 10 digits, then error variable is set to true, revealing the error message
         const phoneNumberRegex = /^\d{10}$/
+
         // input is 10 digits, form is submitted
         if (phoneNumberRegex.test(this.phoneNumber)) {
           this.error = false
-          console.log('Submitted')
-          console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
-          useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber)
-          this.$router.push('/profile/checkin')
-          console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
+
+          // check if phoneNumber is already in the volunteerPhoneList array
+          const volunteer = this.volunteerPhoneList.find(v => v.phone === this.phoneNumber)
+
+          if (volunteer) {
+            console.log('Volunteer found in list')
+            console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
+            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber)
+            this.$router.push('/profile/checkin')
+            console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
+            alert('Login Success')
+            this.$router.push('/profile/checkin')
+          }
+          else {
+            console.log('Volunteer not found in list')
+            alert('Phone number not found')
+            this.$router.push('/register')
+          }
+
         // input is not 10 digits, form is not submitted and error is revealed
-        } else {
+        } 
+        else {
           this.error = true
         }
       },
       // whenever a keydown event occurs, this checks which key was pressed. If it was anything other than what it is included in the acceptedKeys array, then the input is prevented
       reviewKey(e) {
-        if (!this.acceptedKeys.includes(e.key)) {
-          e.preventDefault()
+        if (
+          !(
+            this.acceptedKeys.includes(e.key) ||
+            (e.ctrlKey && (e.key === "c" || e.key === "v"))
+          )
+        ) {
+          e.preventDefault();
         }
       }
     }
