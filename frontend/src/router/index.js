@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
+import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,21 +20,64 @@ const router = createRouter({
     {
       name: 'Profile',
       path: '/profile',
-
       props: true,
       component: () => import('../views/Profile.vue'),
+      beforeEnter: (to, from, next) => {
+        const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
+        console.log('volunteerLoggedIn: ', volunteerLoggedIn)
+        if (volunteerLoggedIn == null) {
+          alert('You do not have access to view this')
+          next('/')
+        } else {
+          // continue to the requested route if user is logged in
+          next()
+        }
+      },
       children: [
         {
           path: '/profile/checkin',
-          component: () => import('@/components/V_CheckIn.vue')
+          component: () => import('@/components/V_CheckIn.vue'),
+          beforeEnter: (to, from, next) => {
+            const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
+            console.log('volunteerLoggedIn: ', volunteerLoggedIn)
+            if (volunteerLoggedIn == null) {
+              alert('You do not have access to view this')
+              next('/')
+            } else {
+              // continue to the requested route if user is logged in
+              next()
+            }
+          },
         },
         {
           path: '/profile/history',
-          component: () => import('@/components/V_History.vue')
+          component: () => import('@/components/V_History.vue'),
+          beforeEnter: (to, from, next) => {
+            const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
+            console.log('volunteerLoggedIn: ', volunteerLoggedIn)
+            if (volunteerLoggedIn == null) {
+              alert('You do not have access to view this')
+              next('/')
+            } else {
+              // continue to the requested route if user is logged in
+              next()
+            }
+          },
         },
         {
           path: '/profile/update',
-          component: () => import('@/components/V_UpdateProfile.vue')
+          component: () => import('@/components/V_UpdateProfile.vue'),
+          beforeEnter: (to, from, next) => {
+            const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
+            console.log('volunteerLoggedIn: ', volunteerLoggedIn)
+            if (volunteerLoggedIn == null) {
+              alert('You do not have access to view this')
+              next('/')
+            } else {
+              // continue to the requested route if user is logged in
+              next()
+            }
+          },
         }
       ]
     },
