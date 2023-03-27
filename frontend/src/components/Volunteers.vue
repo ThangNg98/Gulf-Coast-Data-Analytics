@@ -14,8 +14,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td> <router-link class="nav-link" to="/update_volunteer"> John Smith </router-link></td>
-                            <td> <router-link class="nav-link" to="/update_volunteer"> 53 </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_volunteer"> John Smith </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_volunteer"> 53 </router-link></td>
                         </tr>
                         <tr>
                             <td>Jane Doe</td>

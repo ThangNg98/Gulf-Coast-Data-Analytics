@@ -14,8 +14,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td> <router-link class="nav-link" to="/update_org"> UH Garden </router-link></td>
-                            <td> <router-link class="nav-link" to="/update_org"> University of Houston, Houston, Texas 77204  </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_org"> UH Garden </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_org"> University of Houston, Houston, Texas 77204  </router-link></td>
                         </tr>
                         <tr>
                             <td>UH Tech</td>
@@ -26,7 +26,7 @@
                 </table>
         </div>
         <div style="text-align:right; margin-top: 2rem;">
-            <router-link class="nav-link" to="/create_org"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Add New Organization</button> </router-link>
+            <router-link class="nav-link" to="/admin/create_org"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Add New Organization</button> </router-link>
         </div>
 
     </div>

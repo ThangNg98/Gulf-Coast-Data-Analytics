@@ -22,13 +22,13 @@
     </div>
     <br>
     <!--checkin checkout-->
-    <div class="d-flex justify-content-center">
-        <div class="d-inline-flex flex-column border border-dark w-50" style="min-width:300px;">
-                <div :class="{ 'text-muted': checkedIn }" class="border border-dark float-start">
-                    <div class="d-inline-block float-start">You are checked out</div><div class="d-inline-block float-end w-50"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
+    <div class="d-flex justify-content-center mb-4">
+        <div class="d-inline-flex flex-column border border-dark" style="width:300px;">
+                <div :class="{ 'text-muted': checkedIn }" class="p-2 float-start">
+                    <div class="d-inline-block float-start p-2">You are checked out</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
                 </div>
-                <div :class="{ 'text-muted': !checkedIn }" class="border border-dark float-end">
-                    <div class="d-inline-block float-start">You are checked in</div><div class="d-inline-block float-end w-50"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
+                <div :class="{ 'text-muted': !checkedIn }" class="p-2 float-end">
+                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
                 </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
 export default {
     data() {
         return {
-            checkedIn: true, //checked in state
+            checkedIn: false, //checked in state
             inputOrg:"", //currently selected organization
             orgNames: ['org1', 'org2', 'org3'], //placeholder for org names list from api
             inputEvent:"", //currently selected event

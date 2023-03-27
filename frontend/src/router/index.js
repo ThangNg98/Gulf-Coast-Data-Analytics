@@ -19,6 +19,7 @@ const router = createRouter({
     {
       name: 'Profile',
       path: '/profile',
+
       props: true,
       component: () => import('../views/Profile.vue'),
       children: [
@@ -42,8 +43,8 @@ const router = createRouter({
       component: () => import('../Views/AdminLogin.vue')
     },
     {
-      path: '/admindash',
       name: 'Admin Dashboard',
+      path: '/admin',
       props: true,
       component: () => import('../views/AdminDash.vue'),
       beforeEnter: (to, from, next) => {
@@ -59,7 +60,7 @@ const router = createRouter({
       },
       children: [
         {
-          path: '/admindashview',
+          path: '/admin/dash',
           name: 'Admin Dashboard View',
           props: true,
           component: () => import('../components/AdminDashView.vue'),
@@ -76,7 +77,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/orgs',
+          path: '/admin/orgs',
           name: 'Orgs',
           props: true,
           component: () => import('../components/Orgs.vue'),
@@ -93,7 +94,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/create_org',
+          path: '/admin/create_org',
           name: 'OrgsCreate',
           props: true,
           component: () => import('../components/OrgsCreate.vue'),
@@ -110,7 +111,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/update_org',
+          path: '/admin/update_org',
           name: 'OrgsUpdate',
           props: true,
           component: () => import('../components/OrgsUpdate.vue'),
@@ -127,7 +128,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/volunteers',
+          path: '/admin/volunteers',
           name: 'Volunteers',
           props: true,
           component: () => import('../components/Volunteers.vue'),
@@ -144,7 +145,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/update_volunteer',
+          path: '/admin/update_volunteer',
           name: 'VolunteersUpdate',
           props: true,
           component: () => import('../components/VolunteersUpdate.vue'),
@@ -161,7 +162,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/events',
+          path: '/admin/events',
           name: 'Events',
           props: true,
           component: () => import('../components/Events.vue'),
@@ -178,7 +179,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/update_event',
+          path: '/admin/update_event',
           name: 'EventsUpdate',
           props: true,
           component: () => import('../components/EventsUpdate.vue'),
@@ -195,7 +196,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/create_event',
+          path: '/admin/create_event',
           name: 'EventsCreate',
           props: true,
           component: () => import('../components/EventsCreate.vue'),
@@ -212,7 +213,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/sessions_list',
+          path: '/admin/sessions_list',
           name: 'SessionsList',
           props: true,
           component: () => import('../components/SessionsList.vue'),
@@ -229,7 +230,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/update_sessions',
+          path: '/admin/update_sessions',
           name: 'SessionsUpdate',
           props: true,
           component: () => import('../components/SessionsUpdate.vue'),
