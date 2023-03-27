@@ -15,10 +15,9 @@ CORS(app)
 app.config["DEBUG"] = True
 
 ##### returns all the volunteers in the volunteer table ######
-@app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
+@app.route('/get_volunteers', methods = ['GET']) # http://127.0.0.1:5000/
 def home():
-    
-    query = "SELECT * FROM volunteer" 
+    query = "SELECT * FROM volunteer"
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -38,18 +37,18 @@ def add_volunteer():
     state_id = request_data['state_id']
     date_created = request_data['date_created']
     volunteer_status_id = request_data['volunteer_status_id']
-    rel_status_id = request_data['rel_status_id']
+    rel_id = request_data['rel_id']
     waiver_signed = request_data['waiver_signed']
-    date_waived_signed = request_data['date_waived_signed']
+    date_waiver_signed = request_data['date_waiver_signed']
+    zip = request_data['zip']
 
-    
     ### query for inserting data ###
-    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) # inserts new entry in volunteer table
+    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, date_waiver_signed, zip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, date_waiver_signed, zip) # inserts new entry in volunteer table
    
     execute_query(conn, query)
 
-    return "Add request successful"
+    return "Add volunteer request successful"
 
 if __name__ == "__main__":
     app.run()
