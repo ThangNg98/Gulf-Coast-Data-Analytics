@@ -15,10 +15,10 @@ CORS(app)
 app.config["DEBUG"] = True
 
 ##### returns all the volunteers in the volunteers table ######
-@app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
-def home():
+@app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
+def read_volunteers():
     
-    query = "SELECT volunteers.first_name, volunteers.last_name, volunteers.phone, volunteers.email, volunteers.emergency_contact_fname, emergency_contact_lname, emergency_contact_phone FROM volunteers" 
+    query = "SELECT * FROM volunteer WHERE volunteer_status_id = 1" # query for selecting all active volunteers
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
