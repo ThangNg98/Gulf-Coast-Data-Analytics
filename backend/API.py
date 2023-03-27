@@ -42,5 +42,33 @@ def add_volunteer():
 
     return "Add request successful"
 
+@app.route('/update_event', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/update_event
+def update_event():
+    request_data = request.get_json() # stores json input into variables
+    event_id = request_data['event_id']
+    new_name = request_data['event_name']
+    new_description = request_data['event_description']
+
+    ### query for updating data ###
+    query = "UPDATE event SET event_name='%s', event_description='%s' WHERE event_id=%s"%(new_name,new_description,event_id)
+   
+    execute_query(conn, query)
+
+    return "Update request successful"
+
+@app.route('/delete_event', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/delete_event
+def delete_event():
+    request_data = request.get_json() # stores json input into variables
+    event_id = request_data['event_id']
+    new_status_id = 2 
+
+    ### query for updating data ###
+    query = "UPDATE event SET event_status_id=%s WHERE event_id=%s"%(new_status_id,event_id)
+   
+    execute_query(conn, query)
+
+    return "Delete request successful"
+
+
 if __name__ == "__main__":
     app.run()
