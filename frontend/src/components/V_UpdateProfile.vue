@@ -47,7 +47,6 @@
                                 <option value="">Select a state</option>
                                 <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
                             </select>
-                            <p></p>volunteer_info.state_id: {{   volunteer_info.state_id }}
                             </div>
                         </div>
                     </div>
@@ -88,7 +87,6 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div style="text-align:right; margin-top: 2rem">
                 <button type="submit" class="btn btn-primary" >Update</button>
@@ -186,7 +184,6 @@ export default {
                 {name: 'Acquiantance', id: 8},
                 {name: 'Other', id: 9}
             ]
-
         };
 
     },
