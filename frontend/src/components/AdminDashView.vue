@@ -16,12 +16,17 @@
 import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
 import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
 import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
+import { useAdminLoginStore } from '@/stores/AdminLoginStore'
+
     export default {
         name: 'Admin Dashboard View',
         components: {
             MonthlyTable,
             MonthlyHoursChart,
             MonthlyUniqueVolunteersChart
+        },
+        created() {
+            console.log('isLoggedIn store at DashView: ', useAdminLoginStore().isLoggedIn)
         }
     }
 </script>

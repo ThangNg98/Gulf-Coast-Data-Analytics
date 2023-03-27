@@ -35,7 +35,6 @@
                 </ul>
             </div>
       </nav>
-
         </div>
         <div>
             <router-view></router-view>
@@ -78,10 +77,17 @@
 
 <script>
 import AdminDashView from "@/components/AdminDashView.vue"
+import { useAdminLoginStore } from '@/stores/AdminLoginStore'
+
     export default {
         name: 'Admin Dashboard',
         components: {
             AdminDashView,
+        },
+        methods: {
+            handleLogout() {
+                useAdminLoginStore().logout()
+            }
         }
     }
 </script>
