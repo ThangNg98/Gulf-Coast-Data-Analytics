@@ -36,8 +36,10 @@
 </template>
 <script>
 import axios from 'axios';
-import datetime from datetime;
-now = datetime.now();
+//import datetime from datetime;
+//now = datetime.now();
+//var datetime = require('datetime.js');
+//var dateObj = new Date();
 
 export default {
     data() {
@@ -49,10 +51,9 @@ export default {
             eventNames: ['event1', 'event2', 'event3'], //placeholder for event names list from api
             //test data
             session: {
-                time_in: "",//now.time(),
-                time_out: "",
-                session_date: "",//now.date(), 
-                session_comment: "CURRENT TEST 1:30pm",
+                time_in: "2023-03-27 10:00:00",//now.time(),
+                session_date: "2023-03-27",//now.date(), 
+                session_comment: "CURRENT TEST 1:55pm",
                 org_id: "1", 
                 event_id: "2", 
                 session_staus_id: "1"
@@ -67,13 +68,14 @@ export default {
         },
         async create_session_axios() {
             axios
-                .post('http://127.0.0.1:5000/add_session', this.session)
+                .post('http://127.0.0.1:5000/create_session', this.session)
                 .then(() => {
                     this.session = {}
                 })
                 .catch((error) => {
                     console.log(error);
           });
+          console.log("create_session success");
         }
     }
 }
