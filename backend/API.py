@@ -43,6 +43,14 @@ def add_volunteer():
     return "Add request successful"
 
 ############# EVENTS ###############
+@app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
+def read_events(): # returns all the events in the events table that have active status "1"
+    
+    query = "SELECT event.event_name, event.event_description, event.event_status_id FROM event WHERE event.event_status_id = 1" 
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
+
 @app.route('/update_event', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/update_event
 def update_event():
     request_data = request.get_json() # stores json input into variables
