@@ -13,15 +13,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td> <router-link class="nav-link" to="/admin/update_org"> UH Garden </router-link></td>
-                            <td> <router-link class="nav-link" to="/admin/update_org"> University of Houston, Houston, Texas 77204  </router-link></td>
+                        <tr v-for="org in orgs">
+                            <td>{{ org.org_name }}</td>
+                            <td>{{ org.address_line_1 }}</td>
                         </tr>
-                        <tr>
-                            <td>UH Tech</td>
-                            <td>University of Houston, Houston, Texas 77204 </td>
-                        </tr>
-
                     </tbody>
                 </table>
         </div>
@@ -41,14 +36,29 @@ export default {
     data() {
         return {
             msg : "List of Organizations",
+            orgs:[]
         };
+    
 
     },
     methods: {
         submitForm() {
-        }
-
-
+        },
+        getOrgs() {
+            axios.get('http://127.0.0.1:5000/read_orgs')
+            .then(response => {
+                // iterate through JSON response and add orgs to orgs array
+                for (var i = 0; i < response.data.length; i++) {
+                    this.orgs.push(response.data[i]);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        } 
+    },
+    mounted() {
+        this.getOrgs();
     }
 }
 </script>
