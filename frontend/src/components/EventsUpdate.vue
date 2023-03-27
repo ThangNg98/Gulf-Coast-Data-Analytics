@@ -15,7 +15,7 @@
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/events"> Back to Events</router-link></button>
+                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/events"> Back to Events</router-link></button>
                 <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" >Update</button>
                 <button type="submit" class="btn btn-danger" >Delete</button>
             </div>
