@@ -25,7 +25,7 @@
                     <router-link class="nav-link" to="/register"> Register </router-link>
                   </li>
                   <li class="nav-item">
-                    <router-link class="nav-link" to="/checkin"> Volunteer Profile </router-link>
+                    <router-link class="nav-link" to="/profile/checkin"> Volunteer Profile </router-link>
                   </li>
                   
                 </ul>

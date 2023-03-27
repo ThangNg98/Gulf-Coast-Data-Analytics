@@ -14,8 +14,8 @@
                     </thead>
                     <tbody>   
                         <tr>
-                            <td> <router-link class="nav-link" to="/update_event"> Garden </router-link></td>
-                            <td> <router-link class="nav-link" to="/update_event"> Garden at the Living Legacy Center </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_event"> Garden </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_event"> Garden at the Living Legacy Center </router-link></td>
                         </tr>
                         <tr>
                             <td>Market</td>
@@ -26,7 +26,7 @@
                 </table>
         </div>
         <div style="text-align:right; margin-top: 2rem;">
-            <router-link class="nav-link" to="/create_event"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Create New Event</button> </router-link>
+            <router-link class="nav-link" to="/admin/create_event"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Create New Event</button> </router-link>
         </div>
 
     </div>
