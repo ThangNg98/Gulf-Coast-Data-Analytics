@@ -81,6 +81,13 @@ def delete_event():
 
 
 ############# ORGANIZATIONS ###############
+@app.route('/read_orgs', methods = ['GET']) # http://127.0.0.1:5000/read_orgs
+def read_orgs():
+    
+    query = "SELECT * FROM organization WHERE org_status_id = 1" # query for selecting all active orgs
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
 @app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: http://127.0.0.1:5000/update_organization
 def update_organization():
     request_data = request.get_json() # stores json input into variables
