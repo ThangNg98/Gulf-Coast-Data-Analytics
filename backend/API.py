@@ -34,6 +34,19 @@ def create_session():
 
 ############# EVENTS ###############
 
+@app.route('/create_event', methods=['POST'])
+def create_event():
+    request_data = request.get_json() # stores json input into variables
+    event_name = request_data['event_name']
+    event_description = request_data['event_description']
+
+    query = "INSERT INTO event (event_name,event_description, event_status_id) values ('%s', '%s', '1')" \
+        % (event_name, event_description) # inserts new entry in event table
+
+    execute_query(conn, query)
+
+    return "Add event successful"
+
 # this api will get an event by id
 @app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
@@ -79,6 +92,24 @@ def delete_event():
 
 
 ############# ORGANIZATIONS ###############
+
+@app.route('/create_organization', methods =['POST']) # API allows user to create an organization: http://127.0.0.1:5000/create_organization
+def create_organization():
+    request_data = request.get_json() # stores json input into variables
+    org_name = request_data['org_name']
+    address_line_1 = request_data['address_line_1']
+    address_line_2 = request_data['address_line_2']
+    city = request_data['city']
+    state_id = request_data['state_id']
+    zip = request_data['zip']
+    
+    query = "INSERT INTO organization (org_name, address_line_1, address_line_2, city, state_id, zip, org_status_id) values ('%s', '%s', '%s', '%s', '%s', '%s', '1')" \
+        % (org_name, address_line_1, address_line_2, city, state_id, zip)
+        
+    execute_query(conn, query)
+    
+    return "Create Organization Request Successful"
+    
 # this api will get an org by id
 @app.route('/get_org/<org_id>', methods = ['GET']) # http://127.0.0.1:5000/get_org/1
 def get_org(org_id): # returns all the orgs in the organizations table that have active status "1"
@@ -130,7 +161,7 @@ def delete_organization():
 
 @app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
 def read_volunteers():
-    
+
     query = "SELECT * FROM volunteer WHERE volunteer_status_id = 1" ### CHANGE ME THIS 2 IS FOR TESTING ###
     rows = execute_read_query(conn,query)
     return jsonify(rows)
@@ -163,7 +194,7 @@ def update_volunteer():
 @app.route('/admin_update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/admin_update_volunteer
 def admin_update_volunteer():
     request_data = request.get_json() # stores json input into variables
-    new_id = request_data['id']
+    new_id = request_data['volunteer_id']
     new_first_name = request_data['first_name']
     new_last_name = request_data['last_name']
     new_phone = request_data['phone']
@@ -235,7 +266,7 @@ def add_volunteer():
     city = request_data['city']
     state_id = request_data['state_id']
     date_created = request_data['date_created']
-    volunteer_status_id = '1'
+    volunteer_status_id = 2
     rel_id = request_data['rel_id']
     waiver_signed = request_data['waiver_signed']
     zip = request_data['zip']
