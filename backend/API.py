@@ -183,7 +183,18 @@ def delete_volunteer():
 @app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
 def read_sessions():
     
-    query = "SELECT * FROM session where session_staus_id = 1"
+    query = """ SELECT CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+            session.session_date,
+            event.event_name,
+            organization.org_name,
+            session.time_in,
+            session.time_out
+            FROM session
+            JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
+            JOIN event ON session.event_id = event.event_id
+            JOIN organization ON session.org_id = organization.org_id
+            JOIN session_status ON session.session_status_id = session_status.session_status_id
+            WHERE session_status.session_status = "Active"; """
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
