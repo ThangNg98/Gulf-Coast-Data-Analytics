@@ -81,6 +81,23 @@ def delete_event():
 
 
 ############# ORGANIZATIONS ###############
+@app.route('/create_organization', methods =['POST']) # API allows user to create an organization: http://127.0.0.1:5000/create_organization
+def create_organization():
+    request_data = request.get_json() # stores json input into variables
+    org_name = request_data['org_name']
+    address_line_1 = request_data['address_line_1']
+    address_line_2 = request_data['address_line_2']
+    city = request_data['city']
+    state_id = request_data['state_id']
+    zip = request_data['zip']
+    
+    query = "INSERT INTO organization (org_name, address_line_1, address_line_2, city, state_id, zip, org_status_id) values ('%s', '%s', '%s', '%s', '%s', '%s', '1')" \
+        % (org_name, address_line_1, address_line_2, city, state_id, zip)
+        
+    execute_query(conn, query)
+    
+    return "Create Organization Request Successful"
+
 @app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: http://127.0.0.1:5000/update_organization
 def update_organization():
     request_data = request.get_json() # stores json input into variables
