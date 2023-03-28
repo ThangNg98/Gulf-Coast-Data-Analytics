@@ -163,7 +163,7 @@ def update_volunteer():
 @app.route('/admin_update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/admin_update_volunteer
 def admin_update_volunteer():
     request_data = request.get_json() # stores json input into variables
-    new_id = request_data['id']
+    new_id = request_data['volunteer_id']
     new_first_name = request_data['first_name']
     new_last_name = request_data['last_name']
     new_phone = request_data['phone']
@@ -181,7 +181,7 @@ def admin_update_volunteer():
     new_date_waiver_signed = request_data['date_waiver_signed'] 
 
     ### query for updating data ###
-    query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s, date_waiver_signed=STR_TO_DATE('%s', '%%Y-%%m-%%d') WHERE id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_date_waiver_signed,new_id)
+    query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s, date_waiver_signed=STR_TO_DATE('%s', '%%Y-%%m-%%d') WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_date_waiver_signed,new_id)
    
     execute_query(conn, query)
 
@@ -207,7 +207,7 @@ def get_volunteer(volunteer_id):
     rows = execute_read_query(conn,query)
     return jsonify(rows)    
 
-    @app.route('/volunteer_phone', methods = ['GET'])
+@app.route('/volunteer_phone', methods = ['GET'])
 def volunteer_phone():
     query = """
         SELECT phone
@@ -231,7 +231,7 @@ def add_volunteer():
     city = request_data['city']
     state_id = request_data['state_id']
     date_created = request_data['date_created']
-    volunteer_status_id = '1'
+    volunteer_status_id = 2
     rel_id = request_data['rel_id']
     waiver_signed = request_data['waiver_signed']
     zip = request_data['zip']
