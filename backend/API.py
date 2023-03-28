@@ -52,6 +52,21 @@ def add_volunteer():
     return "Add request successful"
 
 ############# EVENTS ###############
+@app.route('/create_event', methods=['POST'])
+def create_event():
+    request_data = request.get_json() # stores json input into variables
+    event_name = request_data['event_name']
+    event_description = request_data['event_description']
+    
+    query = "INSERT INTO event (event_name,event_description, event_status_id) values ('%s', '%s', '1')" \
+        % (event_name, event_description) # inserts new entry in event table
+    
+    execute_query(conn, query)
+    
+    return "Add event successful"
+    
+    
+
 @app.route('/update_event', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/update_event
 def update_event():
     request_data = request.get_json() # stores json input into variables
