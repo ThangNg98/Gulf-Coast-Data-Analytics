@@ -42,7 +42,8 @@ export default {
             .post('http://127.0.0.1:5000/create_event', this.event_info)
             .then(() =>{
                 this.event_info={}
-                console.log('Event Updated');
+                alert('Event Created')
+                this.$router.push('/admin/events')
             })
             .catch((error)=>{
                 console.log(error);
