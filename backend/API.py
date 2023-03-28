@@ -23,13 +23,34 @@ def create_session():
     session_comment = request_data['session_comment']
     org_id = request_data['org_id']
     event_id = request_data['event_id']
-    session_staus_id = request_data['session_staus_id']
+    session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
     
-    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_staus_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
-        % (time_in, session_date, session_comment, org_id, event_id, session_staus_id, volunteer_id)
+    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_stayus_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+        % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     execute_query(conn,query)
     return "Add session request successful"
+
+@app.route('/update_session', methods = ['POST'])
+def update_session():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_time_in = request_data['time_in']
+    new_time_out = request_data['time_out']
+    new_session_date = request_data['session_date']
+    new_session_comment = request_data['session_comment']
+    new_org_id = request_data['org_id']
+    new_event_id = request_data['event_id']
+    new_session_status_id = request_data['session_status_id']
+
+    ### query for updating data ###
+    query = "UPDATE session SET time_in='%s', time_out='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s, session_status_id=%s WHERE session_id=%s"%(new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, new_session_status_id, session_id)
+
+    execute_query(conn, query)
+
+    return "Update request successful"
+
+
 
 
 ############# EVENTS ###############
@@ -53,7 +74,6 @@ def get_event(event_id): # returns all the events in the events table that have 
     query = "SELECT * FROM event WHERE event.event_id = %s" % event_id
     rows = execute_read_query(conn,query)
     return jsonify(rows)
-
 
 @app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
 def read_events(): # returns all the events in the events table that have active status "1"

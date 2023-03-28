@@ -34,6 +34,7 @@
     </div>
     </div>
 </template>
+
 <script>
 import axios from 'axios';
 
@@ -52,7 +53,7 @@ export default {
                 session_comment: "CURRENT TEST 10:35pm",
                 org_id: "1", 
                 event_id: "2", 
-                session_staus_id: "1",
+                session_status_id: "1",
                 volunteer_id: "2" // volunteer id needs to be stored and pulled
             },
             
