@@ -162,7 +162,7 @@ def delete_organization():
 @app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
 def read_volunteers():
 
-    query = "SELECT * FROM volunteer WHERE volunteer_status_id = 2" ### CHANGE ME THIS 2 IS FOR TESTING ###
+    query = "SELECT * FROM volunteer WHERE volunteer_status_id = 1" ### CHANGE ME THIS 2 IS FOR TESTING ###
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -211,9 +211,13 @@ def admin_update_volunteer():
     new_waiver_signed = request_data['waiver_signed']
     new_date_waiver_signed = request_data['date_waiver_signed'] 
 
-    ### query for updating data ###
-    query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s, date_waiver_signed=STR_TO_DATE('%s', '%%Y-%%m-%%d') WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_date_waiver_signed,new_id)
-   
+    if (request_data['date_waiver_signed'] == None): #if date_waiver_signed = null
+        query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_id)
+
+    else: #if there is a new date waiver signed
+        ### query for updating data ###
+        query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s, date_waiver_signed=STR_TO_DATE('%s', '%%Y-%%m-%%d') WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_date_waiver_signed,new_id)
+
     execute_query(conn, query)
 
     return "Update request successful"
