@@ -13,15 +13,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td> <router-link class="nav-link" to="/admin/update_volunteer"> John Smith </router-link></td>
-                            <td> <router-link class="nav-link" to="/admin/update_volunteer"> 53 </router-link></td>
+                        <tr v-for="volunteer in volunteers"
+                        @click="editVolunteers(volunteer.volunteer_id)">
+                            <td>{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
+                            <td>{{ volunteer.total_hours }}</td>
                         </tr>
-                        <tr>
-                            <td>Jane Doe</td>
-                            <td>21</td>
-                        </tr>
-
                     </tbody>
                 </table>
         </div>
@@ -37,14 +33,29 @@ export default {
     data() {
         return {
             msg : "List of Volunteers",
+            volunteers: [],
         };
 
     },
     methods: {
-        submitForm() {
-        }
-
-
+        getVolunteers() {
+            axios.get('http://127.0.0.1:5000/read_volunteers')
+            .then(response => {
+                // iterate through JSON response and add volunteers to the volunteer array
+                for (var i = 0; i < response.data.length; i++) {
+                    this.volunteers.push(response.data[i]);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
+        editVolunteers(volunteer_id) {
+            this.$router.push({ name: 'VolunteersUpdate', params: { volunteer_id: volunteer_id } });
+        } 
+    },
+    mounted() {
+        this.getVolunteers();
     }
 }
 </script>
