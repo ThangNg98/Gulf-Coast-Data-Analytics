@@ -124,7 +124,8 @@ export default {
             .post('http://127.0.0.1:5000/create_organization', this.org_info)
             .then(() =>{
                 this.org_info={}
-                console.log("Org Created")
+                alert('Organization Created')
+                this.$router.push('/admin/orgs')
             })
             .catch((error)=>{
                 console.log(error);
