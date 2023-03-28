@@ -17,23 +17,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr >
-                            <td> <router-link class="nav-link" to="/admin/update_sessions"> John Smith </router-link></td>
-                            <td> 3/5/2023 </td>
-                            <td> Garden </td>
-                            <td> UH Garden Team </td>
-                            <td> 2:00 PM </td>
-                            <td> null </td>
+                        <tr v-for="sessions in sessions"
+                        @click="editSessions(sessions.session_id)">
+                            <td>{{ sessions.volunteer_name }}</td>
+                            <td>{{ sessions.session_date }}</td>
+                            <td>{{ sessions.event_name }}</td>
+                            <td>{{ sessions.org_name }}</td>
+                            <td>{{ sessions.time_in }}</td>
+                            <td>{{ sessions.time_out }}</td>
                         </tr>
-                        <tr>
-                            <td> <router-link class="nav-link" to="/admin/update_sessions"> Jane Doe </router-link></td>
-                            <td> 3/5/2023 </td>
-                            <td> Garden </td>
-                            <td> UH Garden Team </td>
-                            <td> 2:00 PM </td>
-                            <td> null </td>
-                        </tr>
-
                     </tbody>
                 </table>
         </div>
@@ -49,13 +41,32 @@ export default {
     data() {
         return {
             msg : "Active Sessions List",
+            sessions:[]
         };
 
     },
     methods: {
         submitForm() {
+        },
+        getSession() {
+            axios.get('http://127.0.0.1:5000/read_sessions')
+            .then(response => {
+                // iterate through JSON response and add sessions to sessions array
+                for (var i = 0; i < response.data.length; i++) {
+                    this.sessions.push(response.data[i]);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
+        editSessions(session_id) {
+            this.$router.push({ name: 'SessionsUpdate', params: 
+            { session_id: session_id } });
         }
-
+    },
+    mounted() {
+        this.getSession();
 
     }
 }
