@@ -59,14 +59,14 @@ export default {
         return {
             msg : "Update Organization",
             organization: {
-                org_id: 2,
-                org_name: 'a BRAND NEW org',
-                address_line_1: 'A BRAND NEW address',
-                address_line_2: "A Second BRAND NEW address",
-                city: 'NEW city',
+                org_id: '',
+                org_name: '',
+                address_line_1: '',
+                address_line_2: '',
+                city: '',
                 state_id: '',
-                zip: '11111',
-                org_status_id: 1
+                zip: '',
+                org_status_id: ''
                 
             },
             updateButtonClicked: false,
@@ -125,6 +125,11 @@ export default {
                 { name: 'Wyoming', id: 51 }
                 ]
         };
+    },
+    created() {
+        axios.get(`http://127.0.0.1:5000/get_org/${this.$route.params.org_id}`).then(response => {
+        this.organization = response.data[0];
+        })
     },
     methods: {
         submitForm() {

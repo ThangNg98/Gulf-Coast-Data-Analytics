@@ -158,7 +158,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/admin/update_org',
+          path: '/admin/update_org/:org_id',
           name: 'OrgsUpdate',
           props: true,
           component: () => import('../components/OrgsUpdate.vue'),
