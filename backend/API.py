@@ -14,50 +14,6 @@ app = flask.Flask(__name__)
 CORS(app)
 app.config["DEBUG"] = True
 
-##### returns all the volunteers in the volunteer table ######
-@app.route('/get_volunteers', methods = ['GET']) # http://127.0.0.1:5000/
-def home():
-    query = "SELECT * FROM volunteer"
-    rows = execute_read_query(conn,query)
-    return jsonify(rows)
-
-@app.route('/volunteer_phone', methods = ['GET'])
-def volunteer_phone():
-    query = """
-        SELECT phone
-        FROM volunteer
-    """
-    rows = execute_read_query(conn,query)
-    return jsonify(rows)
-
-@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
-def add_volunteer():
-    request_data = request.get_json() # stores json input into variables
-    first_name = request_data['first_name']
-    last_name = request_data['last_name']
-    phone = request_data['phone']
-    email = request_data['email']
-    emergency_contact_fname = request_data['emergency_contact_fname']
-    emergency_contact_lname = request_data['emergency_contact_lname']
-    emergency_contact_phone = request_data['emergency_contact_phone']
-    address_line_1 = request_data['address_line_1']
-    address_line_2 = request_data['address_line_2']
-    city = request_data['city']
-    state_id = request_data['state_id']
-    date_created = request_data['date_created']
-    volunteer_status_id = request_data['volunteer_status_id']
-    rel_id = request_data['rel_id']
-    waiver_signed = request_data['waiver_signed']
-    zip = request_data['zip']
-
-    ### query for inserting data ###
-    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) # inserts new entry in volunteer table
-   
-    execute_query(conn, query)
-
-    return "Add volunteer request successful"
-
 ############## SESSIONS ##################
 @app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
 def create_session():
@@ -171,6 +127,14 @@ def delete_organization():
 
 
 ############# VOLUNTEERS ###############
+
+@app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
+def read_volunteers():
+
+    query = "SELECT * FROM volunteer WHERE volunteer_status_id = 2" ### CHANGE ME THIS 2 IS FOR TESTING ###
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
 @app.route('/update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/update_volunteer
 def update_volunteer():
     request_data = request.get_json() # stores json input into variables
@@ -235,6 +199,49 @@ def delete_volunteer():
     execute_query(conn, query)
 
     return "Delete request successful"
-    
+
+# this api will get an volunteer by id
+@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/get_volunteer/1
+def get_volunteer(volunteer_id): 
+    query = "SELECT * FROM volunteer WHERE volunteer.volunteer_id = %s" % volunteer_id
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)    
+
+    @app.route('/volunteer_phone', methods = ['GET'])
+def volunteer_phone():
+    query = """
+        SELECT phone
+        FROM volunteer
+    """
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
+@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
+def add_volunteer():
+    request_data = request.get_json() # stores json input into variables
+    first_name = request_data['first_name']
+    last_name = request_data['last_name']
+    phone = request_data['phone']
+    email = request_data['email']
+    emergency_contact_fname = request_data['emergency_contact_fname']
+    emergency_contact_lname = request_data['emergency_contact_lname']
+    emergency_contact_phone = request_data['emergency_contact_phone']
+    address_line_1 = request_data['address_line_1']
+    address_line_2 = request_data['address_line_2']
+    city = request_data['city']
+    state_id = request_data['state_id']
+    date_created = request_data['date_created']
+    volunteer_status_id = '1'
+    rel_id = request_data['rel_id']
+    waiver_signed = request_data['waiver_signed']
+    zip = request_data['zip']
+
+    ### query for inserting data ###
+    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) # inserts new entry in volunteer table
+   
+    execute_query(conn, query)
+
+    return "Add volunteer request successful"
 if __name__ == "__main__":
     app.run()

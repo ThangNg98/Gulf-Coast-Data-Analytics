@@ -192,7 +192,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/admin/update_volunteer',
+          path: '/admin/update_volunteer/:volunteer_id',
           name: 'VolunteersUpdate',
           props: true,
           component: () => import('../components/VolunteersUpdate.vue'),
