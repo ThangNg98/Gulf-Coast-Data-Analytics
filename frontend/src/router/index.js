@@ -24,14 +24,17 @@ const router = createRouter({
       component: () => import('../views/Profile.vue'),
       children: [
         {
+          name: 'ProfileCheckin',
           path: '/profile/checkin',
           component: () => import('@/components/V_CheckIn.vue')
         },
         {
+          name: 'ProfileHistory',
           path: '/profile/history',
           component: () => import('@/components/V_History.vue')
         },
         {
+          name: 'ProfileUpdate',
           path: '/profile/update',
           component: () => import('@/components/V_UpdateProfile.vue')
         }
@@ -61,7 +64,7 @@ const router = createRouter({
       children: [
         {
           path: '/admin/dash',
-          name: 'Admin Dashboard View',
+          name: 'AdminDashboardView',
           props: true,
           component: () => import('../components/AdminDashView.vue'),
           beforeEnter: (to, from, next) => {
