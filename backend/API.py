@@ -22,7 +22,7 @@ def home():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/volunteer_phone/', methods = ['GET'])
+@app.route('/volunteer_phone', methods = ['GET'])
 def volunteer_phone():
     query = """
         SELECT phone
