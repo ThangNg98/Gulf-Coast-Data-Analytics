@@ -120,7 +120,7 @@ export default {
                 address_line_2:'Box 12',
                 city:'Houston',
                 state_id:'',
-                date_created: '2023-01-01',
+                date_created: this.getDate(),//new Date().toJSON("en-US", {timeZone: "America/Chicago"}).slice(0,10),
                 volunteer_status_id: '2',
                 zip: 12345,
                 rel_id:'' ,
@@ -208,6 +208,9 @@ export default {
     },
     methods: {
         submitForm() {
+            //this.getDate();
+            console.log("submit " + this.date_created);
+            //console.log(new Date().toJSON("en-US", {timeZone: "America/Chicago"}).slice(0,10));
             axios
                 .post('http://127.0.0.1:5000/add_volunteer', this.volunteer_info)
                 .then(() => {
@@ -219,6 +222,12 @@ export default {
           console.log(this.volunteer_info + 'add volunteer success');
           //redirect
           this.$router.push({ name: 'ProfileCheckin' })
+        },
+        getDate() {
+            var today = new Date();
+            today.setHours( today.getHours()+(today.getTimezoneOffset()/-60) );
+            today = today.toJSON().slice(0, 10);
+            return today;
         }
 
 
