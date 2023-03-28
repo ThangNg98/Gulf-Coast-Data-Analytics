@@ -12,16 +12,13 @@
                         <th scope="col">Description</th>
                         </tr>
                     </thead>
-                    <tbody>   
-                        <tr>
-                            <td> <router-link class="nav-link" to="/admin/update_event"> Garden </router-link></td>
-                            <td> <router-link class="nav-link" to="/admin/update_event"> Garden at the Living Legacy Center </router-link></td>
+                    <tbody>
+                        <tr 
+                        @click="editEvent(event.event_id)"
+                        v-for="event in events" >
+                            <td>{{ event.event_name }}</td>
+                            <td>{{ event.event_description }}</td>
                         </tr>
-                        <tr>
-                            <td>Market</td>
-                            <td>Market at the Living Legacy Center</td>
-                        </tr>
-
                     </tbody>
                 </table>
         </div>
@@ -41,14 +38,31 @@ export default {
     data() {
         return {
             msg : "List of Events",
-        };
-
+            events: []
+        }
     },
     methods: {
         submitForm() {
+        },
+        getEvents() {
+            axios.get('http://127.0.0.1:5000/read_events')
+            .then(response => {
+                // iterate through JSON response and add events to events array
+                for (var i = 0; i < response.data.length; i++) {
+                    this.events.push(response.data[i]);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
+        editEvent(event_id) {
+            this.$router.push({ name: 'EventsUpdate', params: 
+            { event_id: event_id } });
         }
-
-
+    },
+    mounted() {
+        this.getEvents();
     }
 }
 </script>

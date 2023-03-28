@@ -226,7 +226,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/admin/update_event',
+          path: '/admin/update_event/:event_id',
           name: 'EventsUpdate',
           props: true,
           component: () => import('../components/EventsUpdate.vue'),
