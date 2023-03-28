@@ -14,11 +14,10 @@ app = flask.Flask(__name__)
 CORS(app)
 app.config["DEBUG"] = True
 
-##### returns all the volunteers in the volunteers table ######
-@app.route('/', methods = ['GET']) # http://127.0.0.1:5000/
+##### returns all the volunteers in the volunteer table ######
+@app.route('/get_volunteers', methods = ['GET']) # http://127.0.0.1:5000/
 def home():
-    
-    query = "SELECT volunteers.first_name, volunteers.last_name, volunteers.phone, volunteers.email, volunteers.emergency_contact_fname, emergency_contact_lname, emergency_contact_phone FROM volunteers" 
+    query = "SELECT * FROM volunteer"
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -41,15 +40,23 @@ def add_volunteer():
     emergency_contact_fname = request_data['emergency_contact_fname']
     emergency_contact_lname = request_data['emergency_contact_lname']
     emergency_contact_phone = request_data['emergency_contact_phone']
+    address_line_1 = request_data['address_line_1']
+    address_line_2 = request_data['address_line_2']
+    city = request_data['city']
+    state_id = request_data['state_id']
+    date_created = request_data['date_created']
+    volunteer_status_id = request_data['volunteer_status_id']
+    rel_id = request_data['rel_id']
+    waiver_signed = request_data['waiver_signed']
+    zip = request_data['zip']
 
-    
     ### query for inserting data ###
-    query = "INSERT INTO volunteers (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone) # inserts new entry in volunteers table
+    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) # inserts new entry in volunteer table
    
     execute_query(conn, query)
 
-    return "Add request successful"
+    return "Add volunteer request successful"
 
 ############## SESSIONS ##################
 @app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
