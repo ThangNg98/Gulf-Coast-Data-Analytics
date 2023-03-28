@@ -81,6 +81,14 @@ def delete_event():
 
 
 ############# ORGANIZATIONS ###############
+# this api will get an org by id
+@app.route('/get_org/<org_id>', methods = ['GET']) # http://127.0.0.1:5000/get_org/1
+def get_org(org_id): # returns all the orgs in the organizations table that have active status "1"
+    query = "SELECT * FROM organization WHERE organization.org_id = %s" % org_id
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+
+
 @app.route('/read_orgs', methods = ['GET']) # http://127.0.0.1:5000/read_orgs
 def read_orgs():
     

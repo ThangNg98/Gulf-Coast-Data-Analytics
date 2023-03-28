@@ -13,7 +13,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="org in orgs">
+                        <tr v-for="org in orgs"
+                        @click="editOrgs(org.org_id)">
                             <td>{{ org.org_name }}</td>
                             <td>{{ org.address_line_1 }}</td>
                         </tr>
@@ -55,7 +56,11 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-        } 
+        },
+        editOrgs(org_id) {
+            this.$router.push({ name: 'OrgsUpdate', params: 
+            { org_id: org_id } });
+        }
     },
     mounted() {
         this.getOrgs();
