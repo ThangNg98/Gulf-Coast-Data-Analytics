@@ -36,7 +36,7 @@ def add_volunteer():
     city = request_data['city']
     state_id = request_data['state_id']
     date_created = request_data['date_created']
-    volunteer_status_id = request_data['volunteer_status_id']
+    volunteer_status_id = '1'
     rel_id = request_data['rel_id']
     waiver_signed = request_data['waiver_signed']
     zip = request_data['zip']
