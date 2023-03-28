@@ -34,6 +34,19 @@ def create_session():
 
 ############# EVENTS ###############
 
+@app.route('/create_event', methods=['POST'])
+def create_event():
+    request_data = request.get_json() # stores json input into variables
+    event_name = request_data['event_name']
+    event_description = request_data['event_description']
+
+    query = "INSERT INTO event (event_name,event_description, event_status_id) values ('%s', '%s', '1')" \
+        % (event_name, event_description) # inserts new entry in event table
+
+    execute_query(conn, query)
+
+    return "Add event successful"
+
 # this api will get an event by id
 @app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
