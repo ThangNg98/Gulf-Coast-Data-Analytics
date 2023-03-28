@@ -102,16 +102,20 @@
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
                     <thead>
                         <tr>
-                        <th scope="col">Total Hours</th>
+                        <th scope="clo">Waiver Signed</th>
                         <th scope="col">Waiver Signed Date</th>
+                        <th scope="col">Total Hours</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>[hours]</td>
+                            <td>
+                                <input type="checkbox" v-model="waiverSigned">
+                            </td>
                             <td>
                                 <input type="date" id="date" v-model="volunteer_info.date_waiver_signed" @input="formatDate">
                             </td>
+                            <td>[hours]</td>
                         </tr>
                     </tbody>
                 </table>
@@ -143,7 +147,7 @@ export default {
                 zip: '',
                 rel_id:'',
                 waiver_signed: '',
-                date_waiver_signed: ''                
+                date_waiver_signed: ''               
             },
             updateButtonClicked: false,
             deleteButtonClicked: false,
@@ -215,6 +219,14 @@ export default {
     };
     },
     computed: {
+        waiverSigned: {
+            get() {
+                return this.volunteer_info.waiver_signed == 1;
+            },
+            set(value) {
+                this.volunteer_info.waiver_signed = value ? 1 : 2;
+            }
+        },
         filteredStates() {
             return this.states.filter(state => {
                 return state.name.toLowerCase().includes(this.searchQuery.toLowerCase());
@@ -230,12 +242,18 @@ export default {
         submitForm() {
             if (this.updateButtonClicked == true) {
                 this.updateButtonClicked = false
+                if (!this.volunteer_info.date_waiver_signed) {
+                    console.log('volunteer_info.date_waiver_signed does not have stuff in it')
+                    this.volunteer_info.date_waiver_signed = null
+                }
                 axios
                 .post('http://127.0.0.1:5000/admin_update_volunteer', this.volunteer_info)
                 .then(() =>{
+                    console.log(this.volunteer_info.date_waiver_signed)
                     this.volunteer_info={}
                     alert('Volunteer Updated')
                     this.$router.push('/admin/volunteers')
+                    
                 })
                 .catch((error)=>{
                     console.log(error);
@@ -260,7 +278,18 @@ export default {
     },
     created() {
         axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
-        this.volunteer_info = response.data[0];
+            console.log('response.data[0].date_waiver_signed: ', response.data[0].date_waiver_signed)
+            if (response.data[0].date_waiver_signed == null) {
+                console.log('date_waiver_signed is null')
+                this.volunteer_info = response.data[0]
+                this.volunteer_info.date_waiver_signed = ''
+            }
+            else {
+                console.log('date_waiver_signed is not null')
+                // parse the date string and format it in 'YYYY-MM-DD' format
+                this.volunteer_info = response.data[0]
+                this.volunteer_info.date_waiver_signed = new Date(this.volunteer_info.date_waiver_signed).toISOString().slice(0, 10);
+            }
         })
     },
 }
