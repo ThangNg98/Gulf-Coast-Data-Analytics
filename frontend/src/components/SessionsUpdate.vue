@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/sessions_list"> Back to Sessions</router-link></button>
+                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/sessions_list"> Back to Sessions</router-link></button>
                 <button type="submit" class="btn btn-danger" style="margin-right:0.5rem">Delete</button>
                 <button type="submit" class="btn btn-primary" >Update </button>
             </div>

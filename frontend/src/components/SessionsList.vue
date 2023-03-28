@@ -18,7 +18,7 @@
                     </thead>
                     <tbody>
                         <tr >
-                            <td> <router-link class="nav-link" to="/update_sessions"> John Smith </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_sessions"> John Smith </router-link></td>
                             <td> 3/5/2023 </td>
                             <td> Garden </td>
                             <td> UH Garden Team </td>
@@ -26,7 +26,7 @@
                             <td> null </td>
                         </tr>
                         <tr>
-                            <td> <router-link class="nav-link" to="/update_sessions"> Jane Doe </router-link></td>
+                            <td> <router-link class="nav-link" to="/admin/update_sessions"> Jane Doe </router-link></td>
                             <td> 3/5/2023 </td>
                             <td> Garden </td>
                             <td> UH Garden Team </td>
