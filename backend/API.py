@@ -61,9 +61,10 @@ def create_session():
     org_id = request_data['org_id']
     event_id = request_data['event_id']
     session_staus_id = request_data['session_staus_id']
+    volunteer_id = request_data['volunteer_id']
     
-    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_staus_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" \
-        % (time_in, session_date, session_comment, org_id, event_id, session_staus_id)
+    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_staus_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+        % (time_in, session_date, session_comment, org_id, event_id, session_staus_id, volunteer_id)
     execute_query(conn,query)
     return "Add session request successful"
 

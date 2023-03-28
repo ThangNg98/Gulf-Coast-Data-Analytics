@@ -36,10 +36,6 @@
 </template>
 <script>
 import axios from 'axios';
-//import datetime from datetime;
-//now = datetime.now();
-//var datetime = require('datetime.js');
-//var dateObj = new Date();
 
 export default {
     data() {
@@ -51,22 +47,23 @@ export default {
             eventNames: ['event1', 'event2', 'event3'], //placeholder for event names list from api
             //test data
             session: {
-                time_in: "2023-03-27 10:00:00",//now.time(),
-                session_date: "2023-03-27",//now.date(), 
-                session_comment: "CURRENT TEST 1:55pm",
+                time_in: this.getTime(),//now.time(),
+                session_date: this.getDate(),//now.date(), 
+                session_comment: "CURRENT TEST 10:35pm",
                 org_id: "1", 
                 event_id: "2", 
-                session_staus_id: "1"
+                session_staus_id: "1",
+                volunteer_id: "2" // volunteer id needs to be stored and pulled
             },
             
         }
     },
     methods: {
         create_session() {
-            console.log("create_session")
-            this.create_session_axios();
+            console.log("create_session");
+            this.create_session_axios(); //create session
         },
-        async create_session_axios() {
+        async create_session_axios() { //call axios
             axios
                 .post('http://127.0.0.1:5000/create_session', this.session)
                 .then(() => {
@@ -76,6 +73,19 @@ export default {
                     console.log(error);
           });
           console.log("create_session success");
+        },
+        getDate() {
+            var today = new Date();
+            today.setHours( today.getHours()+(today.getTimezoneOffset()/-60) );
+            return today.toJSON().slice(0, 10)
+        },
+        getTime() {
+            var today = new Date();
+            today.setHours( today.getHours()+(today.getTimezoneOffset()/-60) );
+            var firstHalf = today.toJSON().slice(0,10);
+            var secondHalf = today.toJSON().slice(11,19);
+            var full = firstHalf + " " + secondHalf;
+            return full
         }
     }
 }
