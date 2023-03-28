@@ -128,22 +128,22 @@ export default {
         return {
             msg:"Update Volunteer",
             volunteer_info: { //use axios to call current information connected to current user
-                id:2,
-                first_name: 'John',
-                last_name: 'Smith',
-                phone:  '1234567890',
-                email: 'name@example.com',
-                emergency_contact_fname: 'Jane',
-                emergency_contact_lname: 'Doe',
-                emergency_contact_phone: '0987654321',
-                address_line_1:'1234 Canal St',
-                address_line_2:'Box 12',
-                city:'Houston',
+                volunteer_id:'',
+                first_name: '',
+                last_name: '',
+                phone:  '',
+                email: '',
+                emergency_contact_fname: '',
+                emergency_contact_lname: '',
+                emergency_contact_phone: '',
+                address_line_1:'',
+                address_line_2:'',
+                city:'',
                 state_id:'',
-                zip: 12345,
+                zip: '',
                 rel_id:'',
-                waiver_signed: 2,
-                date_waiver_signed: '2023-03-27'                
+                waiver_signed: '',
+                date_waiver_signed: ''                
             },
             updateButtonClicked: false,
             deleteButtonClicked: false,
@@ -257,7 +257,12 @@ export default {
             const formattedDate = date.toISOString().slice(0, 10)
             this.date = formattedDate
         }
-    }
+    },
+    created() {
+        axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
+        this.volunteer_info = response.data[0];
+        })
+    },
 }
 </script>
 
