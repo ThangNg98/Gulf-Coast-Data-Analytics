@@ -23,13 +23,24 @@ def create_session():
     session_comment = request_data['session_comment']
     org_id = request_data['org_id']
     event_id = request_data['event_id']
-    session_staus_id = request_data['session_staus_id']
+    session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
     
-    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_staus_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
-        % (time_in, session_date, session_comment, org_id, event_id, session_staus_id, volunteer_id)
+    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+        % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     execute_query(conn,query)
     return "Add session request successful"
+
+@app.route('/check_out', methods = ['POST']) # http://127.0.0.1:5000/check_out
+def check_out():
+    request_data = request.get_json() # stores json input into variables
+    print('request_data:', request_data)
+    session_id = request_data['session_id']
+    new_time_out = request_data['time_out']
+    
+    query = "UPDATE session SET time_out='%s'WHERE session_id=%s"%(new_time_out, session_id)
+    execute_query(conn,query)
+    return "Add check out time request successful"
 
 
 ############# EVENTS ###############
@@ -50,8 +61,10 @@ def create_event():
 # this api will get an event by id
 @app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
-    query = "SELECT * FROM event WHERE event.event_id = %s" % event_id
-    rows = execute_read_query(conn,query)
+    query = "select event.event_id, event.event_name, event.event_description, sum(session.total_hours) as total_hours, \
+            count(session.volunteer_id) as num_volunteers from event \
+            LEFT JOIN session on event.event_id=session.event_id WHERE event.event_id='%s'" % event_id
+    rows = execute_read_query(conn,query)   
     return jsonify(rows)
 
 
@@ -90,7 +103,6 @@ def delete_event():
 
     return "Delete request successful"
 
-
 ############# ORGANIZATIONS ###############
 
 @app.route('/create_organization', methods =['POST']) # API allows user to create an organization: http://127.0.0.1:5000/create_organization
@@ -113,7 +125,11 @@ def create_organization():
 # this api will get an org by id
 @app.route('/get_org/<org_id>', methods = ['GET']) # http://127.0.0.1:5000/get_org/1
 def get_org(org_id): # returns all the orgs in the organizations table that have active status "1"
-    query = "SELECT * FROM organization WHERE organization.org_id = %s" % org_id
+    query = "select organization.org_id, organization.org_name, organization.address_line_1, \
+            organization.address_line_2, organization.city, organization.state_id, \
+            organization.zip, organization.org_status_id, sum(session.total_hours) as total_hours, \
+            count(session.volunteer_id) as num_volunteers from organization \
+            LEFT JOIN session on organization.org_id=session.org_id WHERE organization.org_id='%s'" % org_id
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -169,7 +185,7 @@ def read_volunteers():
 @app.route('/update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/update_volunteer
 def update_volunteer():
     request_data = request.get_json() # stores json input into variables
-    new_id = request_data['id']
+    new_id = request_data['volunteer_id']
     new_first_name = request_data['first_name']
     new_last_name = request_data['last_name']
     new_phone = request_data['phone']
@@ -186,7 +202,7 @@ def update_volunteer():
 
     ### query for updating data ###
     query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s WHERE id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_id)
-   
+
     execute_query(conn, query)
 
     return "Update request successful"
@@ -266,17 +282,25 @@ def add_volunteer():
     city = request_data['city']
     state_id = request_data['state_id']
     date_created = request_data['date_created']
-    volunteer_status_id = 2
+    volunteer_status_id = 1
     rel_id = request_data['rel_id']
-    waiver_signed = request_data['waiver_signed']
+    waiver_signed = 2
     zip = request_data['zip']
 
-    ### query for inserting data ###
-    query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
-        % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) # inserts new entry in volunteer table
-   
-    execute_query(conn, query)
+    # Check if phone value is not already in the volunteer table
+    query = "SELECT * FROM volunteer WHERE phone = '%s' AND volunteer_status_id = 1" % (phone)
+    result = execute_read_query(conn, query)
+    if result:
+        print('Volunteer with this phone number already exists.')
+        return '1'
+    else:
+        print('Volunteer with this phone number does not exist. New volunteer added.')
+        # If phone number is not in the volunteer table, insert new entry
+        query = "INSERT INTO volunteer (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" \
+            % (first_name, last_name, phone, email, emergency_contact_fname, emergency_contact_lname, emergency_contact_phone, address_line_1, address_line_2, city, state_id, date_created, volunteer_status_id, rel_id, waiver_signed, zip) # inserts new entry in volunteer table
+    
+        execute_query(conn, query)
 
-    return "Add volunteer request successful"
+        return '2'
 if __name__ == "__main__":
     app.run()
