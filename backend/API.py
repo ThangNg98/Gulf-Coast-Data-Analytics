@@ -180,6 +180,26 @@ def delete_volunteer():
     return "Delete request successful"
 
 ############# SESSIONS ###############
+# this api will get a session by session_id
+@app.route('/get_session/<session_id>', methods = ['GET']) # http://127.0.0.1:5000/get_session/1
+def get_session(session_id):
+    query = """ SELECT CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
+            event.event_name,
+            organization.org_name,
+            DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
+            DATE_FORMAT(session.time_out, '%h:%i %p') AS time_out
+            FROM session
+            JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
+            JOIN event ON session.event_id = event.event_id
+            JOIN organization ON session.org_id = organization.org_id
+            JOIN session_status ON session.session_status_id = session_status.session_status_id
+            WHERE session.session_status_id = 1
+            AND session.session_id = {}
+            ORDER BY volunteer_name; """.format(session_id)
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
 @app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
 def read_sessions():
     
@@ -194,7 +214,7 @@ def read_sessions():
             JOIN event ON session.event_id = event.event_id
             JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
-            WHERE session.time_out IS NULL AND session.session_status_id = 1
+            WHERE session.session_status_id = 1
             ORDER BY volunteer_name; """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
