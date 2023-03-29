@@ -183,7 +183,7 @@ def delete_volunteer():
 # this api will get a session by session_id
 @app.route('/get_session/<session_id>', methods = ['GET']) # http://127.0.0.1:5000/get_session/1
 def get_session(session_id):
-    query = """ SELECT CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+    query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
             DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
             event.event_name,
             organization.org_name,
@@ -203,7 +203,7 @@ def get_session(session_id):
 @app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
 def read_sessions():
     
-    query = """ SELECT CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+    query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
             DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
             event.event_name,
             organization.org_name,
