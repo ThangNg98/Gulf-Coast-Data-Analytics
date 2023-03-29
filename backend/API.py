@@ -184,11 +184,11 @@ def delete_volunteer():
 def read_sessions():
     
     query = """ SELECT CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
-            session.session_date,
+            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
             event.event_name,
             organization.org_name,
-            session.time_in,
-            session.time_out
+            DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
+            DATE_FORMAT(session.time_out, '%h:%i %p') AS time_out
             FROM session
             JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
             JOIN event ON session.event_id = event.event_id
