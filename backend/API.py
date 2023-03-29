@@ -15,7 +15,7 @@ CORS(app)
 app.config["DEBUG"] = True
 
 ############## SESSIONS ##################
-@app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
+@app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/create_session
 def create_session():
     request_data = request.get_json() # stores json input into variables
     time_in = request_data['time_in']
@@ -31,6 +31,36 @@ def create_session():
     execute_query(conn,query)
     return "Add session request successful"
 
+@app.route('/check_out', methods = ['POST']) # http://127.0.0.1:5000/check_out
+def check_out():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_time_out = request_data['time_out']
+    
+    query = "UPDATE session SET time_out='%s'WHERE session_id=%s"%(new_time_out, session_id)
+    execute_query(conn,query)
+    return "Add check out time request successful"
+
+@app.route('/read_session/<session_id>', methods = ['GET'])
+def read_session(session_id):
+    query = """
+        SELECT 
+            s.session_id, 
+            TIME_FORMAT(s.time_in, '%%H:%%i') AS time_in, 
+            TIME_FORMAT(s.time_out, '%%H:%%i') AS time_out, 
+            DATE_FORMAT(s.session_date, '%%Y-%%m-%%d') AS session_date,
+            s.session_comment,
+            CONCAT(v.first_name, ' ', v.last_name) AS full_name,
+            s.org_id,
+            s.event_id
+        FROM session s
+        JOIN volunteer v ON s.volunteer_id = v.volunteer_id
+        WHERE s.session_id = %s;
+    """ % session_id
+    rows = execute_read_query(conn,query)
+    print('LORI', rows)
+    return jsonify(rows)
+
 @app.route('/update_session', methods = ['POST'])
 def update_session():
     request_data = request.get_json() # stores json input into variables
@@ -41,16 +71,30 @@ def update_session():
     new_session_comment = request_data['session_comment']
     new_org_id = request_data['org_id']
     new_event_id = request_data['event_id']
-    new_session_status_id = request_data['session_status_id']
 
-    ### query for updating data ###
-    query = "UPDATE session SET time_in='%s', time_out='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s, session_status_id=%s WHERE session_id=%s"%(new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, new_session_status_id, session_id)
+    if (request_data['time_out'] == None): # if there's not time out
+        query = "UPDATE session SET time_in='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in,  new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
+    
+    else:
+        ### query for updating data ###
+        query = "UPDATE session SET time_in='%s', time_out='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
 
     execute_query(conn, query)
 
     return "Update request successful"
 
+@app.route('/delete_session', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/delete_session
+def delete_session():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_status_id = 2 
 
+    ### query for updating data ###
+    query = "UPDATE session SET session_status_id=%s WHERE session_id=%s"%(new_status_id,session_id)
+   
+    execute_query(conn, query)
+
+    return "Delete request successful"
 
 
 ############# EVENTS ###############
@@ -79,7 +123,9 @@ def get_event(event_id): # returns all the events in the events table that have 
 def read_events(): # returns all the events in the events table that have active status "1"
     
     query = "SELECT * FROM event WHERE event.event_status_id = 1" 
+    
     rows = execute_read_query(conn,query)
+    
     return jsonify(rows)
 
 
@@ -142,7 +188,9 @@ def get_org(org_id): # returns all the orgs in the organizations table that have
 def read_orgs():
     
     query = "SELECT * FROM organization WHERE org_status_id = 1" # query for selecting all active orgs
+    print('before execute')
     rows = execute_read_query(conn,query)
+    print('after execute')
     return jsonify(rows)
 
 @app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: http://127.0.0.1:5000/update_organization
@@ -298,5 +346,8 @@ def add_volunteer():
     execute_query(conn, query)
 
     return "Add volunteer request successful"
+
+
+
 if __name__ == "__main__":
     app.run()
