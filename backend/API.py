@@ -201,6 +201,7 @@ def get_session(session_id):
     return jsonify(rows)
 
 @app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
+#API to get Open Sessions
 def read_sessions():
     
     query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
@@ -214,7 +215,7 @@ def read_sessions():
             JOIN event ON session.event_id = event.event_id
             JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
-            WHERE session.session_status_id = 1
+            WHERE session.session_status_id = 1 AND session.time_out IS NULL
             ORDER BY volunteer_name; """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
