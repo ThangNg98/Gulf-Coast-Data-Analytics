@@ -52,15 +52,15 @@ export default {
                 session_comment: "CURRENT TEST 10:35pm",
                 org_id: "1", 
                 event_id: "2", 
-                session_staus_id: "1",
-                volunteer_id: "2" // volunteer id needs to be stored and pulled
+                session_status_id: "1",
+                volunteer_id: "3" // volunteer id needs to be stored and pulled
             },
             
         }
     },
     methods: {
         create_session() {
-            console.log("create_session");
+            this.time_in = this.getTime();
             this.create_session_axios(); //create session
         },
         async create_session_axios() { //call axios
