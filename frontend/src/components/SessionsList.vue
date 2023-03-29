@@ -13,7 +13,6 @@
                         <th scope="col">Event</th>
                         <th scope="col">Organization</th>
                         <th scope="col">Start Time</th>
-                        <th scope="col">Finish Time</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,7 +23,6 @@
                             <td>{{ sessions.event_name }}</td>
                             <td>{{ sessions.org_name }}</td>
                             <td>{{ sessions.time_in }}</td>
-                            <td>{{ sessions.time_out }}</td>
                         </tr>
                     </tbody>
                 </table>
