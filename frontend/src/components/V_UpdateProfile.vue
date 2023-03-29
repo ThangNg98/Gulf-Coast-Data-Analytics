@@ -92,10 +92,12 @@
                 <button type="submit" class="btn btn-primary" >Update</button>
           </div>
         </form>
+        <p>phone: {{ volunteer_info.phone }}</p>
     </div>
 </template>
 
 <script>
+import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore.js'
 import axios from "axios";
 export default {
     name: 'Register',
@@ -103,10 +105,10 @@ export default {
         return {
             msg:"Update Volunteer",
             volunteer_info: { //use axios to call current information connected to current user
-                id:1,
+                volunteer_id: 2,
                 first_name: 'John',
                 last_name: 'Smith',
-                phone:  '1234567890',
+                phone:  useVolunteerPhoneStore().volunteerPhone,
                 email: 'name@example.com',
                 emergency_contact_fname: 'Jane',
                 emergency_contact_lname: 'Doe',
