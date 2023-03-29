@@ -194,7 +194,7 @@ def read_sessions():
             JOIN event ON session.event_id = event.event_id
             JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
-            WHERE session.time_out IS NULL
+            WHERE session.time_out IS NULL AND session.session_status_id = 1
             ORDER BY volunteer_name; """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
