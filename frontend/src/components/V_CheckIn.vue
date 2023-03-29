@@ -65,7 +65,7 @@ export default {
     },
     methods: {
         create_session() {
-            console.log("create_session");
+            this.time_in = this.getTime();
             this.create_session_axios(); //create session
         },
         async create_session_axios() { //call axios
