@@ -44,6 +44,86 @@ def check_out():
     execute_query(conn,query)
     return "Add check out time request successful"
 
+@app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
+#API to get Open Sessions
+def read_sessions():
+
+    query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
+            event.event_name,
+            organization.org_name,
+            DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
+            DATE_FORMAT(session.time_out, '%h:%i %p') AS time_out,
+            session_comment,
+            volunteer.phone
+            FROM session
+            JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
+            JOIN event ON session.event_id = event.event_id
+            JOIN organization ON session.org_id = organization.org_id
+            JOIN session_status ON session.session_status_id = session_status.session_status_id
+            WHERE session.session_status_id = 1 AND session.time_out IS NULL
+            ORDER BY volunteer_name; """ 
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+        # Helmut = gets all sessions
+        # Sends us ID
+        # In update page, we use ID to get info to fill fields
+
+        #Helmut send us everything
+@app.route('/read_session/<session_id>', methods = ['GET'])
+def read_session(session_id):
+    query = """
+        SELECT 
+            s.session_id, 
+            TIME_FORMAT(s.time_in, '%%H:%%i') AS time_in, 
+            TIME_FORMAT(s.time_out, '%%H:%%i') AS time_out, 
+            DATE_FORMAT(s.session_date, '%%Y-%%m-%%d') AS session_date,
+            s.session_comment,
+            CONCAT(v.first_name, ' ', v.last_name) AS full_name,
+            s.org_id,
+            s.event_id
+        FROM session s
+        JOIN volunteer v ON s.volunteer_id = v.volunteer_id
+        WHERE s.session_id = %s;
+    """ % session_id
+    rows = execute_read_query(conn,query)
+    print('LORI', rows)
+    return jsonify(rows)        
+
+@app.route('/update_session', methods = ['POST'])
+def update_session():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_time_in = request_data['time_in']
+    new_time_out = request_data['time_out']
+    new_session_date = request_data['session_date']
+    new_session_comment = request_data['session_comment']
+    new_org_id = request_data['org_id']
+    new_event_id = request_data['event_id']
+
+    if (request_data['time_out'] == None): # if there's not time out
+        query = "UPDATE session SET time_in='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in,  new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
+
+    else:
+        ### query for updating data ###
+        query = "UPDATE session SET time_in='%s', time_out='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
+
+    execute_query(conn, query)
+
+    return "Update request successful"
+
+@app.route('/delete_session', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/delete_session
+def delete_session():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_status_id = 2 
+
+    ### query for updating data ###
+    query = "UPDATE session SET session_status_id=%s WHERE session_id=%s"%(new_status_id,session_id)
+
+    execute_query(conn, query)
+
+    return "Delete request successful"   
 
 ############# EVENTS ###############
 

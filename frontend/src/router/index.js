@@ -277,7 +277,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/admin/update_sessions',
+          path: '/admin/update_sessions/:session_id',
           name: 'SessionsUpdate',
           props: true,
           component: () => import('../components/SessionsUpdate.vue'),
