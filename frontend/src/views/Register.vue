@@ -213,15 +213,21 @@ export default {
             //console.log(new Date().toJSON("en-US", {timeZone: "America/Chicago"}).slice(0,10));
             axios
                 .post('http://127.0.0.1:5000/add_volunteer', this.volunteer_info)
-                .then(() => {
-                    this.volunteer_info = {}
+                .then(response => {
+                    if (response.data == '1') {
+                        alert('Volunteer with this phone number already exists.')
+                    }
+                    else {
+                        this.volunteer_info = {}
+                        alert('Registration Successful')
+                        this.$router.push('/')
+
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
           });
-          console.log(this.volunteer_info + 'add volunteer success');
-          //redirect
-          this.$router.push({ name: 'ProfileCheckin' })
+
         },
         getDate() {
             var today = new Date();

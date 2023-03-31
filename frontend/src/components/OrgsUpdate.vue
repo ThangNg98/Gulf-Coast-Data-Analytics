@@ -41,8 +41,10 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>[hours]</td>
-                            <td>[# volunteers]</td>
+                            <td v-if="hours != null"> {{ this.hours }}</td>
+                            <td v-else> 0 </td>
+                            <td v-if="num_volunteers != 0"> {{ this.num_volunteers }}</td>
+                            <td v-else> 0 </td>
                         </tr>
                     </tbody>
                 </table>
@@ -69,6 +71,8 @@ export default {
                 org_status_id: ''
                 
             },
+            hours: null,
+            num_volunteers: 0,
             updateButtonClicked: false,
             deleteButtonClicked: false,
             states: [
@@ -128,7 +132,16 @@ export default {
     },
     created() {
         axios.get(`http://127.0.0.1:5000/get_org/${this.$route.params.org_id}`).then(response => {
-        this.organization = response.data[0];
+        this.organization.org_id = response.data[0].org_id;
+        this.organization.org_name = response.data[0].org_name;
+        this.organization.address_line_1 = response.data[0].address_line_1;
+        this.organization.address_line_2 = response.data[0].address_line_2;
+        this.organization.city = response.data[0].city;
+        this.organization.state_id = response.data[0].state_id;
+        this.organization.zip = response.data[0].zip;
+        this.organization.org_status_id = response.data[0].org_status_id;
+        this.hours = response.data[0].total_hours;
+        this.num_volunteers = response.data[0].num_volunteers
         })
     },
     methods: {
