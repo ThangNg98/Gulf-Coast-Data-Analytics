@@ -26,21 +26,15 @@ def create_session():
     session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
     
-<<<<<<< HEAD
     event_name = "event " + str(time_in)
     
-=======
->>>>>>> e29296dc7b1bae44ba28da5eec6ddf201304a88f
     query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
         % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     execute_query(conn,query)
     
-<<<<<<< HEAD
     query_auto_logout = "CREATE EVENT '%s' ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 SECOND DO UPDATE session SET time_out = NOW() where time_in = '%s';" \
         % (event_name, time_in)
     execute_query(conn,query_auto_logout)
-=======
->>>>>>> e29296dc7b1bae44ba28da5eec6ddf201304a88f
     
     return "Add session request successful"
 
