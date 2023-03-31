@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="phoneNumber" maxlength="14">
                     </div>
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
@@ -73,7 +73,7 @@
                 <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="volunteer_info.emergency_contact_phone">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="emergencyPhoneNumber" maxlength="14">
                     </div>
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Relationship</label>
@@ -92,7 +92,6 @@
                 <button type="submit" class="btn btn-primary" >Update</button>
           </div>
         </form>
-        <p>phone: {{ volunteer_info.phone }}</p>
     </div>
 </template>
 
@@ -120,6 +119,8 @@ export default {
                 zip: 12345,
                 rel_id:''         
             },
+            phoneNumber: useVolunteerPhoneStore().volunteerPhone,
+            emergencyPhoneNumber: '0987654321',
             searchQuery: '',
             states: [
                 { name: 'Alabama', id: 1 },
@@ -187,6 +188,15 @@ export default {
             ]
         };
     },
+    watch: {
+      phoneNumber(newValue) {
+        this.formatPhoneNumber(newValue);
+      },
+      emergencyPhoneNumber(newValue) {
+        console.log('wah')
+        this.formatEmergencyPhoneNumber(newValue);
+      }
+    },
     computed: {
         filteredStates() {
             return this.states.filter(state => {
@@ -200,8 +210,68 @@ export default {
         },
     },
     methods: {
+        formatPhoneNumber(value) {
+            if (!value) return value;
+            const phoneNumber = value.replace(/[^\d]/g, '');
+            const phoneNumberLength = phoneNumber.length;
+            console.log('phoneNumberLength:', phoneNumberLength)
+            if (phoneNumberLength > 0) {
+                this.phoneNumber = this.phoneNumber
+            }        
+            if (phoneNumberLength == 1) {
+                this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 2) {
+                this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 3) {
+                this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength > 3) {
+                this.phoneNumber = `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+            }
+            if (phoneNumberLength > 6){
+                this.phoneNumber = `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(
+                3,
+                6,
+                )}-${phoneNumber.slice(6, 10)}`;
+            }
+        },
+        formatEmergencyPhoneNumber(value) {
+            if (!value) return value;
+            const phoneNumber = value.replace(/[^\d]/g, '');
+            const phoneNumberLength = phoneNumber.length;
+            console.log('phoneNumberLength:', phoneNumberLength)
+            if (phoneNumberLength > 0) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber
+            }
+            if (phoneNumberLength == 1) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 2) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 3) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength > 3) {
+                this.emergencyPhoneNumber = `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+            }
+            if (phoneNumberLength > 6){
+                this.emergencyPhoneNumber = `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(
+                3,
+                6,
+                )}-${phoneNumber.slice(6, 10)}`;
+            }
+        },
         submitForm() {
             console.log('form submitted')
+            this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            this.volunteer_info.phone = this.phoneNumber
+            this.volunteer_info.emergency_contact_phone = this.emergencyPhoneNumber
+            console.log('this.volunteer_info.phone', this.volunteer_info.phone)
+            console.log('this.phoneNumber:', this.phoneNumber)
             axios
             .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
             .then(() =>{
