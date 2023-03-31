@@ -32,7 +32,7 @@ def create_session():
         % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     execute_query(conn,query)
     
-    query_auto_logout = "CREATE EVENT " + event_name + " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 8 HOUR DO UPDATE session SET time_out = NOW() where time_in = '%s';" \
+    query_auto_logout = "CREATE EVENT " + event_name + " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 8 HOUR DO UPDATE session SET time_out = NOW() where time_in = '%s' && time_out is null;" \
         % (time_in)
     execute_query(conn,query_auto_logout)
     
