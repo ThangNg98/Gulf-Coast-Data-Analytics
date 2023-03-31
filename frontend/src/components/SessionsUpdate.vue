@@ -89,10 +89,10 @@ export default {
         this.getSession(); //need to acocunt for how many events and orgs there are. the more events and orgs the longer the delay
         setTimeout(() => {
             this.getEvents();
-        }, 100); // delay of 0.5 seconds
+        }, 100); // delay of 0.1 seconds
         setTimeout(() => {
             this.getOrgs();
-        }, 200); // delay of 1 second
+        }, 200); // delay of 0.2 second
     },
     methods: {
         submitForm() {
@@ -145,7 +145,7 @@ export default {
                     console.log(error);
             });
         },
-        getEvents() {
+        getOrgs() {
             axios.get('http://127.0.0.1:5000/read_orgs')
             .then(response => {
                 // iterate through JSON response and add orgs to orgs array
@@ -160,7 +160,7 @@ export default {
                 console.log(error);
             });
         },
-        getOrgs() {
+        getEvents() {
             axios.get('http://127.0.0.1:5000/read_events')
             .then(response => {
                 // iterate through JSON response and add orgs to orgs array

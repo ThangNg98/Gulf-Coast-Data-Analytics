@@ -105,19 +105,19 @@ export default {
         return {
             msg:"Update Volunteer",
             volunteer_info: { //use axios to call current information connected to current user
-                volunteer_id: 2,
-                first_name: 'John',
-                last_name: 'Smith',
+                volunteer_id: null,
+                first_name: null,
+                last_name: null,
                 phone:  useVolunteerPhoneStore().volunteerPhone,
-                email: 'name@example.com',
-                emergency_contact_fname: 'Jane',
-                emergency_contact_lname: 'Doe',
-                emergency_contact_phone: '0987654321',
-                address_line_1:'1234 Canal St',
-                address_line_2:'Box 12',
-                city:'Houston',
+                email: null,
+                emergency_contact_fname: null,
+                emergency_contact_lname: null,
+                emergency_contact_phone: null,
+                address_line_1:null,
+                address_line_2:null,
+                city: null,
                 state_id:'',
-                zip: 12345,
+                zip: null,
                 rel_id:''         
             },
             searchQuery: '',
@@ -199,19 +199,46 @@ export default {
             });
         },
     },
+    mounted() {
+        this.getVolunteerID()
+        setTimeout(() => {
+        this.getVolunteerData();
+        }, 100); // delay of 0.1 seconds
+    },
     methods: {
         submitForm() {
             console.log('form submitted')
             axios
             .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
             .then(() =>{
-                this.volunteer_info={}
                 alert('Volunteer Updated')
                 this.$router.push('/profile/update')
             })
             .catch((error)=>{
                 console.log(error);
             });
+    },
+    getVolunteerID() {
+            const phone = useVolunteerPhoneStore().volunteerPhone
+            axios
+                .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
+                .then((response) => {
+                    this.volunteer_info.volunteer_id = response.data[0].volunteer_id
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+    getVolunteerData() {
+        axios
+            .get(`http://127.0.0.1:5000/get_volunteer/${this.volunteer_info.volunteer_id}`)
+            .then((response) => {
+                this.volunteer_info = response.data[0]
+                console.log(this.volunteer_info)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }}
 </script>

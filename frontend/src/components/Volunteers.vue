@@ -15,7 +15,7 @@
                     <tbody>
                         <tr v-for="volunteer in volunteers"
                         @click="editVolunteers(volunteer.volunteer_id)">
-                            <td>{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
+                            <td style="text-align:left">{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
                             <!-- This v-if statement needs to check if the value is null and if it is display a 0 if it isnt then display the value-->
                             <td v-if="volunteer.total_hours == null">0</td>
                             <td v-else>{{ volunteer.total_hours }}</td>

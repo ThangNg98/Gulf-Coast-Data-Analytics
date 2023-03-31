@@ -15,6 +15,32 @@ CORS(app)
 app.config["DEBUG"] = True
 
 ############## SESSIONS ##################
+@app.route('/check_most_recent/<volunteer_id>', methods=['GET'])
+def check_most_recent(volunteer_id):
+    print('volunteer_id:', volunteer_id)
+    query = """
+        WITH most_recent AS (
+            SELECT MAX(session_id) AS max_session_id
+            FROM (
+                SELECT session_id, time_in 
+                FROM session
+                WHERE volunteer_id = '%s'
+                AND session_status_id = 1
+            ) AS recent_sessions
+        )
+        SELECT session_id, IF(time_out IS NULL, '1', '2') AS time_out
+        FROM session
+        WHERE session_id = (
+            SELECT max_session_id
+            FROM most_recent
+        );
+    """ % volunteer_id
+    rows = execute_read_query(conn, query)
+    print('rows:', rows)
+    return jsonify(rows)
+
+
+
 @app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
 def create_session():
     request_data = request.get_json() # stores json input into variables
@@ -292,7 +318,7 @@ def update_volunteer():
     new_rel_id = request_data['rel_id']
 
     ### query for updating data ###
-    query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s WHERE id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_id)
+    query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_id)
 
     execute_query(conn, query)
 
@@ -332,11 +358,11 @@ def admin_update_volunteer():
 @app.route('/delete_volunteer', methods =['POST']) # API allows user to set the volunteer status to inactive in the database: http://127.0.0.1:5000/delete_volunteer
 def delete_volunteer():
     request_data = request.get_json() # stores json input into variables
-    id = request_data['id']
+    id = request_data['volunteer_id']
     new_status_id = 2 
 
     ### query for updating data ###
-    query = "UPDATE volunteer SET volunteer_status_id=%s WHERE id=%s"%(new_status_id,id)
+    query = "UPDATE volunteer SET volunteer_status_id=%s WHERE volunteer_id=%s"%(new_status_id,id)
    
     execute_query(conn, query)
 
@@ -393,5 +419,18 @@ def add_volunteer():
         execute_query(conn, query)
 
         return '2'
+
+@app.route('/get_volunteer_id/<volunteer_phone>', methods=['GET'])
+def get_volunteer_id(volunteer_phone):
+    print('volunteer_phone:', volunteer_phone)
+    query = """
+        SELECT volunteer_id, first_name
+        FROM volunteer
+        WHERE phone = '%s'
+        AND volunteer_status_id = 1
+    """ % volunteer_phone
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
 if __name__ == "__main__":
     app.run()
