@@ -260,7 +260,16 @@ def delete_organization():
 @app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
 def read_volunteers():
 
-    query = "SELECT * FROM volunteer WHERE volunteer_status_id = 1" ### CHANGE ME THIS 2 IS FOR TESTING ###
+    # This query needs to join the volunteer table with the session table by volunteer_id and sum the total hours for each volunteer 
+    query = """SELECT volunteer.volunteer_id, volunteer.first_name, volunteer.last_name, volunteer.phone, volunteer.email, volunteer.emergency_contact_fname, 
+    volunteer.emergency_contact_lname, volunteer.emergency_contact_phone, volunteer.address_line_1, volunteer.address_line_2, volunteer.city, volunteer.volunteer_status_id, 
+    volunteer.date_created, volunteer.volunteer_status_id, volunteer.rel_id, volunteer.waiver_signed, volunteer.date_waiver_signed, volunteer.zip,
+    sum(session.total_hours) as total_hours 
+    FROM volunteer 
+    LEFT JOIN session 
+    ON volunteer.volunteer_id=session.volunteer_id 
+    WHERE volunteer.volunteer_status_id = 1 
+    GROUP BY volunteer.volunteer_id"""
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
