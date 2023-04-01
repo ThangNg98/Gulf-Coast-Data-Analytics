@@ -15,6 +15,32 @@ CORS(app)
 app.config["DEBUG"] = True
 
 ############## SESSIONS ##################
+@app.route('/check_most_recent/<volunteer_id>', methods=['GET'])
+def check_most_recent(volunteer_id):
+    print('volunteer_id:', volunteer_id)
+    query = """
+        WITH most_recent AS (
+            SELECT MAX(session_id) AS max_session_id
+            FROM (
+                SELECT session_id, time_in 
+                FROM session
+                WHERE volunteer_id = '%s'
+                AND session_status_id = 1
+            ) AS recent_sessions
+        )
+        SELECT session_id, IF(time_out IS NULL, '1', '2') AS time_out
+        FROM session
+        WHERE session_id = (
+            SELECT max_session_id
+            FROM most_recent
+        );
+    """ % volunteer_id
+    rows = execute_read_query(conn, query)
+    print('rows:', rows)
+    return jsonify(rows)
+
+
+
 @app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
 def create_session():
     request_data = request.get_json() # stores json input into variables
@@ -61,6 +87,86 @@ def check_out():
     execute_query(conn,query)
     return "Add check out time request successful"
 
+@app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
+#API to get Open Sessions
+def read_sessions():
+
+    query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
+            event.event_name,
+            organization.org_name,
+            DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
+            DATE_FORMAT(session.time_out, '%h:%i %p') AS time_out,
+            session_comment,
+            volunteer.phone
+            FROM session
+            JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
+            JOIN event ON session.event_id = event.event_id
+            JOIN organization ON session.org_id = organization.org_id
+            JOIN session_status ON session.session_status_id = session_status.session_status_id
+            WHERE session.session_status_id = 1 AND session.time_out IS NULL
+            ORDER BY volunteer_name; """ 
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+        # Helmut = gets all sessions
+        # Sends us ID
+        # In update page, we use ID to get info to fill fields
+
+        #Helmut send us everything
+@app.route('/read_session/<session_id>', methods = ['GET'])
+def read_session(session_id):
+    query = """
+        SELECT 
+            s.session_id, 
+            TIME_FORMAT(s.time_in, '%%H:%%i') AS time_in, 
+            TIME_FORMAT(s.time_out, '%%H:%%i') AS time_out, 
+            DATE_FORMAT(s.session_date, '%%Y-%%m-%%d') AS session_date,
+            s.session_comment,
+            CONCAT(v.first_name, ' ', v.last_name) AS full_name,
+            s.org_id,
+            s.event_id
+        FROM session s
+        JOIN volunteer v ON s.volunteer_id = v.volunteer_id
+        WHERE s.session_id = %s;
+    """ % session_id
+    rows = execute_read_query(conn,query)
+    print('LORI', rows)
+    return jsonify(rows)        
+
+@app.route('/update_session', methods = ['POST'])
+def update_session():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_time_in = request_data['time_in']
+    new_time_out = request_data['time_out']
+    new_session_date = request_data['session_date']
+    new_session_comment = request_data['session_comment']
+    new_org_id = request_data['org_id']
+    new_event_id = request_data['event_id']
+
+    if (request_data['time_out'] == None): # if there's not time out
+        query = "UPDATE session SET time_in='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in,  new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
+
+    else:
+        ### query for updating data ###
+        query = "UPDATE session SET time_in='%s', time_out='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
+
+    execute_query(conn, query)
+
+    return "Update request successful"
+
+@app.route('/delete_session', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/delete_session
+def delete_session():
+    request_data = request.get_json() # stores json input into variables
+    session_id = request_data['session_id']
+    new_status_id = 2 
+
+    ### query for updating data ###
+    query = "UPDATE session SET session_status_id=%s WHERE session_id=%s"%(new_status_id,session_id)
+
+    execute_query(conn, query)
+
+    return "Delete request successful"   
 
 ############# EVENTS ###############
 
@@ -197,7 +303,16 @@ def delete_organization():
 @app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
 def read_volunteers():
 
-    query = "SELECT * FROM volunteer WHERE volunteer_status_id = 1" ### CHANGE ME THIS 2 IS FOR TESTING ###
+    # This query needs to join the volunteer table with the session table by volunteer_id and sum the total hours for each volunteer 
+    query = """SELECT volunteer.volunteer_id, volunteer.first_name, volunteer.last_name, volunteer.phone, volunteer.email, volunteer.emergency_contact_fname, 
+    volunteer.emergency_contact_lname, volunteer.emergency_contact_phone, volunteer.address_line_1, volunteer.address_line_2, volunteer.city, volunteer.volunteer_status_id, 
+    volunteer.date_created, volunteer.volunteer_status_id, volunteer.rel_id, volunteer.waiver_signed, volunteer.date_waiver_signed, volunteer.zip,
+    sum(session.total_hours) as total_hours 
+    FROM volunteer 
+    LEFT JOIN session 
+    ON volunteer.volunteer_id=session.volunteer_id 
+    WHERE volunteer.volunteer_status_id = 1 
+    GROUP BY volunteer.volunteer_id"""
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -260,11 +375,11 @@ def admin_update_volunteer():
 @app.route('/delete_volunteer', methods =['POST']) # API allows user to set the volunteer status to inactive in the database: http://127.0.0.1:5000/delete_volunteer
 def delete_volunteer():
     request_data = request.get_json() # stores json input into variables
-    id = request_data['id']
+    id = request_data['volunteer_id']
     new_status_id = 2 
 
     ### query for updating data ###
-    query = "UPDATE volunteer SET volunteer_status_id=%s WHERE id=%s"%(new_status_id,id)
+    query = "UPDATE volunteer SET volunteer_status_id=%s WHERE volunteer_id=%s"%(new_status_id,id)
    
     execute_query(conn, query)
 
@@ -321,5 +436,18 @@ def add_volunteer():
         execute_query(conn, query)
 
         return '2'
+
+@app.route('/get_volunteer_id/<volunteer_phone>', methods=['GET'])
+def get_volunteer_id(volunteer_phone):
+    print('volunteer_phone:', volunteer_phone)
+    query = """
+        SELECT volunteer_id, first_name
+        FROM volunteer
+        WHERE phone = '%s'
+        AND volunteer_status_id = 1
+    """ % volunteer_phone
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
 if __name__ == "__main__":
     app.run()

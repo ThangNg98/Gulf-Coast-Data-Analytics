@@ -15,8 +15,8 @@
                     <tbody>
                         <tr v-for="org in orgs"
                         @click="editOrgs(org.org_id)">
-                            <td>{{ org.org_name }}</td>
-                            <td>{{ org.address_line_1 }}</td>
+                            <td style="text-align:left">{{ org.org_name }}</td>
+                            <td style="text-align:left">{{ org.address_line_1 }}</td>
                         </tr>
                     </tbody>
                 </table>

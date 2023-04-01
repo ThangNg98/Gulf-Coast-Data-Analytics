@@ -5,7 +5,7 @@
             <!--event selection-->
             <div class="mb-3 d-flex justify-content-between">
                 <label for="eventSelect" class="text-start"><h4>Event</h4></label>
-                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" v-model="session.event_id">
+                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn">
                 <option :value=null>-</option>
                 <option v-for="event in events" :value="event.event_id" :key="event.event_id">
                     {{ event.event_name }}
@@ -16,7 +16,7 @@
             <!--org selection-->
             <div class="d-flex justify-content-between">
                 <label for="orgSelect"><h4>Organization</h4></label>
-                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id">
+                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn">
                     <option :value=null>-</option>
                     <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
                 </select>
@@ -28,14 +28,22 @@
     <!--checkin checkout-->
     <div class="d-flex justify-content-center mb-4">
         <div class="d-inline-flex flex-column border border-dark" style="width:300px;">
-                <div :class="{ 'text-muted': checkedIn }" class="p-2 float-start">
-                    <div class="d-inline-block float-start p-2">You are checked out</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedInButton = true; getTime(); create_session(); checkedIn = !checkedIn" :disabled="checkedIn">Check In</button></div>
+                <div :class="{ 'text-muted': alreadyCheckedIn }" class="p-2 float-start">
+                    <div class="d-inline-block float-start p-2">You are checked out</div><div 
+                    class="d-inline-block float-end h-100" 
+                    style="width:100px"><button class="w-100 h-100" type="button" 
+                    @click="checkedInButton = true; getTime(); create_session(); alreadyCheckedIn = !alreadyCheckedIn" 
+                    :disabled="alreadyCheckedIn">Check In</button></div>
                 </div>
-                <div :class="{ 'text-muted': !checkedIn }" class="p-2 float-end">
-                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios(); checkedIn = !checkedIn;" :disabled="!checkedIn">Check Out</button></div>
+                <div :class="{ 'text-muted': !alreadyCheckedIn }" class="p-2 float-end">
+                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios(); alreadyCheckedIn = !alreadyCheckedIn;" :disabled="!alreadyCheckedIn">Check Out</button></div>
                 </div>
         </div>
     </div>
+    <h2 style="text-align: center"> Current Session</h2>
+    <p>session.session_id: {{ session.session_id }}</p>
+    <p v-if="session.event_id" > session.session_event: {{ session.event_id }} </p>
+    <p>session.org_id: {{ session.org_id }}</p>
     <p>events: {{ this.events }}</p>
     <p>orgs: {{ this.orgs }}</p>
     <p>session.volunteer_id: {{ session.volunteer_id }}</p>
@@ -52,27 +60,53 @@ export default {
             orgs: [],
             events: [],
             session: {
-                session_id: 6,
+                session_id: null,
                 time_in: null,//now.time(),
                 time_out: null,
                 session_date: this.getDate(),//now.date(), 
                 session_comment: "CURRENT TEST 10:35pm",
-                org_id: null,
-                event_id: null,
-                session_status_id: 1,
+                org_id: null, 
+                event_id: null, 
+                session_status_id: "1",
                 volunteer_id: useVolunteerPhoneStore().volunteerID // volunteer id needs to be stored and pulled
             },
             checkedInButton: false,
-            checkedOutButton: false
+            checkedOutButton: false,
+            alreadyCheckedIn: false
         }
     },
     mounted() {
-        this.getEvents()
+        this.checkRecent();
         setTimeout(() => {
-            this.getOrgs()
-        }, 250)        
+            this.getEvents();
+        }, 200); // delay of 0.2 seconds
+        setTimeout(() => {
+            this.getOrgs();
+        }, 300); // delay of 0.3 seconds
     },
     methods: {
+        checkRecent() {
+            axios
+                .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
+                .then((response) => {
+                    if (response.data[0]) {
+                        this.session.session_id = response.data[0].session_id
+                        const temp_checkedIn = response.data[0].time_out
+                        if (temp_checkedIn == '1') {
+                            this.alreadyCheckedIn = true
+                        }
+                        else if (temp_checkedIn == '2') {
+                            this.alreadyCheckedIn = false
+                        }
+                    }
+                    else {
+                        this.alreadyCheckedIn = false
+                    }
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+        },
         getEvents() {
             axios
                 .get('http://127.0.0.1:5000/read_events')
@@ -103,18 +137,25 @@ export default {
             axios
                 .post('http://127.0.0.1:5000/create_session', this.session)
                 .then(() => {
+                    console.log(this.session.event_id)
                 })
                 .catch((error) => {
                     console.log(error);
-          });
-          console.log("create_session success");
+            });
+            console.log("create_session success");
+            setTimeout(() => {
+                axios
+                    .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
+                    .then((response) => {
+                        this.session.session_id = response.data[0].session_id
+                    })
+            }, 100); 
         },
         async update_session_axios() { //call axios
             console.log('this.session:', this.session)
             axios
                 .post('http://127.0.0.1:5000/check_out', this.session)
                 .then(() => {
-                    this.session = {}
                 })
                 .catch((error) => {
                     console.log(error);
