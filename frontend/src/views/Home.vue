@@ -75,7 +75,7 @@
       axios
         .get('http://127.0.0.1:5000/volunteer_phone/')
         .then(response => {
-          console.log('response')
+          console.log('volunteer_phone response:', response)
           this.volunteerPhoneList = response.data;
         })
         .catch(error => {
@@ -128,9 +128,10 @@
           if (volunteer) {
             console.log('Volunteer found in list')
             console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
-            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber)
-            this.$router.push('/profile/checkin')
+            console.log('setVolunteerID before: ', useVolunteerPhoneStore().volunteerID)
+            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id)
             console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
+            console.log('setVolunteerID after: ', useVolunteerPhoneStore().volunteerID)
             alert('Login Success')
             this.$router.push('/profile/checkin')
           }
