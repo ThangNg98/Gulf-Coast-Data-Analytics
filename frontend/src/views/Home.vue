@@ -1,32 +1,32 @@
 <template>
-    <main>
-      <div class="container">
-        <div class="text-center mt-5">
-          <h1>{{ msg }}</h1>
-        </div>
-        <!--Form for submitting phone number-->
-        <form class="mt-5" @submit.prevent="handleSubmitForm">
-          <!--Header-->
-          <div class="form-group text-center">
-            <h2>Enter Phone Number</h2>
-            <!--If phone number input is not exactly 10 digits upon submit, this error message appears-->
-            <div class="invalid-feedback" v-if="error">
-              Phone number must be 10 digits.
-            </div>
-          </div>
-          <!--Phone number input field-->
-          <div class="form-group">
-            <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber" maxlength="10">
-          </div>
-          <br>
-          <!--Submit button-->
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
+  <main>
+    <div class="container">
+      <div class="text-center mt-5">
+        <h1>{{ msg }}</h1>
       </div>
-    </main>
-  </template>
+      <!--Form for submitting phone number-->
+      <form class="mt-5" @submit.prevent="handleSubmitForm">
+        <!--Header-->
+        <div class="form-group text-center">
+          <h2>Enter Phone Number</h2>
+          <!--If phone number input is not exactly 10 digits upon submit, this error message appears-->
+          <div class="invalid-feedback" v-if="error">
+            Phone number must be 10 digits.
+          </div>
+        </div>
+        <!--Phone number input field-->
+        <div class="form-group">
+          <input type="tel" class="form-control mx-auto" required style="max-width: 300px" @keydown="reviewKey" v-model="phoneNumber" maxlength="14" >
+        </div>
+        <br>
+        <!--Submit button-->
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</template>
   
 <script>
   import axios from 'axios'  
@@ -66,11 +66,16 @@
         volunteerPhoneList: [],
       }
     },
+    watch: {
+      phoneNumber(newValue) {
+        this.formatPhoneNumber(newValue);
+      }
+    },
     mounted() {
       axios
         .get('http://127.0.0.1:5000/volunteer_phone/')
         .then(response => {
-          console.log('response')
+          console.log('volunteer_phone response:', response)
           this.volunteerPhoneList = response.data;
         })
         .catch(error => {
@@ -78,10 +83,40 @@
         })
     },
     methods: {
+      formatPhoneNumber(value) {
+        if (!value) return value;
+        const phoneNumber = value.replace(/[^\d]/g, '');
+        const phoneNumberLength = phoneNumber.length;
+        console.log('phoneNumberLength:', phoneNumberLength)
+        if (phoneNumberLength > 0) {
+          this.phoneNumber = this.phoneNumber
+        }        
+        if (phoneNumberLength == 1) {
+          this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+        }
+        if (phoneNumberLength == 2) {
+          this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+        }
+        if (phoneNumberLength == 3) {
+          this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+        }
+        if (phoneNumberLength > 3) {
+          this.phoneNumber = `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+        }
+        if (phoneNumberLength > 6){
+          this.phoneNumber = `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(
+          3,
+          6,
+        )}-${phoneNumber.slice(6, 10)}`;
+        }
+      },
       //method called when form submits
       handleSubmitForm() {
         // error checking - if phone number is not exactly 10 digits, then error variable is set to true, revealing the error message
         const phoneNumberRegex = /^\d{10}$/
+
+        this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+        console.log('this.phoneNumber:', this.phoneNumber)
 
         // input is 10 digits, form is submitted
         if (phoneNumberRegex.test(this.phoneNumber)) {
@@ -93,9 +128,10 @@
           if (volunteer) {
             console.log('Volunteer found in list')
             console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
-            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber)
-            this.$router.push('/profile/checkin')
+            console.log('setVolunteerID before: ', useVolunteerPhoneStore().volunteerID)
+            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id)
             console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
+            console.log('setVolunteerID after: ', useVolunteerPhoneStore().volunteerID)
             alert('Login Success')
             this.$router.push('/profile/checkin')
           }

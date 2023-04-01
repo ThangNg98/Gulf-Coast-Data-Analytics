@@ -6,16 +6,22 @@
             <div class="mb-3 d-flex justify-content-between">
                 <label for="eventSelect" class="text-start"><h4>Event</h4></label>
                 <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn">
-                    <option v-for="event in events" :key="event.event_id" :value="event.event_id">{{ event.event_name }}</option>
+                <option :value=null>-</option>
+                <option v-for="event in events" :value="event.event_id" :key="event.event_id">
+                    {{ event.event_name }}
+                </option>
                 </select>
             </div>
+            <p>session.event_id {{ session.event_id }}</p>
             <!--org selection-->
             <div class="d-flex justify-content-between">
                 <label for="orgSelect"><h4>Organization</h4></label>
                 <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn">
-                    <option v-for="org in orgs" :key="org.org_id" :value="org.org_id">{{ org.org_name }}</option>
+                    <option :value=null>-</option>
+                    <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
                 </select>
             </div>
+            <p>session.org_id: {{session.org_id}}</p>
         </div>
     </div>
     <br>
@@ -38,18 +44,21 @@
     <p>session.session_id: {{ session.session_id }}</p>
     <p v-if="session.event_id" > session.session_event: {{ session.event_id }} </p>
     <p>session.org_id: {{ session.org_id }}</p>
+    <p>events: {{ this.events }}</p>
+    <p>orgs: {{ this.orgs }}</p>
+    <p>session.volunteer_id: {{ session.volunteer_id }}</p>
     </div>
 </template>
 <script>
 import axios from 'axios';
-import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore.js'
+import { useVolunteerPhoneStore } from '../stores/VolunteerPhoneStore'
 
 export default {
     data() {
-        return {            
-            events: [],
+        return {
+            checkedIn: false, //checked in state
             orgs: [],
-            //test data
+            events: [],
             session: {
                 session_id: null,
                 time_in: null,//now.time(),
@@ -59,7 +68,7 @@ export default {
                 org_id: null, 
                 event_id: null, 
                 session_status_id: "1",
-                volunteer_id: null
+                volunteer_id: useVolunteerPhoneStore().volunteerID // volunteer id needs to be stored and pulled
             },
             checkedInButton: false,
             checkedOutButton: false,
@@ -67,29 +76,15 @@ export default {
         }
     },
     mounted() {
-        this.getVolunteerID()
-        setTimeout(() => {
-            this.checkRecent();
-        }, 100); // delay of 0.1 seconds
+        this.checkRecent();
         setTimeout(() => {
             this.getEvents();
-        }, 200); // delay of 0.1 seconds
+        }, 200); // delay of 0.2 seconds
         setTimeout(() => {
             this.getOrgs();
-        }, 300); // delay of 0.1 seconds
+        }, 300); // delay of 0.3 seconds
     },
     methods: {
-        getVolunteerID() {
-            const phone = useVolunteerPhoneStore().volunteerPhone
-            axios
-                .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
-                .then((response) => {
-                    this.session.volunteer_id = response.data[0].volunteer_id
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }, // yeet
         checkRecent() {
             axios
                 .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
@@ -109,6 +104,28 @@ export default {
                     }
                 })
                 .catch((error) => {
+                  console.log(error)
+                })
+        },
+        getEvents() {
+            axios
+                .get('http://127.0.0.1:5000/read_events')
+                .then((response) => {
+                    console.log('read_events response:', response)
+                    this.events = response.data.map(event => ({ event_id: event.event_id, event_name: event.event_name }));
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+        getOrgs() {
+            axios
+                .get('http://127.0.0.1:5000/read_orgs')
+                .then((response) => {
+                    console.log('read_orgs response:', response)
+                    this.orgs = response.data.map(org => ({org_id: org.org_id, org_name: org.org_name}));
+                })
+                .catch(error => {
                     console.log(error)
                 })
         },
@@ -170,36 +187,6 @@ export default {
                 this.checkedOutButton = false
                 this.session.time_out = mysqlTime
             }
-        },
-        getOrgs() {
-            axios.get('http://127.0.0.1:5000/read_orgs')
-            .then(response => {
-                // iterate through JSON response and add orgs to orgs array
-                for (var i = 0; i < response.data.length; i++) {
-                    this.orgs.push({
-                        org_name: response.data[i].org_name,
-                        org_id: response.data[i].org_id
-                    });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        },
-        getEvents() {
-            axios.get('http://127.0.0.1:5000/read_events')
-            .then(response => {
-                // iterate through JSON response and add orgs to orgs array
-                for (var i = 0; i < response.data.length; i++) {
-                    this.events.push({
-                        event_name: response.data[i].event_name,
-                        event_id: response.data[i].event_id
-                    });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
         }
     }
 }
