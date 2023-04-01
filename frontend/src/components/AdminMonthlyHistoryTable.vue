@@ -1,6 +1,5 @@
 <template>
     <div class="table-responsive">
-            <h6>Monthly History</h6>
             <table class="table w-100">
                 <thead>
                     <tr>
