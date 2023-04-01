@@ -51,16 +51,34 @@ def create_session():
     event_id = request_data['event_id']
     session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
+
+    if (org_id == None):
+        query = """
+            INSERT INTO session (
+                time_in,
+                session_date,
+                session_comment,
+                event_id,
+                session_status_id,
+                volunteer_id
+            )
+            VALUES (
+                '%s', '%s', '%s', '%s', '%s', '%s'
+            );
+        """ \
+        % (time_in, session_date, session_comment, event_id, session_status_id, volunteer_id)
     
-    event_name = "event" + str(time_in).replace(":", "")
+    else:
+        query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+            % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     
-    query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
-        % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     execute_query(conn,query)
+    event_name = "event" + str(time_in).replace(":", "")
     
     query_auto_logout = "CREATE EVENT " + event_name + " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 8 HOUR DO UPDATE session SET time_out = NOW() where time_in = '%s' && time_out is null;" \
         % (time_in)
     execute_query(conn,query_auto_logout)
+
     
     return "Add session request successful"
 
@@ -383,7 +401,7 @@ def get_volunteer(volunteer_id):
 @app.route('/volunteer_phone/', methods = ['GET'])
 def volunteer_phone():
     query = """
-        SELECT phone
+        SELECT volunteer_id, phone
         FROM volunteer
     """
     rows = execute_read_query(conn,query)

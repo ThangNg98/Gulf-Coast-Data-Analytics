@@ -5,12 +5,15 @@ import { defineStore } from 'pinia'
 export const useVolunteerPhoneStore = defineStore('volunteerphone', {
   //session state that determines whether user is logged in
   state: () => ({
-    volunteerPhone: null
+    volunteerPhone: null,
+    volunteerID: null
   }),
   //actions that can be called by Vue components to log the user in and log them out
   actions: {
-    setVolunteerPhone(phone) {
+    setVolunteerPhone(phone, ID) {
       this.volunteerPhone = phone
+      this.volunteerID = ID
+
     },
     clearVolunteerPhone() {
       this.volunteerPhone = null
