@@ -28,7 +28,11 @@ def check_most_recent(volunteer_id):
                 AND session_status_id = 1
             ) AS recent_sessions
         )
-        SELECT session_id, IF(time_out IS NULL, '1', '2') AS time_out
+        SELECT 
+            session_id, 
+            IF(time_out IS NULL, '1', '2') AS time_out,
+            org_id,
+            event_id
         FROM session
         WHERE session_id = (
             SELECT max_session_id
