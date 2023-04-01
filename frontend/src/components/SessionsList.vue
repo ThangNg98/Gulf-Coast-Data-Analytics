@@ -5,7 +5,7 @@
     </div>
     <div class="container"> 
         <div class="table-responsive-md">
-            <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
+            <table class="table table-bordered" style="margin:auto; text-align: left; max-width: 50%; margin-top: 2rem">
                     <thead>
                         <tr>
                         <th scope="col">Volunteer Name</th>
