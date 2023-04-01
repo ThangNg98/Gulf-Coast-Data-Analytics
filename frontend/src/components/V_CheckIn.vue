@@ -44,6 +44,7 @@
     <p>session.session_id: {{ session.session_id }}</p>
     <p v-if="session.event_id" > session.session_event: {{ session.event_id }} </p>
     <p>session.org_id: {{ session.org_id }}</p>
+    <p>session.event_id: {{ session.event_id }}</p>
     <p>events: {{ this.events }}</p>
     <p>orgs: {{ this.orgs }}</p>
     <p>session.volunteer_id: {{ session.volunteer_id }}</p>
@@ -76,13 +77,15 @@ export default {
         }
     },
     mounted() {
-        this.checkRecent();
+        setTimeout(() => {
+            this.checkRecent();
+        }, 500); 
         setTimeout(() => {
             this.getEvents();
-        }, 200); // delay of 0.2 seconds
+        }, 1000); 
         setTimeout(() => {
             this.getOrgs();
-        }, 300); // delay of 0.3 seconds
+        }, 1500); 
     },
     methods: {
         checkRecent() {
@@ -90,9 +93,11 @@ export default {
                 .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
                 .then((response) => {
                     if (response.data[0]) {
-                        this.session.session_id = response.data[0].session_id
                         const temp_checkedIn = response.data[0].time_out
                         if (temp_checkedIn == '1') {
+                            this.session.session_id = response.data[0].session_id
+                            this.session.org_id = response.data[0].org_id
+                            this.session.event_id = response.data[0].event_id
                             this.alreadyCheckedIn = true
                         }
                         else if (temp_checkedIn == '2') {
@@ -149,13 +154,15 @@ export default {
                     .then((response) => {
                         this.session.session_id = response.data[0].session_id
                     })
-            }, 100); 
+            }, 500); 
         },
         async update_session_axios() { //call axios
             console.log('this.session:', this.session)
             axios
                 .post('http://127.0.0.1:5000/check_out', this.session)
                 .then(() => {
+                    this.session.org_id = null
+                    this.session.event_id = null
                 })
                 .catch((error) => {
                     console.log(error);

@@ -210,10 +210,12 @@ export default {
         },
     },
     mounted() {
-        this.getVolunteerID()
+        setTimeout(() => {
+            this.getVolunteerID();
+        }, 500);
         setTimeout(() => {
         this.getVolunteerData();
-        }, 100); // delay of 0.1 seconds
+        }, 1000);
     },
     methods: {
         formatPhoneNumber(value) {
