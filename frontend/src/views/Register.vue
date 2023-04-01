@@ -8,24 +8,29 @@
         <form @submit.prevent="submitForm">
             <div>
                 <div class="row">
-                    <div class="col"> 
+                    <div class="row">
+                    <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
-                    </div>
-                    <div class="col"> 
+                    </div></div>
+                    <div class="row">
+                    <div class="col-8"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.last_name">
-                    </div>
+                    </div></div>
                 </div>
                 <div class="row">
-                    <div class="col"> 
+                    <div class="row">
+                    <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone" maxlength="14">
                     </div>
+                    </div>
+                    <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.email">
-                    </div>
+                    </div></div>
                     <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>

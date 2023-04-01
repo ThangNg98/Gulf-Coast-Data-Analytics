@@ -27,6 +27,7 @@
         </div>
     </div>
     <div v-if="checkedIn">
+        <div class="text-center"><h6>In Session</h6></div>
         <table class="table">
             <thead>
                 <tr>
@@ -55,7 +56,7 @@
                     <div class="d-inline-block float-start p-2">You are checked out</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="create_session(); this.session_creation_time = getTime(); checkedIn = !checkedIn;" :disabled="checkedIn">Check In</button></div>
                 </div>
                 <div :class="{ 'text-muted': !checkedIn }" class="p-2 float-end">
-                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedIn = !checkedIn" :disabled="!checkedIn">Check Out</button></div>
+                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkOut()" :disabled="!checkedIn">Check Out</button></div>
                 </div>
         </div>
     </div>
@@ -115,6 +116,13 @@ export default {
             var secondHalf = today.toJSON().slice(11,19);
             var full = firstHalf + " " + secondHalf;
             return full
+        },
+        checkOut() {
+            if (confirm("Are you sure you want to close your session?")) {
+                this.checkedIn = !this.checkedIn;
+            } else {
+            }
+            
         }
     }
 }
