@@ -52,10 +52,15 @@ def create_session():
     session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
     
+    event_name = "event" + str(time_in).replace(":", "")
+    
     query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
         % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     execute_query(conn,query)
     
+    query_auto_logout = "CREATE EVENT " + event_name + " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 8 HOUR DO UPDATE session SET time_out = NOW() where time_in = '%s' && time_out is null;" \
+        % (time_in)
+    execute_query(conn,query_auto_logout)
     
     return "Add session request successful"
 
