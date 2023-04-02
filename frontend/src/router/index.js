@@ -9,7 +9,17 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       props: true,
-      component: () => import('../views/Home.vue')
+      component: () => import('../views/Home.vue'),
+      beforeEnter: (to, from, next) => {
+        const volunteerPhone = useVolunteerPhoneStore().volunteerPhone
+        if (volunteerPhone) {
+          // User is logged in, redirect to /profile/checkin
+          next('/profile/checkin')
+        } else {
+          // User is not logged in, allow access to Home page
+          next()
+        }
+      }
     },
     {
       path: '/register',
@@ -49,22 +59,6 @@ const router = createRouter({
               next()
             }
           },
-        },
-        {
-          name: 'test',
-          path: '/profile/test',
-          component: () => import('@/components/test_checkin.vue'),
-          beforeEnter: (to, from, next) => {
-            const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
-            console.log('volunteerLoggedIn: ', volunteerLoggedIn)
-            if (volunteerLoggedIn == null) {
-              alert('You do not have access to view this')
-              next('/')
-            } else {
-              // continue to the requested route if user is logged in
-              next()
-            }
-          }
         },
         {
           name: 'ProfileHistory',
