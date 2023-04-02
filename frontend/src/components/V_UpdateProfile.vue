@@ -3,43 +3,42 @@
         <h3>Volunteer</h3>
         <form @submit.prevent="submitForm">
             <div>
-                <div class="row">
                     <div class="row">
                     <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
                     </div></div>
-                    <div class="row">
+                    <div class="row mt-2">
                     <div class="col-8"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.last_name">
                     </div></div>
-                </div>
-                <div class="row">
-                    <div class="row">
+                
+                
+                    <div class="row mt-2">
                     <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone" maxlength="14">
                     </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-2">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.email">
                     </div></div>
-                    <div class="row">
+                    <div class="row mt-2">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_1">
                     </div>
-                </div>
-                <div class="row">
+                
+                <div class="row mt-2">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 2</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_2">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">City</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.city">
@@ -66,21 +65,25 @@
             <h3> Emergency Contact</h3>
             <div>
                 <div class="row">
-                    <div class="col"> 
+                    <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter First Name" v-model="volunteer_info.emergency_contact_fname">
                     </div>
-                    <div class="col"> 
+                    </div>
+                    <div class="row">
+                    <div class="col-8"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Last Name" v-model="volunteer_info.emergency_contact_lname">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col"> 
+                <div class="row mt-2">
+                    <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="volunteer_info.emergency_contact_phone">
                     </div>
-                    <div class="col"> 
+                    </div>
+                    <div class="row mt-2">
+                    <div class="col-7"> 
                         <label for="exampleFormControlInput1" class="form-label">Relationship</label>
                         <div>
                             <div>
