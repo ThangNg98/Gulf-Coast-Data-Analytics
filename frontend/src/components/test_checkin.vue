@@ -58,10 +58,7 @@
                     </table>
     </div>
     </div>
-    <p>session.session_id: {{ session.session_id }}</p>
-    <p>session: {{session}}</p>
-    <p>events: {{ events }}</p>
-    <p>orgs: {{ orgs }}</p>
+
 
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
