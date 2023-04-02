@@ -3,42 +3,38 @@
         <h3>Volunteer</h3>
         <form @submit.prevent="submitForm">
             <div>
-                    <div class="row">
-                    <div class="col-6"> 
+                <div class="row">
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
-                    </div></div>
-                    <div class="row mt-2">
-                    <div class="col-8"> 
+                    </div>
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.last_name">
-                    </div></div>
-                
-                
-                    <div class="row mt-2">
-                    <div class="col-6"> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone" maxlength="14">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="phoneNumber" maxlength="14">
                     </div>
-                    </div>
-                    <div class="row mt-2">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.email">
-                    </div></div>
-                    <div class="row mt-2">
+                    </div>
+                    <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_1">
                     </div>
-                
-                <div class="row mt-2">
+                </div>
+                <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 2</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_2">
                     </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">City</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.city">
@@ -65,25 +61,21 @@
             <h3> Emergency Contact</h3>
             <div>
                 <div class="row">
-                    <div class="col-6"> 
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter First Name" v-model="volunteer_info.emergency_contact_fname">
                     </div>
-                    </div>
-                    <div class="row">
-                    <div class="col-8"> 
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Last Name" v-model="volunteer_info.emergency_contact_lname">
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-6"> 
+                <div class="row">
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="volunteer_info.emergency_contact_phone">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="emergencyPhoneNumber" maxlength="14">
                     </div>
-                    </div>
-                    <div class="row mt-2">
-                    <div class="col-7"> 
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Relationship</label>
                         <div>
                             <div>
@@ -104,6 +96,7 @@
 </template>
 
 <script>
+import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore.js'
 import axios from "axios";
 export default {
     name: 'Register',
@@ -111,21 +104,23 @@ export default {
         return {
             msg:"Update Volunteer",
             volunteer_info: { //use axios to call current information connected to current user
-                id:1,
-                first_name: 'John',
-                last_name: 'Smith',
-                phone:  '1234567890',
-                email: 'name@example.com',
-                emergency_contact_fname: 'Jane',
-                emergency_contact_lname: 'Doe',
-                emergency_contact_phone: '0987654321',
-                address_line_1:'1234 Canal St',
-                address_line_2:'Box 12',
-                city:'Houston',
+                volunteer_id: null,
+                first_name: null,
+                last_name: null,
+                phone:  useVolunteerPhoneStore().volunteerPhone,
+                email: null,
+                emergency_contact_fname: null,
+                emergency_contact_lname: null,
+                emergency_contact_phone: null,
+                address_line_1:null,
+                address_line_2:null,
+                city: null,
                 state_id:'',
-                zip: 12345,
+                zip: null,
                 rel_id:''         
             },
+            phoneNumber: useVolunteerPhoneStore().volunteerPhone,
+            emergencyPhoneNumber: '0987654321',
             searchQuery: '',
             states: [
                 { name: 'Alabama', id: 1 },
@@ -193,6 +188,15 @@ export default {
             ]
         };
     },
+    watch: {
+      phoneNumber(newValue) {
+        this.formatPhoneNumber(newValue);
+      },
+      emergencyPhoneNumber(newValue) {
+        console.log('wah')
+        this.formatEmergencyPhoneNumber(newValue);
+      }
+    },
     computed: {
         filteredStates() {
             return this.states.filter(state => {
@@ -205,19 +209,108 @@ export default {
             });
         },
     },
+    mounted() {
+        setTimeout(() => {
+            this.getVolunteerID();
+        }, 500);
+        setTimeout(() => {
+        this.getVolunteerData();
+        }, 1000);
+    },
     methods: {
+        formatPhoneNumber(value) {
+            if (!value) return value;
+            const phoneNumber = value.replace(/[^\d]/g, '');
+            const phoneNumberLength = phoneNumber.length;
+            console.log('phoneNumberLength:', phoneNumberLength)
+            if (phoneNumberLength > 0) {
+                this.phoneNumber = this.phoneNumber
+            }        
+            if (phoneNumberLength == 1) {
+                this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 2) {
+                this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 3) {
+                this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength > 3) {
+                this.phoneNumber = `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+            }
+            if (phoneNumberLength > 6){
+                this.phoneNumber = `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(
+                3,
+                6,
+                )}-${phoneNumber.slice(6, 10)}`;
+            }
+        },
+        formatEmergencyPhoneNumber(value) {
+            if (!value) return value;
+            const phoneNumber = value.replace(/[^\d]/g, '');
+            const phoneNumberLength = phoneNumber.length;
+            console.log('phoneNumberLength:', phoneNumberLength)
+            if (phoneNumberLength > 0) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber
+            }
+            if (phoneNumberLength == 1) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 2) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength == 3) {
+                this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            }
+            if (phoneNumberLength > 3) {
+                this.emergencyPhoneNumber = `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+            }
+            if (phoneNumberLength > 6){
+                this.emergencyPhoneNumber = `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(
+                3,
+                6,
+                )}-${phoneNumber.slice(6, 10)}`;
+            }
+        },
         submitForm() {
             console.log('form submitted')
+            this.phoneNumber = this.phoneNumber.replace(/[^\d]/g, '');
+            this.emergencyPhoneNumber = this.emergencyPhoneNumber.replace(/[^\d]/g, '');
+            this.volunteer_info.phone = this.phoneNumber
+            this.volunteer_info.emergency_contact_phone = this.emergencyPhoneNumber
+            console.log('this.volunteer_info.phone', this.volunteer_info.phone)
+            console.log('this.phoneNumber:', this.phoneNumber)
             axios
             .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
             .then(() =>{
-                this.volunteer_info={}
                 alert('Volunteer Updated')
                 this.$router.push('/profile/update')
             })
             .catch((error)=>{
                 console.log(error);
             });
+    },
+    getVolunteerID() {
+            const phone = useVolunteerPhoneStore().volunteerPhone
+            axios
+                .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
+                .then((response) => {
+                    this.volunteer_info.volunteer_id = response.data[0].volunteer_id
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+    getVolunteerData() {
+        axios
+            .get(`http://127.0.0.1:5000/get_volunteer/${this.volunteer_info.volunteer_id}`)
+            .then((response) => {
+                this.volunteer_info = response.data[0]
+                console.log(this.volunteer_info)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }}
 </script>

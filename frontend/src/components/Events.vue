@@ -16,8 +16,8 @@
                         <tr 
                         @click="editEvent(event.event_id)"
                         v-for="event in events" >
-                            <td>{{ event.event_name }}</td>
-                            <td>{{ event.event_description }}</td>
+                            <td style="text-align:left">{{ event.event_name }}</td>
+                            <td style="text-align:left">{{ event.event_description }}</td>
                         </tr>
                     </tbody>
                 </table>

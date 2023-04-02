@@ -147,7 +147,8 @@ export default {
                 zip: '',
                 rel_id:'',
                 waiver_signed: '',
-                date_waiver_signed: ''               
+                date_waiver_signed: '' ,
+                total_hours: ''              
             },
             updateButtonClicked: false,
             deleteButtonClicked: false,

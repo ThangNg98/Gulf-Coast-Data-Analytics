@@ -2,12 +2,12 @@
     <main>
     <div>
         <h2 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> <router-link class="" to="/admin/sessions_list">{{ msg }}</router-link> | <router-link class="" to="/admin/closed_sessions">{{ msg2 }}</router-link> </h2>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Active Sessions</h1>
+        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Closed Sessions </h1>
     </div>
     <div class="container"> 
         
         <div class="table-responsive-md">
-            <table class="table table-bordered" style="margin:auto; text-align: left; max-width: 50%; margin-top: 2rem">
+            <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
                     <thead>
                         <tr>
                         <th scope="col">Volunteer Name</th>
@@ -15,6 +15,7 @@
                         <th scope="col">Event</th>
                         <th scope="col">Organization</th>
                         <th scope="col">Time In</th>
+                        <th scope="col">Time Out</th>
                         <th scope="col">Session Comments</th>
                         </tr>
                     </thead>
@@ -33,6 +34,7 @@
                             <td>{{ session.event_name }}</td>
                             <td>{{ session.org_name }}</td>
                             <td>{{ session.time_in }}</td>
+                            <td>{{ session.time_out }}</td>
                             <td>{{ session.session_comment }}</td>
                         </tr>
                     </tbody>
@@ -45,7 +47,7 @@
 <script>
 import axios from "axios";
 export default {
-    name: 'SessionsList',
+    name: 'ClosedSessions',
     data() {
         return {
             msg : "Active",
@@ -58,7 +60,7 @@ export default {
         submitForm() {
         },
         getSession() {
-            axios.get('http://127.0.0.1:5000/read_sessions')
+            axios.get('http://127.0.0.1:5000/read_closed_sessions')
             .then(response => {
                 // iterate through JSON response and add sessions to sessions array
                 for (var i = 0; i < response.data.length; i++) {
