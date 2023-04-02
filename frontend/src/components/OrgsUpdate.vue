@@ -3,27 +3,42 @@
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
-    <div class="container"> 
+    <div class="container text-start"> 
         <form @submit.prevent="submitForm">
             <div>
+                <div class="row">
+                    <div class="col">
                 <label for="exampleFormControlInput1" class="form-label">Organization Name</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.org_name">
-                <label for="exampleFormControlInput1" class="form-label"> Address Line 1 </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.address_line_1">
+                </div></div>
+                <div class="row mt-2">
+                    <div class="col"> 
+                        <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.address_line_1">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col">
                 <label for="exampleFormControlInput1" class="form-label"> Address Line 2 </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.address_line_2">
+                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.address_line_2"></div></div>
+
+                <div class="row mt-2">
+                    <div class="col">
                 <label for="exampleFormControlInput1" class="form-label"> City </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.city">
+                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.city"></div>
+                <div class="col">
                 <label for="exampleFormControlInput1" class="form-label"> State </label>
+                
                 <div>
                     <select class="form-select"  v-model="organization.state_id">
                     <option value="">Select a state</option>
                     <option v-for="state in states" :key="state.id" :value="state.id">{{ state.name }}</option>
                     </select>
-                </div>
+                </div></div>
+                <div class="col">
                 <label for="exampleFormControlInput1" class="form-label"> Zip </label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.zip">
-            </div>
+            </div></div></div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
                 <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
