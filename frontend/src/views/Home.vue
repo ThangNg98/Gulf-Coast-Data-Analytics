@@ -133,7 +133,7 @@
             console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
             console.log('setVolunteerID after: ', useVolunteerPhoneStore().volunteerID)
             alert('Login Success')
-            this.$router.push('/profile/checkin')
+            this.$router.push('/profile/test')
           }
           else {
             console.log('Volunteer not found in list')

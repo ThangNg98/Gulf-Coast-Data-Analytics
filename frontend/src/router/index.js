@@ -51,6 +51,22 @@ const router = createRouter({
           },
         },
         {
+          name: 'test',
+          path: '/profile/test',
+          component: () => import('@/components/test_checkin.vue'),
+          beforeEnter: (to, from, next) => {
+            const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
+            console.log('volunteerLoggedIn: ', volunteerLoggedIn)
+            if (volunteerLoggedIn == null) {
+              alert('You do not have access to view this')
+              next('/')
+            } else {
+              // continue to the requested route if user is logged in
+              next()
+            }
+          }
+        },
+        {
           name: 'ProfileHistory',
           path: '/profile/history',
           component: () => import('@/components/V_History.vue'),
