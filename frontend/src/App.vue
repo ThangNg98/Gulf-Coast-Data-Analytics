@@ -33,10 +33,17 @@
       </nav>
         </section>
       </header>
+
     </div>
+    
     <div class="grow w-4/5">
       <div>
         <router-view></router-view>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer-content">
+
       </div>
     </div>
   </main>
@@ -62,8 +69,6 @@ export default {
   color: white;
   padding: 18px;
 }
-.container_home {
-  display:flex;
-  margin: auto;
-}
+ 
+
 </style>

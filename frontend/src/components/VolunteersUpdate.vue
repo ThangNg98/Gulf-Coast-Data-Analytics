@@ -302,4 +302,13 @@ export default {
   padding-left: auto;
   padding-right: auto
 }
+
+@media only screen and (min-width: 768px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 25%
+}
+}
 </style>

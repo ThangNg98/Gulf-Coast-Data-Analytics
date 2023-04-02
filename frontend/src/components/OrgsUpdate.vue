@@ -175,9 +175,13 @@ export default {
 </script>
 
 <style>
+
+@media only screen and (min-width: 768px) {
 .container {
   margin: auto;
   padding-left: auto;
-  padding-right: auto
+  padding-right: auto;
+  width: 25%
+}
 }
 </style>

@@ -5,7 +5,7 @@
     </div>
     <div class="container"> 
         <form @submit.prevent="submitForm">
-            <div>
+            <div class="">
                 <label for="exampleFormControlInput1" class="form-label">Event Name</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="this.events.event_name">
                 <label for="exampleFormControlInput1" class="form-label"> Description</label>
@@ -107,10 +107,13 @@ export default {
 </script>
 
 <style>
+@media only screen and (min-width: 768px) {
 .container {
   margin: auto;
   padding-left: auto;
-  padding-right: auto
-
+  padding-right: auto;
+  width: 25%
 }
+}
+
 </style>

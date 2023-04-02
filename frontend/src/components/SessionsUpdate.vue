@@ -186,4 +186,13 @@ export default {
   padding-right: auto;
   text-align: left
 }
+
+@media only screen and (min-width: 768px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 35%
+}
+}
 </style>

@@ -66,8 +66,7 @@ export default {
 .container {
   margin: auto;
   padding-left: auto;
-  padding-right: auto
-
+  padding-right: auto;
 }
 
 .table td {
