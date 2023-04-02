@@ -31,7 +31,7 @@ def check_most_recent(volunteer_id):
         SELECT 
             session_id, 
             IF(time_out IS NULL, '1', '2') AS time_out,
-            org_id,
+            org_id
             event_id
         FROM session
         WHERE session_id = (
@@ -118,6 +118,28 @@ def read_sessions():
             ORDER BY volunteer_name; """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
+
+@app.route('/read_closed_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_closed_sessions
+#API to get Open Sessions
+def read_closed_sessions():
+
+    query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
+            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
+            event.event_name,
+            organization.org_name,
+            DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
+            DATE_FORMAT(session.time_out, '%h:%i %p') AS time_out,
+            session_comment,
+            volunteer.phone
+            FROM session
+            JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
+            JOIN event ON session.event_id = event.event_id
+            JOIN organization ON session.org_id = organization.org_id
+            JOIN session_status ON session.session_status_id = session_status.session_status_id
+            WHERE session.session_status_id = 1 AND session.time_out IS NOT NULL
+            ORDER BY volunteer_name; """ 
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)    
         # Helmut = gets all sessions
         # Sends us ID
         # In update page, we use ID to get info to fill fields
@@ -141,7 +163,22 @@ def read_session(session_id):
     """ % session_id
     rows = execute_read_query(conn,query)
     print('LORI', rows)
-    return jsonify(rows)        
+    return jsonify(rows)   
+
+@app.route('/current_session/<session_id>', methods = ['GET'])
+def current_session(session_id):   
+    query = """
+        SELECT org_name, event_name, TIME_FORMAT(time_in, '%%h:%%i %%p') AS time_in
+        FROM session
+        JOIN event ON session.event_id = event.event_id
+        JOIN organization ON session.org_id = organization.org_id
+        WHERE session_id = %s;        
+    
+    
+    """ % session_id
+    rows = execute_read_query(conn,query)
+    print(rows)
+    return jsonify(rows)
 
 @app.route('/update_session', methods = ['POST'])
 def update_session():

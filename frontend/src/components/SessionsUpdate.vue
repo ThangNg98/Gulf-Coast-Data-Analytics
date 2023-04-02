@@ -53,7 +53,7 @@
                     </div>
                 </div>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/sessions_list" @click=$router.back> Back to Sessions</router-link></button>
+                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/sessions_list" @click="$router.back"> Back to Sessions</router-link></button>
                 <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" @click="updateButtonClicked = true">Update </button>
                 <button type="submit" class="btn btn-danger" @click="deleteButtonClicked=true">Delete</button>
             </div>

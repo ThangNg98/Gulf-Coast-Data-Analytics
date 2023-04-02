@@ -277,6 +277,23 @@ const router = createRouter({
           }
         },
         {
+          path: '/admin/closed_sessions',
+          name: 'ClosedSessions',
+          props: true,
+          component: () => import('../components/ClosedSessions.vue'),
+          beforeEnter: (to, from, next) => {
+            const isLoggedIn = useAdminLoginStore().isLoggedIn
+            console.log('isLoggedIn: ', isLoggedIn)
+            if (!isLoggedIn) {
+              alert('You do not have access to view this')
+              next('/adminlogin')
+            } else {
+              // continue to the requested route if user is logged in
+              next()
+            }
+          }
+        },
+        {
           path: '/admin/update_sessions/:session_id',
           name: 'SessionsUpdate',
           props: true,

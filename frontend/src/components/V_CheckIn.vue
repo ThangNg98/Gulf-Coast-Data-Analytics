@@ -12,7 +12,6 @@
                 </option>
                 </select>
             </div>
-            <p>session.event_id {{ session.event_id }}</p>
             <!--org selection-->
             <div class="d-flex justify-content-between">
                 <label for="orgSelect"><h4>Organization</h4></label>
@@ -21,7 +20,6 @@
                     <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
                 </select>
             </div>
-            <p>session.org_id: {{session.org_id}}</p>
         </div>
     </div>
     <br>
@@ -41,13 +39,22 @@
         </div>
     </div>
     <h2 style="text-align: center"> Current Session</h2>
-    <p>session.session_id: {{ session.session_id }}</p>
-    <p v-if="session.event_id" > session.session_event: {{ session.event_id }} </p>
-    <p>session.org_id: {{ session.org_id }}</p>
-    <p>session.event_id: {{ session.event_id }}</p>
-    <p>events: {{ this.events }}</p>
-    <p>orgs: {{ this.orgs }}</p>
-    <p>session.volunteer_id: {{ session.volunteer_id }}</p>
+    <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
+                    <thead>
+                        <tr>
+                        <th scope="col">Event Name</th>
+                        <th scope="col">Organization</th>
+                        <th scope="col">Time In</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> {{ this.event_name }}</td>
+                            <td> {{ this.org_name }}</td>
+                            <td> {{ this.time_in }}</td>
+                        </tr>
+                    </tbody>
+                </table>
     </div>
 </template>
 <script>
@@ -73,7 +80,10 @@ export default {
             },
             checkedInButton: false,
             checkedOutButton: false,
-            alreadyCheckedIn: false
+            alreadyCheckedIn: false,
+            event_name: null,
+            org_name: null,
+            time_in: null
         }
     },
     mounted() {
@@ -86,6 +96,17 @@ export default {
         setTimeout(() => {
             this.getOrgs();
         }, 1500); 
+        setTimeout(() => {
+            axios
+            .get(`http://127.0.0.1:5000/current_session/${this.session.session_id}`)
+                    .then((response) => {
+                        this.event_name = response.data[0].event_name
+                        this.org_name = response.data[0].org_name
+                        this.time_in = response.data[0].time_in
+                    })
+
+
+            },2000);
     },
     methods: {
         checkRecent() {
@@ -155,6 +176,17 @@ export default {
                         this.session.session_id = response.data[0].session_id
                     })
             }, 500); 
+            setTimeout(() => {
+                axios
+                .get(`http://127.0.0.1:5000/current_session/${this.session.session_id}`)
+                        .then((response) => {
+                            this.event_name = response.data[0].event_name
+                            this.org_name = response.data[0].org_name
+                            this.time_in = response.data[0].time_in
+                        })
+
+
+            },1000);
         },
         async update_session_axios() { //call axios
             console.log('this.session:', this.session)
@@ -163,6 +195,9 @@ export default {
                 .then(() => {
                     this.session.org_id = null
                     this.session.event_id = null
+                    this.event_name = null
+                    this.org_name = null
+                    this.time_in = null
                 })
                 .catch((error) => {
                     console.log(error);
