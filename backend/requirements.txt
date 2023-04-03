@@ -4,9 +4,6 @@ cffi
 charset-normalizer
 click==8.0.4
 colorama==0.4.4
-conda==4.10.3
-conda-package-handling
-conda_package_streaming
 cryptography
 Flask==2.0.3
 Flask-Cors==3.0.10
