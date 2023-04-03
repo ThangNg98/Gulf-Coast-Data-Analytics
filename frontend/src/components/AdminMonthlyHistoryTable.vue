@@ -11,51 +11,42 @@
                 <tbody>
                     <!--use axios data to print rows of monthly data-->
                     <tr v-for="month in monthlyData">
-                        <td>{{month.month}}, {{month.year}}</td>
-                        <td>{{month.totalHours}}</td>
-                        <td>{{month.totalUniqueVolunteers}}</td>
+                        <td>{{month.MonthName}}, {{month.YearName}}</td>
+                        <td>{{month.TotalHours}}</td>
+                        <td>{{month.UniqueVolunteers}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 </template>
 <script lang="ts">
+import axios from 'axios';
     export default {
         data() {
             return {
                 monthlyData: [ //use axios to get the data
                     {
-                        month: 'January',
-                        year: 2023,
-                        totalHours: 200,
-                        totalUniqueVolunteers: 55
-                    },
-                    {
-                        month: 'February',
-                        year: 2023,
-                        totalHours: 100,
-                        totalUniqueVolunteers: 30
-                    },
-                    {
-                        month: 'March',
-                        year: 2023,
-                        totalHours: 150,
-                        totalUniqueVolunteers: 35
-                    },
-                    {
-                        month: 'April',
-                        year: 2023,
-                        totalHours: 100,
-                        totalUniqueVolunteers: 10
-                    },
-                    {
-                        month: 'May',
-                        year: 2023,
-                        totalHours: 250,
-                        totalUniqueVolunteers: 45
+                        MonthName: '',
+                        YearName: null,
+                        TotalHours: null,
+                        UniqueVolunteers: null
                     }
                 ]
             }
+        },
+        methods: {
+            getMonthsHoursUniques() {
+                axios.get('http://127.0.0.1:5000/get_month_hours_uniques')
+                .then(response => {
+                    this.monthlyData = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+        },
+        mounted() {
+            this.getMonthsHoursUniques();
         }
     }
 </script>

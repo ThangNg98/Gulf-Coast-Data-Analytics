@@ -496,5 +496,17 @@ def get_volunteer_id(volunteer_phone):
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
+############# ADMIN DASHBOARD #############
+@app.route('/get_month_hours_uniques', methods=['GET'])
+def get_month_hours_uniques():
+    query = """
+        SELECT DATE_FORMAT(session_date, '%M') as MonthName, DATE_FORMAT(session_date, '%Y') as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers
+        from session
+        GROUP BY MonthName, YearName;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+
 if __name__ == "__main__":
     app.run()
