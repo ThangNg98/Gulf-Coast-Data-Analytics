@@ -9,6 +9,7 @@ conda-package-handling @ file:///C:/ci/conda-package-handling_1618262410900/work
 cryptography @ file:///C:/ci/cryptography_1616769504165/work
 Flask==2.0.3
 Flask-Cors==3.0.10
+gunicorn==20.1.0
 idna @ file:///home/linux1/recipes/ci/idna_1610986105248/work
 itsdangerous==2.1.0
 Jinja2==3.0.3
