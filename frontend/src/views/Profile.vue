@@ -26,7 +26,7 @@ import axios from 'axios';
             }
         },
         mounted() {
-           // this.getVolunteerName()
+           this.getVolunteerName()
 
         },
         methods: {
