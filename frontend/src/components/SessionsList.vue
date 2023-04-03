@@ -4,11 +4,10 @@
         <h2 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> <router-link class="" to="/admin/sessions_list">{{ msg }}</router-link> | <router-link class="" to="/admin/closed_sessions">{{ msg2 }}</router-link> </h2>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Open Sessions</h1>
     </div>
-    <div class="container"> 
-        
-        <div class="table-responsive-md">
+    <div class="container">     
+        <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
-                    <thead>
+                    <thead class="theadsticky">
                         <tr>
                         <th scope="col">Volunteer Name</th>
                         <th scope="col">Session Date</th>
@@ -96,4 +95,17 @@ export default {
     background-color: rgba(230, 231, 235, 1);
     transition: background-color 0.3s ease-in-out;
   }
+
+.theadsticky {
+  position: sticky;
+  top: 0;
+  background-color: #e6e7eb !important;
+}
+
+.table-wrapper {
+  max-height: 700px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
+}
 </style>

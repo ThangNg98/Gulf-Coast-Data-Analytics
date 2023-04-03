@@ -4,9 +4,9 @@
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
     <div class="container1"> 
-        <div class="table-responsive-md">
+        <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
-                    <thead>
+                    <thead class="theadsticky">
                         <tr>
                         <th scope="col">Volunteer Name</th>
                         <th style="width:5%" scope="col">Total Hours</th>
@@ -70,5 +70,17 @@ export default {
     word-wrap: break-word;
     min-width: 160px;
     max-width: 160px;
+}
+.theadsticky {
+  position: sticky;
+  top: 0;
+  background-color: #e6e7eb !important;
+}
+
+.table-wrapper {
+  max-height: 700px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
 }
 </style>
