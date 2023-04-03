@@ -23,7 +23,7 @@ pycosat==0.6.3
 pycparser 
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
-pyOpenSSL k
+pyOpenSSL
 pyperclip==1.8.2
 PyRect==0.1.4
 PyScreeze==0.1.28
