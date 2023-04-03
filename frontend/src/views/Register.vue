@@ -12,7 +12,7 @@
                     <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
-                    </div></div>
+                    </div> </div>
                     <div class="row">
                     <div class="col-8"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
@@ -259,7 +259,7 @@ export default {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
-  width: 35%
+  width: 25%
 }
 }
 </style>

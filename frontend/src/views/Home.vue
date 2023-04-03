@@ -137,8 +137,11 @@
           }
           else {
             console.log('Volunteer not found in list')
-            alert('Phone number not found')
-            this.$router.push('/register')
+            if (confirm("Phone number not found. Would you like to register?") == true) {
+              this.$router.push('/register')
+            } else {
+              this.phoneNumber = "";
+            }
           }
 
         // input is not 10 digits, form is not submitted and error is revealed
