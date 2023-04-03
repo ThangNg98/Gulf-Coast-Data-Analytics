@@ -31,6 +31,7 @@
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
                 <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" >Submit</button>
           </div>
         </form>
@@ -40,7 +41,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
     name: 'OrgsCreate',
     data() {
@@ -109,7 +109,6 @@ export default {
                 { name: 'Wyoming', id: 51 }
             ],
         };
-
     },
     computed: {
         filteredStates() {
@@ -131,17 +130,17 @@ export default {
                 console.log(error);
             });
         }
-
-
     }
 }
 </script>
 
-<style>
+<style scoped>
+@media only screen and (min-width: 768px) {
 .container {
   margin: auto;
   padding-left: auto;
-  padding-right: auto
-
+  padding-right: auto;
+  width: 25%
+}
 }
 </style>

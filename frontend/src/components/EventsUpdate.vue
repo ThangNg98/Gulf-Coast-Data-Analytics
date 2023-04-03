@@ -13,9 +13,10 @@
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/events"> Back to Events</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" @click="updateButtonClicked = true">Update</button>
-                <button type="submit" class="btn btn-danger" @click="deleteButtonClicked = true">Delete</button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/events"> Back to Events</router-link></button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked = true">Delete</button>
+                <button type="submit" class="btn btn-primary" @click="updateButtonClicked = true">Update</button>
+                
             </div>
         </form>
         <div class="table-responsive-md">
@@ -43,7 +44,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
     name: 'EventsUpdate',
     data() {
@@ -59,7 +59,6 @@ export default {
             hours: null,
             num_volunteers: 0
         };
-
     },
     created() {
     axios.get(`http://127.0.0.1:5000/get_event/${this.$route.params.event_id}`).then(response => {
@@ -98,15 +97,12 @@ export default {
                     console.log(error);
                 });
             }
-
         }
-
-
     }
 }
 </script>
 
-<style>
+<style scoped>
 @media only screen and (min-width: 768px) {
 .container {
   margin: auto;
@@ -115,5 +111,4 @@ export default {
   width: 25%
 }
 }
-
 </style>

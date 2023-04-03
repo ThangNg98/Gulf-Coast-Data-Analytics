@@ -33,3 +33,11 @@ import { useAdminLoginStore } from '@/stores/AdminLoginStore'
         }
     }
 </script>
+
+<style scoped>
+.container1 {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+}
+</style>

@@ -13,12 +13,17 @@
                 </select>
             </div>
             <!--org selection-->
-            <div class="d-flex justify-content-between">
+            <div class="mb-3 d-flex justify-content-between">
                 <label for="orgSelect"><h4>Organization</h4></label>
                 <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn">
                     <option :value=null>-</option>
                     <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
                 </select>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <label for="orgSelect"><h4>Comments</h4></label>
+                <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" :disabled="alreadyCheckedIn" v-model="session.session_comment">  </textarea>
             </div>
         </div>
     </div>
@@ -36,15 +41,17 @@
                 <div :class="{ 'text-muted': !alreadyCheckedIn }" class="p-2 float-end">
                     <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios(); alreadyCheckedIn = !alreadyCheckedIn;" :disabled="!alreadyCheckedIn">Check Out</button></div>
                 </div>
+                
         </div>
     </div>
     <h2 style="text-align: center"> Current Session</h2>
-    <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
+    <table class="table table-bordered" style="margin:auto; text-align: center; margin-top: 2rem;">
                     <thead>
                         <tr>
                         <th scope="col">Event Name</th>
                         <th scope="col">Organization</th>
                         <th scope="col">Time In</th>
+                        <th scope="col">Comment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +59,7 @@
                             <td> {{ this.event_name }}</td>
                             <td> {{ this.org_name }}</td>
                             <td> {{ this.time_in }}</td>
+                            <td> {{ this.session.session_comment }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -72,7 +80,7 @@ export default {
                 time_in: null,//now.time(),
                 time_out: null,
                 session_date: this.getDate(),//now.date(), 
-                session_comment: "CURRENT TEST 10:35pm",
+                session_comment: null,
                 org_id: null, 
                 event_id: null, 
                 session_status_id: "1",
@@ -198,6 +206,7 @@ export default {
                     this.event_name = null
                     this.org_name = null
                     this.time_in = null
+                    this.session.session_comment = null
                 })
                 .catch((error) => {
                     console.log(error);
@@ -233,3 +242,16 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+@media only screen and (min-width: 768px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 30%
+}
+}
+
+</style>
