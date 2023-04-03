@@ -27,7 +27,6 @@ PyScreeze==0.1.28
 PySocks
 pytweening==1.0.4
 requests
-ruamel-yaml-conda
 urllib3
 Werkzeug==2.0.3
 win-inet-pton
