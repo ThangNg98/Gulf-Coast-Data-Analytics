@@ -2,7 +2,7 @@
     <main>
     <div>
         <h2 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> <router-link class="" to="/admin/sessions_list">{{ msg }}</router-link> | <router-link class="" to="/admin/closed_sessions">{{ msg2 }}</router-link> </h2>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Active Sessions</h1>
+        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Open Sessions</h1>
     </div>
     <div class="container"> 
         
@@ -48,7 +48,7 @@ export default {
     name: 'SessionsList',
     data() {
         return {
-            msg : "Active",
+            msg : "Open",
             msg2 : "Closed",
             sessions:[],
             hoverId: null,

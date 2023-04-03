@@ -110,6 +110,6 @@ export default {
 .theadsticky {
   position: sticky;
   top: 0;
-  background-color: #adb5bd !important;
+  background-color: #e6e7eb !important;
 }
 </style>
