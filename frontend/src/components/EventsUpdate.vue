@@ -61,7 +61,7 @@ export default {
         };
     },
     created() {
-    axios.get(`http://127.0.0.1:5000/get_event/${this.$route.params.event_id}`).then(response => {
+    axios.get(`https://llc.onrender.com/get_event/${this.$route.params.event_id}`).then(response => {
         this.events.event_id = response.data[0].event_id;
         this.events.event_name = response.data[0].event_name;
         this.events.event_description = response.data[0].event_description;
@@ -74,7 +74,7 @@ export default {
             if (this.updateButtonClicked == true) {
                 this.updateButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/update_event', this.events)
+                .post('https://llc.onrender.com/update_event', this.events)
                 .then(() =>{
                     this.events={}
                     alert('Event Updated')
@@ -87,7 +87,7 @@ export default {
             else if (this.deleteButtonClicked == true) {
                 this.deleteButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/delete_event', this.events)
+                .post('https://llc.onrender.com/delete_event', this.events)
                 .then(() =>{
                     this.events={}
                     alert('Event Deleted')

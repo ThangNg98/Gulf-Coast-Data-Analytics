@@ -281,7 +281,7 @@ export default {
             console.log('this.volunteer_info.phone', this.volunteer_info.phone)
             console.log('this.phoneNumber:', this.phoneNumber)
             axios
-            .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
+            .post('https://llc.onrender.com/update_volunteer', this.volunteer_info)
             .then(() =>{
                 alert('Volunteer Updated')
                 this.$router.push('/profile/update')
@@ -293,7 +293,7 @@ export default {
     getVolunteerID() {
             const phone = useVolunteerPhoneStore().volunteerPhone
             axios
-                .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
+                .get(`https://llc.onrender.com/get_volunteer_id/${phone}`)
                 .then((response) => {
                     this.volunteer_info.volunteer_id = response.data[0].volunteer_id
                 })
@@ -303,7 +303,7 @@ export default {
         },
     getVolunteerData() {
         axios
-            .get(`http://127.0.0.1:5000/get_volunteer/${this.volunteer_info.volunteer_id}`)
+            .get(`https://llc.onrender.com/get_volunteer/${this.volunteer_info.volunteer_id}`)
             .then((response) => {
                 this.volunteer_info = response.data[0]
                 console.log(this.volunteer_info)

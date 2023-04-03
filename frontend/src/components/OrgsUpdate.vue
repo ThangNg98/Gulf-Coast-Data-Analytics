@@ -131,7 +131,7 @@ export default {
         };
     },
     created() {
-        axios.get(`http://127.0.0.1:5000/get_org/${this.$route.params.org_id}`).then(response => {
+        axios.get(`https://llc.onrender.com/get_org/${this.$route.params.org_id}`).then(response => {
         this.organization.org_id = response.data[0].org_id;
         this.organization.org_name = response.data[0].org_name;
         this.organization.address_line_1 = response.data[0].address_line_1;
@@ -149,7 +149,7 @@ export default {
             if (this.updateButtonClicked == true) {
                 this.updateButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/update_organization', this.organization)
+                .post('https://llc.onrender.com/update_organization', this.organization)
                 .then(() =>{
                     this.organization={}
                     alert('Organization Updated')
@@ -162,7 +162,7 @@ export default {
             else if (this.deleteButtonClicked == true) {
                 this.deleteButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/delete_organization', this.organization)
+                .post('https://llc.onrender.com/delete_organization', this.organization)
                 .then(() =>{
                     this.organization={}
                     alert('Organization Deleted')

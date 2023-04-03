@@ -99,7 +99,7 @@ export default {
             if (this.updateButtonClicked == true){
                 this.updateButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/update_session', this.session_info)
+                .post('https://llc.onrender.com/update_session', this.session_info)
                 .then(()=>{
                     this.session_info={}
                     alert('Session updated')
@@ -112,7 +112,7 @@ export default {
             else if (this.deleteButtonClicked = true){
                 this.deleteButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/delete_session', this.session_info)
+                .post('https://llc.onrender.com/delete_session', this.session_info)
                 .then(()=>{
                     this.session_info = {}
                     alert('Session deleted')
@@ -124,7 +124,7 @@ export default {
             }
         },
         getSession() {
-            axios.get(`http://127.0.0.1:5000/read_session/${this.session_info.session_id}`)
+            axios.get(`https://llc.onrender.com/read_session/${this.session_info.session_id}`)
                 .then(response => {
                     console.log('response:', response.data);
                     this.session_info.session_id = response.data[0].session_id;
@@ -146,7 +146,7 @@ export default {
             });
         },
         getOrgs() {
-            axios.get('http://127.0.0.1:5000/read_orgs')
+            axios.get('https://llc.onrender.com/read_orgs')
             .then(response => {
                 // iterate through JSON response and add orgs to orgs array
                 for (var i = 0; i < response.data.length; i++) {
@@ -161,7 +161,7 @@ export default {
             });
         },
         getEvents() {
-            axios.get('http://127.0.0.1:5000/read_events')
+            axios.get('https://llc.onrender.com/read_events')
             .then(response => {
                 // iterate through JSON response and add orgs to orgs array
                 for (var i = 0; i < response.data.length; i++) {

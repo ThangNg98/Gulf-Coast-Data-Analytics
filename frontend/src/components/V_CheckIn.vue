@@ -106,7 +106,7 @@ export default {
         }, 1500); 
         setTimeout(() => {
             axios
-            .get(`http://127.0.0.1:5000/current_session/${this.session.session_id}`)
+            .get(`https://llc.onrender.com/current_session/${this.session.session_id}`)
                     .then((response) => {
                         this.event_name = response.data[0].event_name
                         this.org_name = response.data[0].org_name
@@ -119,7 +119,7 @@ export default {
     methods: {
         checkRecent() {
             axios
-                .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
+                .get(`https://llc.onrender.com/check_most_recent/${this.session.volunteer_id}`)
                 .then((response) => {
                     if (response.data[0]) {
                         const temp_checkedIn = response.data[0].time_out
@@ -143,7 +143,7 @@ export default {
         },
         getEvents() {
             axios
-                .get('http://127.0.0.1:5000/read_events')
+                .get('https://llc.onrender.com/read_events')
                 .then((response) => {
                     console.log('read_events response:', response)
                     this.events = response.data.map(event => ({ event_id: event.event_id, event_name: event.event_name }));
@@ -154,7 +154,7 @@ export default {
         },
         getOrgs() {
             axios
-                .get('http://127.0.0.1:5000/read_orgs')
+                .get('https://llc.onrender.com/read_orgs')
                 .then((response) => {
                     console.log('read_orgs response:', response)
                     this.orgs = response.data.map(org => ({org_id: org.org_id, org_name: org.org_name}));
@@ -169,7 +169,7 @@ export default {
         },
         async create_session_axios() { //call axios
             axios
-                .post('http://127.0.0.1:5000/create_session', this.session)
+                .post('https://llc.onrender.com/create_session', this.session)
                 .then(() => {
                     console.log(this.session.event_id)
                 })
@@ -179,14 +179,14 @@ export default {
             console.log("create_session success");
             setTimeout(() => {
                 axios
-                    .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
+                    .get(`https://llc.onrender.com/check_most_recent/${this.session.volunteer_id}`)
                     .then((response) => {
                         this.session.session_id = response.data[0].session_id
                     })
             }, 500); 
             setTimeout(() => {
                 axios
-                .get(`http://127.0.0.1:5000/current_session/${this.session.session_id}`)
+                .get(`https://llc.onrender.com/current_session/${this.session.session_id}`)
                         .then((response) => {
                             this.event_name = response.data[0].event_name
                             this.org_name = response.data[0].org_name
@@ -199,7 +199,7 @@ export default {
         async update_session_axios() { //call axios
             console.log('this.session:', this.session)
             axios
-                .post('http://127.0.0.1:5000/check_out', this.session)
+                .post('https://llc.onrender.com/check_out', this.session)
                 .then(() => {
                     this.session.org_id = null
                     this.session.event_id = null

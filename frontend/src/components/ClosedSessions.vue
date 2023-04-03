@@ -5,7 +5,6 @@
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Closed Sessions </h1>
     </div>
     <div class="container"> 
-        
         <div class="table-responsive-md">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
                     <thead>
@@ -46,6 +45,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
     name: 'ClosedSessions',
     data() {
@@ -60,7 +60,7 @@ export default {
         submitForm() {
         },
         getSession() {
-            axios.get('http://127.0.0.1:5000/read_closed_sessions')
+            axios.get('https://llc.onrender.com/read_closed_sessions')
             .then(response => {
                 // iterate through JSON response and add sessions to sessions array
                 for (var i = 0; i < response.data.length; i++) {

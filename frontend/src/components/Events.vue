@@ -44,7 +44,7 @@ export default {
         submitForm() {
         },
         getEvents() {
-            axios.get('http://127.0.0.1:5000/read_events')
+            axios.get('https://llc.onrender.com/read_events')
             .then(response => {
                 // iterate through JSON response and add events to events array
                 for (var i = 0; i < response.data.length; i++) {

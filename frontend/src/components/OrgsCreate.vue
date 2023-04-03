@@ -120,7 +120,7 @@ export default {
     methods: {
         submitForm() {
             axios
-            .post('http://127.0.0.1:5000/create_organization', this.org_info)
+            .post('https://llc.onrender.com/create_organization', this.org_info)
             .then(() =>{
                 this.org_info={}
                 alert('Organization Created')

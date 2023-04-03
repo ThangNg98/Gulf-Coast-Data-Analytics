@@ -249,7 +249,7 @@ export default {
                     this.volunteer_info.date_waiver_signed = null
                 }
                 axios
-                .post('http://127.0.0.1:5000/admin_update_volunteer', this.volunteer_info)
+                .post('https://llc.onrender.com/admin_update_volunteer', this.volunteer_info)
                 .then(() =>{
                     console.log(this.volunteer_info.date_waiver_signed)
                     this.volunteer_info={}
@@ -264,7 +264,7 @@ export default {
             else if (this.deleteButtonClicked = true) {
                 this.deleteButtonClicked = false
                 axios
-                .post('http://127.0.0.1:5000/delete_volunteer', this.volunteer_info)
+                .post('https://llc.onrender.com/delete_volunteer', this.volunteer_info)
                 .then(() =>{
                     this.volunteer_info={}
                     alert('Volunteer Deleted')
@@ -279,8 +279,8 @@ export default {
         },
     },
     created() {
-        axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
-            axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${this.$route.params.volunteer_id}`)
+        axios.get(`https://llc.onrender.com/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
+            axios.get(`https://llc.onrender.com/read_volunteer_hours/${this.$route.params.volunteer_id}`)
                     .then(response => {
                         this.volunteer_info.total_hours = response.data[0].total_hours
                     })

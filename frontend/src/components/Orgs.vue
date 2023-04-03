@@ -44,7 +44,7 @@ export default {
         submitForm() {
         },
         getOrgs() {
-            axios.get('http://127.0.0.1:5000/read_orgs')
+            axios.get('https://llc.onrender.com/read_orgs')
             .then(response => {
                 // iterate through JSON response and add orgs to orgs array
                 for (var i = 0; i < response.data.length; i++) {

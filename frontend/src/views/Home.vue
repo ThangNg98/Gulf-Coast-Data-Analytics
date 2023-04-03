@@ -73,7 +73,7 @@
     },
     mounted() {
       axios
-        .get('http://127.0.0.1:5000/volunteer_phone/')
+        .get('https://llc.onrender.com/volunteer_phone/')
         .then(response => {
           console.log('volunteer_phone response:', response)
           this.volunteerPhoneList = response.data;
