@@ -33,7 +33,8 @@ export async function checkMostRecentAPI(volunteerId) {
             session_id: response.data[0].session_id,
             org_id: response.data[0].org_id,
             event_id: response.data[0].event_id,
-            time_in: response.data[0].time_in
+            time_in: response.data[0].time_in,
+            session_comment: response.data[0].session_comment
           };
           result.alreadyCheckedIn = true;
         } else if (temp_checkedIn == '2') {

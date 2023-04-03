@@ -135,11 +135,13 @@ export default {
                 this.session.org_id = result.session?.org_id;
                 this.session.event_id = result.session?.event_id;
                 this.session.time_in = result.session?.time_in;
+                this.session.session_comment = result.session?.session_comment;
                 console.log('this.alreadyCheckedIn:',  this.alreadyCheckedIn)
                 console.log('this.session.session_id:',  this.alreadyCheckedIn)
                 console.log('this.session.org_id:', this.session.org_id)
                 console.log('this.session.event_id', this.session.event_id)
                 console.log('this.session.time_in', this.session.time_in)
+                console.log('this.session.session_comment', this.session.session_comment)
             } catch (error) {
                 console.log(error)
             }
@@ -207,6 +209,7 @@ export default {
                 await checkOutAPI(this.session);
                 this.session.org_id = null
                 this.session.event_id = null
+                this.session.session_comment = null
                 this.current_event_name = null
                 this.current_org_name = null
                 console.log("update_session success");
