@@ -6,7 +6,8 @@
                 <nav class="in-page-nav-bar nav border border-dark">
                     <router-link class="nav-link border-end border-dark p-2" to="/profile/checkin">Check In/Out</router-link>
                     <router-link class="nav-link border-end border-dark p-2" to="/profile/history">History</router-link>
-                    <router-link class="nav-link p-2" to="/profile/update">Update Profile</router-link>
+                    <router-link class="nav-link border-end border-dark p-2" to="/profile/update">Update Profile</router-link>
+                    <router-link class="nav-link p-2" @click="logout" to="/">Logout</router-link>
                 </nav>
             </div>
         </div>
@@ -40,7 +41,11 @@ import axios from 'axios';
                     .catch((error) => {
                         console.log(error)
                     })
-        },
+            },
+            logout() {
+                console.log('logout called')
+                useVolunteerPhoneStore().clearVolunteerPhone()
+            }
 
         }
     }

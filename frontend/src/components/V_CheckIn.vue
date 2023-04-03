@@ -44,8 +44,9 @@
                 
         </div>
     </div>
-    <h2 style="text-align: center"> Current Session</h2>
-    <table class="table table-bordered" style="margin:auto; text-align: center; margin-top: 2rem;">
+    <div v-if="alreadyCheckedIn">
+        <h2 style="text-align: center"> Current Session</h2>
+        <table class="table table-bordered" style="margin:auto; text-align: center; margin-top: 2rem;">
                     <thead>
                         <tr>
                         <th scope="col">Event Name</th>
@@ -64,12 +65,22 @@
                     </tbody>
                 </table>
     </div>
+    </div>
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
 </template>
 <script>
 import axios from 'axios';
 import { useVolunteerPhoneStore } from '../stores/VolunteerPhoneStore'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { checkMostRecentAPI, getEventsAPI, getOrgsAPI, createSessionAPI, checkOutAPI } from '../api/api.js'
 
 export default {
+    components: {
+        LoadingModal
+    },
     data() {
         return {
             checkedIn: false, //checked in state
@@ -89,129 +100,119 @@ export default {
             checkedInButton: false,
             checkedOutButton: false,
             alreadyCheckedIn: false,
-            event_name: null,
-            org_name: null,
-            time_in: null
+            current_event_name: null,
+            current_org_name: null,
+            time_in: null,
+            isLoading: false
         }
     },
     mounted() {
-        setTimeout(() => {
-            this.checkRecent();
-        }, 500); 
-        setTimeout(() => {
-            this.getEvents();
-        }, 1000); 
-        setTimeout(() => {
-            this.getOrgs();
-        }, 1500); 
-        setTimeout(() => {
-            axios
-            .get(`http://127.0.0.1:5000/current_session/${this.session.session_id}`)
-                    .then((response) => {
-                        this.event_name = response.data[0].event_name
-                        this.org_name = response.data[0].org_name
-                        this.time_in = response.data[0].time_in
-                    })
-
-
-            },2000);
+        const loadingStore = useLoadingStore()
+        console.log('loadingStore:', loadingStore)
+        this.loadData();
     },
     methods: {
-        checkRecent() {
-            axios
-                .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
-                .then((response) => {
-                    if (response.data[0]) {
-                        const temp_checkedIn = response.data[0].time_out
-                        if (temp_checkedIn == '1') {
-                            this.session.session_id = response.data[0].session_id
-                            this.session.org_id = response.data[0].org_id
-                            this.session.event_id = response.data[0].event_id
-                            this.alreadyCheckedIn = true
-                        }
-                        else if (temp_checkedIn == '2') {
-                            this.alreadyCheckedIn = false
-                        }
-                    }
-                    else {
-                        this.alreadyCheckedIn = false
-                    }
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
+        async loadData() {
+        this.isLoading = true;
+        try {
+            await this.checkMostRecent();
+            await this.getEvents();
+            await this.getOrgs();
+            if (this.alreadyCheckedIn) {
+                    this.getCurrentInfo()
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        this.isLoading = false;
         },
-        getEvents() {
-            axios
-                .get('http://127.0.0.1:5000/read_events')
-                .then((response) => {
-                    console.log('read_events response:', response)
-                    this.events = response.data.map(event => ({ event_id: event.event_id, event_name: event.event_name }));
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+        async checkMostRecent() {
+            try {
+                const result = await checkMostRecentAPI(this.session.volunteer_id);
+                console.log('result:', result)
+                this.alreadyCheckedIn = result.alreadyCheckedIn;
+                this.session.session_id = result.session?.session_id;
+                this.session.org_id = result.session?.org_id;
+                this.session.event_id = result.session?.event_id;
+                this.session.time_in = result.session?.time_in;
+                console.log('this.alreadyCheckedIn:',  this.alreadyCheckedIn)
+                console.log('this.session.session_id:',  this.alreadyCheckedIn)
+                console.log('this.session.org_id:', this.session.org_id)
+                console.log('this.session.event_id', this.session.event_id)
+                console.log('this.session.time_in', this.session.time_in)
+            } catch (error) {
+                console.log(error)
+            }
         },
-        getOrgs() {
-            axios
-                .get('http://127.0.0.1:5000/read_orgs')
-                .then((response) => {
-                    console.log('read_orgs response:', response)
-                    this.orgs = response.data.map(org => ({org_id: org.org_id, org_name: org.org_name}));
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+        async getEvents() {
+            try {
+                const response = await getEventsAPI();
+                this.events = response.data.map(event => ({ event_id: event.event_id, event_name: event.event_name }));
+                console.log('this.events:', this.events)
+            } catch (error) {
+                console.log(error)
+            }
         },
-        create_session() {
+        async getOrgs() {
+            try {
+                const response = await getOrgsAPI();
+                this.orgs = response.data.map(org => ({org_id: org.org_id, org_name: org.org_name}));
+                console.log('this.orgs:', this.orgs)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async create_session() {
             this.time_in = this.getTime();
-            this.create_session_axios(); //create session
+            console.log('this.session:', this.session)
+            try {
+                await createSessionAPI(this.session)
+                this.getCurrentInfo()
+                console.log('create_session success')
+            } catch (error) {
+                console.log(error);
+            }
         },
-        async create_session_axios() { //call axios
-            axios
-                .post('http://127.0.0.1:5000/create_session', this.session)
-                .then(() => {
-                    console.log(this.session.event_id)
-                })
-                .catch((error) => {
-                    console.log(error);
-            });
-            console.log("create_session success");
-            setTimeout(() => {
-                axios
-                    .get(`http://127.0.0.1:5000/check_most_recent/${this.session.volunteer_id}`)
-                    .then((response) => {
-                        this.session.session_id = response.data[0].session_id
-                    })
-            }, 500); 
-            setTimeout(() => {
-                axios
-                .get(`http://127.0.0.1:5000/current_session/${this.session.session_id}`)
-                        .then((response) => {
-                            this.event_name = response.data[0].event_name
-                            this.org_name = response.data[0].org_name
-                            this.time_in = response.data[0].time_in
-                        })
-
-
-            },1000);
+        getCurrentInfo() {
+            console.log('this.session.event_id:', this.session.event_id)
+            console.log('this.events:', this.events)
+            const event = this.events.find(e => e.event_id === this.session.event_id)
+            this.current_event_name = event.event_name
+            const org = this.orgs.find(o => o.org_id === this.session.org_id)
+            if (org) {
+                this.current_org_name = org.org_name
+            } else {
+                this.current_org_name = 'None'
+            }
         },
         async update_session_axios() { //call axios
-            console.log('this.session:', this.session)
-            axios
-                .post('http://127.0.0.1:5000/check_out', this.session)
-                .then(() => {
-                    this.session.org_id = null
-                    this.session.event_id = null
-                    this.event_name = null
-                    this.org_name = null
-                    this.time_in = null
-                    this.session.session_comment = null
-                })
-                .catch((error) => {
-                    console.log(error);
-          });
-          console.log("update_session success");
+            this.isLoading = true;
+            await this.update_session_axios_1();
+            await this.update_session_axios_2();
+            this.isLoading = false;
+        },
+        async update_session_axios_1() {
+            console.log('this.session.volunteer_id:', this.session.volunteer_id)
+            try {
+                const result = await checkMostRecentAPI(this.session.volunteer_id);
+                console.log('result from update 1', result)
+                this.session.session_id = result.session.session_id
+            } catch(error) {
+                console.log(error)
+            }
+        },
+        async update_session_axios_2() {
+            try {
+                console.log('this.session:', this.session)
+                await checkOutAPI(this.session);
+                this.session.org_id = null
+                this.session.event_id = null
+                this.current_event_name = null
+                this.current_org_name = null
+                console.log("update_session success");
+            } catch (error) {
+                console.log(error)
+            }
         },
         getDate() {
             var today = new Date();
