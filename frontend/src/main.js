@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, watch } from 'vue'
 import App from './App.vue'
 import router from './router'
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -17,3 +17,11 @@ app.use(pinia)
 
 app.mount('#app')
 
+watch(
+  pinia.state,
+  (state) => {
+    localStorage.setItem("stateVolunteerPhone", state.volunteerphone.volunteerPhone);
+    localStorage.setItem("stateVolunteerID", state.volunteerphone.volunteerID);
+  },
+  { deep: true }
+  );
