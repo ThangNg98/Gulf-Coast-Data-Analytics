@@ -26,7 +26,6 @@ PyRect==0.1.4
 PyScreeze==0.1.28
 PySocks
 pytweening==1.0.4
-pywin32==305.1
 requests
 ruamel-yaml-conda
 urllib3
