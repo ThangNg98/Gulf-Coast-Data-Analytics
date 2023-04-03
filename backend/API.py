@@ -33,7 +33,8 @@ def check_most_recent(volunteer_id):
             TIME_FORMAT(time_in, '%%h:%%i %%p') AS time_in,
             IF(time_out IS NULL, '1', '2') AS time_out,
             org_id,
-            event_id
+            event_id,
+            session_comment
         FROM session
         WHERE session_id = (
             SELECT max_session_id
