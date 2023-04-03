@@ -7,7 +7,7 @@ from sql import create_connection, execute_query, execute_read_query
 from datetime import datetime
 from flask_cors import CORS
 
-conn = create_connection('172.26.54.22', 'ADMIN', 'password123!', 'llc_database') # connection to database
+conn = create_connection('llc-database-2.cslgyx4imwmp.us-east-2.rds.amazonaws.com', 'admin', 'GzYHPwCxqlnw7tPTcQMB', 'llc_database') # connection to database
 
 # setup application
 app = flask.Flask(__name__)
