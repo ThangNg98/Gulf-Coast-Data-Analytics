@@ -26,9 +26,9 @@
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem"  @click="updateButtonClicked = true">Update </button>
-                <button type="submit" class="btn btn-danger"  @click="deleteButtonClicked = true">Delete</button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked = true">Delete</button>
+                <button type="submit" class="btn btn-primary" @click="updateButtonClicked = true">Update </button>
             </div>
         </form>
         <div class="table-responsive-md">
@@ -174,10 +174,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+@media only screen and (min-width: 768px) {
 .container {
   margin: auto;
   padding-left: auto;
-  padding-right: auto
+  padding-right: auto;
+  width: 25%
+}
 }
 </style>

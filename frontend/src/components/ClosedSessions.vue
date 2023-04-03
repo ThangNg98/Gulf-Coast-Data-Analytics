@@ -82,12 +82,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: auto;
   padding-left: auto;
   padding-right: auto
 }
+
 .table td {
     word-wrap: break-word;
     min-width: 160px;

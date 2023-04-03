@@ -1,13 +1,16 @@
 <!--'/admindashview'-->
 <template>
-        <div class="container text-center">
-        <div>
+        <div class="container">
+        <div class="text-center">
             <h1 style="margin-top: 2rem; margin-bottom: 2rem">Admin Dashboard</h1>
         </div>
         <div>
             <!--monthly history table-->
+            <h6 class="text-center">Monthly History</h6>
             <div class="mb-3"><MonthlyTable></MonthlyTable></div>
+            <h6 class="text-center">Total Hours per Month in the Last Year</h6>
             <div class="mb-3"><MonthlyHoursChart></MonthlyHoursChart></div>
+            <h6 class="text-center">Number of Unique Volunteers per Month in the Last Year</h6>
             <div class="mb-3"><MonthlyUniqueVolunteersChart></MonthlyUniqueVolunteersChart></div>
         </div>
     </div>
@@ -30,3 +33,11 @@ import { useAdminLoginStore } from '@/stores/AdminLoginStore'
         }
     }
 </script>
+
+<style scoped>
+.container1 {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+}
+</style>

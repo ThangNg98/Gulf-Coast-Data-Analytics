@@ -93,9 +93,9 @@
                 </div>
             </div>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/volunteers"> Back to Volunteers</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" @click="updateButtonClicked = true">Update </button>
-                <button type="submit" class="btn btn-danger"  @click="deleteButtonClicked = true">Delete</button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/volunteers"> Back to Volunteers</router-link></button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked = true">Delete</button>
+                <button type="submit" class="btn btn-primary"  @click="updateButtonClicked = true">Update </button>
             </div>
         </form>
         <div class="table-responsive-md">
@@ -115,7 +115,8 @@
                             <td>
                                 <input type="date" id="date" v-model="volunteer_info.date_waiver_signed" @input="formatDate">
                             </td>
-                            <td>[hours]</td>
+                            <td v-if="volunteer_info.total_hours != null" > {{ this.volunteer_info.total_hours }}</td>
+                            <td v-else> 0 </td>
                         </tr>
                     </tbody>
                 </table>
@@ -275,10 +276,17 @@ export default {
             const date = new Date(event.target.value)
             const formattedDate = date.toISOString().slice(0, 10)
             this.date = formattedDate
-        }
+        },
     },
     created() {
         axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
+            axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${this.$route.params.volunteer_id}`)
+                    .then(response => {
+                        this.volunteer_info.total_hours = response.data[0].total_hours
+                    })
+                    .catch(error => {
+                        console.log(error);
+            });
             console.log('response.data[0].date_waiver_signed: ', response.data[0].date_waiver_signed)
             if (response.data[0].date_waiver_signed == null) {
                 console.log('date_waiver_signed is null')
@@ -296,10 +304,18 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: auto;
   padding-left: auto;
   padding-right: auto
+}
+@media only screen and (min-width: 768px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 25%
+}
 }
 </style>

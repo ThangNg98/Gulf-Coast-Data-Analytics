@@ -4,28 +4,33 @@
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
     <div class="container"> 
-        <h3> Volunteer</h3>
+        <h3 style="text-align:left"> Volunteer</h3>
         <form @submit.prevent="submitForm">
-            <div>
+            <div style="text-align:left">
                 <div class="row">
-                    <div class="col"> 
+                    <div class="row">
+                    <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
-                    </div>
-                    <div class="col"> 
+                    </div></div>
+                    <div class="row">
+                    <div class="col-8"> 
                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.last_name">
-                    </div>
+                    </div></div>
                 </div>
                 <div class="row">
-                    <div class="col"> 
+                    <div class="row">
+                    <div class="col-6"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone" maxlength="14">
                     </div>
+                    </div>
+                    <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.email">
-                    </div>
+                    </div></div>
                     <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
@@ -62,8 +67,8 @@
                 </div>
             </div>
             <br>
-            <h3> Emergency Contact</h3>
-            <div>
+            <h3 style="text-align:left"> Emergency Contact</h3>
+            <div style="text-align:left">
                 <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
@@ -116,13 +121,13 @@ export default {
                 emergency_contact_fname: '',
                 emergency_contact_lname: '',
                 emergency_contact_phone: '',
-                address_line_1:'1234 Canal St',
-                address_line_2:'Box 12',
-                city:'Houston',
+                address_line_1:'',
+                address_line_2:'',
+                city:'',
                 state_id:'',
                 date_created: this.getDate(),//new Date().toJSON("en-US", {timeZone: "America/Chicago"}).slice(0,10),
                 volunteer_status_id: '2',
-                zip: 12345,
+                zip: '',
                 rel_id:'' ,
                 waiver_signed: '2',
                 zip: ''
@@ -241,11 +246,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: auto;
   padding-left: auto;
   padding-right: auto
 
+}
+
+@media only screen and (min-width: 768px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 35%
+}
 }
 </style>

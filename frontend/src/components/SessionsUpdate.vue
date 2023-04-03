@@ -53,9 +53,9 @@
                     </div>
                 </div>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/sessions_list" @click="$router.back"> Back to Sessions</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" @click="updateButtonClicked = true">Update </button>
-                <button type="submit" class="btn btn-danger" @click="deleteButtonClicked=true">Delete</button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" @click="goBack"> Back to Sessions </button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked=true">Delete</button>
+                <button type="submit" class="btn btn-primary"  @click="updateButtonClicked = true">Update </button>
             </div>
         </form>
     </div>
@@ -103,7 +103,7 @@ export default {
                 .then(()=>{
                     this.session_info={}
                     alert('Session updated')
-                    this.$router.push('/admin/sessions_list')
+                    this.goBack()
                 })
                 .catch(()=>{
                     console.log(error);
@@ -116,7 +116,7 @@ export default {
                 .then(()=>{
                     this.session_info = {}
                     alert('Session deleted')
-                    this.$router.push('/admin/sessions_list')
+                    this.goBack()
                 })
                 .catch(()=>{
                     console.log(error);
@@ -174,16 +174,22 @@ export default {
             .catch(error => {
                 console.log(error);
             });
+        },
+        goBack() {
+            this.$router.go(-1)
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
+@media only screen and (min-width: 768px) {
 .container {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
-  text-align: left
+  width: 35%
 }
+}
+
 </style>
