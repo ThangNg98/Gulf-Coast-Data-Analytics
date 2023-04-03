@@ -57,9 +57,9 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td> {{ this.event_name }}</td>
-                            <td> {{ this.org_name }}</td>
-                            <td> {{ this.time_in }}</td>
+                            <td> {{ this.current_event_name }}</td>
+                            <td> {{ this.current_org_name }}</td>
+                            <td> {{ this.session.time_in }}</td>
                             <td> {{ this.session.session_comment }}</td>
                         </tr>
                     </tbody>
