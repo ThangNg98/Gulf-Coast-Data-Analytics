@@ -4,30 +4,35 @@
             <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem">{{ msg }}</h1>
         </div>
         <div class="container"> 
-            <form @submit.prevent="submitForm" novalidate>
+            <form @submit.prevent="submitForm">
                 <div>
                     <label for="orgName" class="form-label">Organization Name *</label>
-                    <input type="text" class="form-control" id="orgName" v-model="org_info.org_name" required>
+                    <input type="text" class="form-control" ref="orgName" v-model="org_info.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50">
+                    <div class="invalid-feedback">{{errors.orgName}}</div>
 
-                    <label for="exampleFormControlInput1" class="form-label"> Address Line 1 *</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.address_line_1">
+                    <label for="address" class="form-label"> Address Line 1 *</label>
+                    <input type="text" class="form-control" ref="address" v-model="org_info.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255">
+                    <div class="invalid-feedback">{{errors.address}}</div>
 
-                    <label for="exampleFormControlInput1" class="form-label"> Address Line 2</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.address_line_2">
+                    <label for="address2" class="form-label"> Address Line 2</label>
+                    <input type="text" class="form-control" ref="address2" v-model="org_info.address_line_2">
 
-                    <label for="exampleFormControlInput1" class="form-label"> City *</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.city">
+                    <label for="city" class="form-label"> City *</label>
+                    <input type="text" class="form-control" ref="city" v-model="org_info.city" :class="{ 'is-invalid': errors.city }" :maxlength="60">
+                    <div class="invalid-feedback">{{errors.city}}</div>
 
                     <div>
                         <label for="state_select" class="form-label">State *</label>
-                        <select class="form-select" id="state_select" v-model="org_info.state_id">
+                        <select class="form-select" id="state_select" v-model="org_info.state_id" :class="{ 'is-invalid': errors.state }">
                             <option value="">Select a state</option>
                             <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
                         </select>
+                        <div class="invalid-feedback">{{errors.state}}</div>
                     </div>
 
                     <label for="exampleFormControlInput1" class="form-label"> Zip *</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip">
+                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5">
+                    <div class="invalid-feedback">{{errors.zip}}</div>
 
                     <div style="margin-top: 1rem; font-weight: bold">
                     * Required
@@ -41,6 +46,7 @@
                     <button type="submit" class="btn btn-primary" style="margin-right:0.5rem">Submit</button>
                 </div>
             </form>
+            <p>errors: {{ errors }}</p>
         </div>
     </main>
 </template>
@@ -115,7 +121,57 @@ export default {
                 { name: 'Wisconsin', id: 50 },
                 { name: 'Wyoming', id: 51 }
             ],
+            errors: {},
+            submitPressed: false,
         };
+    },
+    watch: {
+        'org_info.org_name'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('orgName')
+                } else {
+                    this.addValidationStyle('orgName', 'Organization name is required.')
+                }
+            }
+        },
+        'org_info.address_line_1'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('address')
+                } else {
+                    this.addValidationStyle('address', 'Address is required.')
+                }
+            }
+        },
+        'org_info.city'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('city')
+                } else {
+                    this.addValidationStyle('city', 'City is required.')
+                }
+            }
+        },
+        'org_info.state_id'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('state')
+                } else {
+                    this.addValidationStyle('state', 'State is required.')
+                }
+            }
+        },
+        'org_info.zip'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('zip')
+                } else {
+                    this.addValidationStyle('zip', 'Zip code is required.')
+                }
+            }
+        }
+
     },
     computed: {
         filteredStates() {
@@ -125,17 +181,48 @@ export default {
         }
     },
     methods: {
+        removeValidationStyle(name) {
+            this.errors[name] = null
+        },
+        addValidationStyle(name, des) {
+            this.errors[name] = des
+        },
         submitForm() {
-            axios
-            .post('http://127.0.0.1:5000/create_organization', this.org_info)
-            .then(() =>{
-                this.org_info={}
-                alert('Organization Created')
-                this.$router.push('/admin/orgs')
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
+            this.submitPressed = true
+
+            this.errors = {}
+
+            if (!this.org_info.org_name) {
+                this.errors.orgName = 'Organization name is required.'
+            }
+            if (!this.org_info.address_line_1) {
+                this.errors.address = 'Address is required.'
+            }
+            if (!this.org_info.city) {
+                this.errors.city = 'City is required.'
+            }
+            if (!this.org_info.state_id) {
+                this.errors.state = 'State is required.'
+            }
+            if (!this.org_info.zip) {
+                this.errors.zip = 'Zip code is required.'
+            }
+            if (this.org_info.zip && !/^\d+$/.test(this.org_info.zip)) {
+                this.errors.zip = 'Zip code must be digits only.'
+            }
+            if (Object.keys(this.errors).length === 0) {
+                // Submit form
+                axios
+                .post('http://127.0.0.1:5000/create_organization', this.org_info)
+                .then(() =>{
+                    this.org_info={}
+                    alert('Organization Created')
+                    this.$router.push('/admin/orgs')
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            }
         }
     }
 }
