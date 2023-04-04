@@ -1,43 +1,50 @@
 <template>
     <main>
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
-    </div>
-    <div class="container"> 
-        <form @submit.prevent="submitForm">
-            <div>
-                <label for="exampleFormControlInput1" class="form-label">Organization Name</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Boy Scouts" v-model="org_info.org_name">
-
-                <label for="exampleFormControlInput1" class="form-label"> Address Line 1</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="123 Boy Scouts St." v-model="org_info.address_line_1">
-
-                <label for="exampleFormControlInput1" class="form-label"> Address Line 2</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="123 Boy Scouts St." v-model="org_info.address_line_2">
-
-                <label for="exampleFormControlInput1" class="form-label"> City</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="123 Boy Scouts St." v-model="org_info.city">
-
+        <div>
+            <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem">{{ msg }}</h1>
+        </div>
+        <div class="container"> 
+            <form @submit.prevent="submitForm" novalidate>
                 <div>
-                    <label for="state_select" class="form-label">State</label>
-                    <select class="form-select" id="state_select" v-model="org_info.state_id">
-                        <option value="">Select a state</option>
-                        <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
-                    </select>
-                </div>
+                    <label for="orgName" class="form-label">Organization Name *</label>
+                    <input type="text" class="form-control" id="orgName" v-model="org_info.org_name" required>
 
-                <label for="exampleFormControlInput1" class="form-label"> Zip</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="123 Boy Scouts St." v-model="org_info.zip">
-            </div>
-            <br>
-            <div style="text-align:right; margin-top: 2rem;">
-                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" >Submit</button>
-          </div>
-        </form>
-    </div>
+                    <label for="exampleFormControlInput1" class="form-label"> Address Line 1 *</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.address_line_1">
+
+                    <label for="exampleFormControlInput1" class="form-label"> Address Line 2</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.address_line_2">
+
+                    <label for="exampleFormControlInput1" class="form-label"> City *</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.city">
+
+                    <div>
+                        <label for="state_select" class="form-label">State *</label>
+                        <select class="form-select" id="state_select" v-model="org_info.state_id">
+                            <option value="">Select a state</option>
+                            <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
+                        </select>
+                    </div>
+
+                    <label for="exampleFormControlInput1" class="form-label"> Zip *</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip">
+
+                    <div style="margin-top: 1rem; font-weight: bold">
+                    * Required
+                </div>
+                </div>
+                <br>
+                <div style="text-align:right; margin-top: 2rem;">
+                    <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left">
+                        <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link>
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="margin-right:0.5rem">Submit</button>
+                </div>
+            </form>
+        </div>
     </main>
 </template>
+
 
 <script>
 import axios from "axios";

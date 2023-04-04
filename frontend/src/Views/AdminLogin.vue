@@ -3,25 +3,25 @@
     <!--Header-->
     <h1 class="text-center my-5">Administrator Login</h1>
     <!--Form for Admin Login-->
-    <form ref="login-form" @submit.prevent="handleLogin" class="needs-validation" novalidate>
-      <div class="input-group mb-3 has-validation">
+    <form ref="login-form" @submit.prevent="handleLogin" novalidate>
+      <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">
             <i class="bi bi-person-fill"></i>
           </span>
         </div>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="username" ref="validationUsername" pattern="^.*\S+.*$" required>
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="username" ref="validationUsername" pattern="^.*\S+.*$" required :disabled="showModal">
         <div class="invalid-feedback">
           Please enter a username.
         </div>
       </div>
-      <div class="input-group mb-3 has-validation">
+      <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">
             <i class="bi bi-lock-fill"></i>
           </span>
         </div>
-        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" v-model="password" ref="validationPassword" pattern="^.*\S+.*$" required>
+        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" v-model="password" ref="validationPassword" pattern="^.*\S+.*$" required :disabled="showModal">
         <div class="invalid-feedback">
           Please enter a password.
         </div>
@@ -69,7 +69,13 @@ export default {
       message: '',
     }
   },
-  mounted() {
+  watch: {
+    username(newValue, oldValue) {
+      this.removeValidationStyles()
+    },
+    password(newValue, oldValue) {
+      this.removeValidationStyles()
+    },
   },
   methods: {
     showAlertModal() {
@@ -81,6 +87,10 @@ export default {
       this.showModal = false;
       this.title = '';
       this.message = '';
+    },
+    removeValidationStyles() {
+      const form = this.$refs['login-form']
+      form.classList.remove('was-validated')
     },
     handleLogin() {
       // Get a reference to the form element
