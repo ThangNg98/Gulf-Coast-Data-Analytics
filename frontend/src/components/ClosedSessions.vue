@@ -6,9 +6,9 @@
     </div>
     <div class="container"> 
         
-        <div class="table-responsive-md">
+        <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
-                    <thead>
+                    <thead class="theadsticky">
                         <tr>
                         <th scope="col">Volunteer Name</th>
                         <th scope="col">Session Date</th>
@@ -50,7 +50,7 @@ export default {
     name: 'ClosedSessions',
     data() {
         return {
-            msg : "Active",
+            msg : "Open",
             msg2 : "Closed",
             sessions:[],
             hoverId: null,
@@ -82,12 +82,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: auto;
   padding-left: auto;
   padding-right: auto
 }
+
 .table td {
     word-wrap: break-word;
     min-width: 160px;
@@ -98,4 +99,17 @@ export default {
     background-color: rgba(230, 231, 235, 1);
     transition: background-color 0.3s ease-in-out;
   }
+
+.table-wrapper {
+  max-height: 700px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
+}
+
+.theadsticky {
+  position: sticky;
+  top: 0;
+  background-color: #e6e7eb !important;
+}
 </style>

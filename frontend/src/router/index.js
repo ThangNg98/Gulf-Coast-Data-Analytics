@@ -9,7 +9,17 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       props: true,
-      component: () => import('../views/Home.vue')
+      component: () => import('../views/Home.vue'),
+      beforeEnter: (to, from, next) => {
+        const volunteerPhone = useVolunteerPhoneStore().volunteerPhone
+        if (volunteerPhone) {
+          // User is logged in, redirect to /profile/checkin
+          next('/profile/checkin')
+        } else {
+          // User is not logged in, allow access to Home page
+          next()
+        }
+      }
     },
     {
       path: '/register',

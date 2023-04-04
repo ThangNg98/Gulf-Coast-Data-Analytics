@@ -3,12 +3,12 @@
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
-    <div class="container text-start"> 
+    <div class="container"> 
         <h3> Volunteer</h3>
         <form @submit.prevent="submitForm">
             <div>
                 <div class="row">
-                    <div class="col-5"> 
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
                     </div>
@@ -17,29 +17,28 @@
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.last_name">
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-2"> 
+                <div class="row">
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone" maxlength="14">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone">
                     </div>
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.email">
                     </div>
-                </div>
-                <div class="row mt-2">
+                    <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_1">
                     </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Address Line 2</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_2">
                     </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">City</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.city">
@@ -60,12 +59,13 @@
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.zip">
                     </div>
                 </div>
+                </div>
             </div>
             <br>
             <h3> Emergency Contact</h3>
             <div>
                 <div class="row">
-                    <div class="col-5"> 
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter First Name" v-model="volunteer_info.emergency_contact_fname">
                     </div>
@@ -74,12 +74,12 @@
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Last Name" v-model="volunteer_info.emergency_contact_lname">
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-2"> 
+                <div class="row">
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="volunteer_info.emergency_contact_phone">
                     </div>
-                    <div class="col-3"> 
+                    <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Relationship</label>
                         <div>
                             <div>
@@ -93,9 +93,9 @@
                 </div>
             </div>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="submit" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/volunteers"> Back to Volunteers</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" @click="updateButtonClicked = true">Update </button>
-                <button type="submit" class="btn btn-danger"  @click="deleteButtonClicked = true">Delete</button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/volunteers"> Back to Volunteers</router-link></button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked = true">Delete</button>
+                <button type="submit" class="btn btn-primary"  @click="updateButtonClicked = true">Update </button>
             </div>
         </form>
         <div class="table-responsive-md">
@@ -115,7 +115,8 @@
                             <td>
                                 <input type="date" id="date" v-model="volunteer_info.date_waiver_signed" @input="formatDate">
                             </td>
-                            <td>[hours]</td>
+                            <td v-if="volunteer_info.total_hours != null" > {{ this.volunteer_info.total_hours }}</td>
+                            <td v-else> 0 </td>
                         </tr>
                     </tbody>
                 </table>
@@ -275,10 +276,17 @@ export default {
             const date = new Date(event.target.value)
             const formattedDate = date.toISOString().slice(0, 10)
             this.date = formattedDate
-        }
+        },
     },
     created() {
         axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
+            axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${this.$route.params.volunteer_id}`)
+                    .then(response => {
+                        this.volunteer_info.total_hours = response.data[0].total_hours
+                    })
+                    .catch(error => {
+                        console.log(error);
+            });
             console.log('response.data[0].date_waiver_signed: ', response.data[0].date_waiver_signed)
             if (response.data[0].date_waiver_signed == null) {
                 console.log('date_waiver_signed is null')
@@ -296,13 +304,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: auto;
   padding-left: auto;
   padding-right: auto
 }
-
 @media only screen and (min-width: 768px) {
 .container {
   margin: auto;

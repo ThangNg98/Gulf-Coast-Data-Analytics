@@ -3,13 +3,13 @@
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
-    <div class="container"> 
-        <div class="table-responsive-md">
-            <table class="table table-bordered" style="margin:auto; text-align: left; max-width: 50%; margin-top: 2rem">
-                    <thead>
+    <div class="container1"> 
+        <div class="table-responsive-md table-wrapper">
+            <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
+                    <thead class="theadsticky">
                         <tr>
                         <th scope="col">Volunteer Name</th>
-                        <th scope="col">Total Hours</th>
+                        <th style="width:5%" scope="col">Total Hours</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,7 +29,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
     name: 'Volunteers',
     data() {
@@ -37,7 +36,6 @@ export default {
             msg : "List of Volunteers",
             volunteers: [],
         };
-
     },
     methods: {
         getVolunteers() {
@@ -62,16 +60,27 @@ export default {
 }
 </script>
 
-<style>
-.container {
+<style scoped>
+.container1 {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
 }
-
 .table td {
     word-wrap: break-word;
     min-width: 160px;
     max-width: 160px;
+}
+.theadsticky {
+  position: sticky;
+  top: 0;
+  background-color: #e6e7eb !important;
+}
+
+.table-wrapper {
+  max-height: 700px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
 }
 </style>

@@ -18,5 +18,8 @@ export const useVolunteerPhoneStore = defineStore('volunteerphone', {
     clearVolunteerPhone() {
       this.volunteerPhone = null
     }
+  },
+  persist: {
+    enabled: true
   }
 })

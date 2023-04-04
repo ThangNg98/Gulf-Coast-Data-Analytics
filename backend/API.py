@@ -30,9 +30,11 @@ def check_most_recent(volunteer_id):
         )
         SELECT 
             session_id, 
+            TIME_FORMAT(time_in, '%%h:%%i %%p') AS time_in,
             IF(time_out IS NULL, '1', '2') AS time_out,
-            org_id
-            event_id
+            org_id,
+            event_id,
+            session_comment
         FROM session
         WHERE session_id = (
             SELECT max_session_id
@@ -234,7 +236,7 @@ def create_event():
 @app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
     query = "select event.event_id, event.event_name, event.event_description, sum(session.total_hours) as total_hours, \
-            count(session.volunteer_id) as num_volunteers from event \
+            count(distinct session.volunteer_id) as num_volunteers from event \
             LEFT JOIN session on event.event_id=session.event_id WHERE event.event_id='%s'" % event_id
     rows = execute_read_query(conn,query)   
     return jsonify(rows)
@@ -300,7 +302,7 @@ def get_org(org_id): # returns all the orgs in the organizations table that have
     query = "select organization.org_id, organization.org_name, organization.address_line_1, \
             organization.address_line_2, organization.city, organization.state_id, \
             organization.zip, organization.org_status_id, sum(session.total_hours) as total_hours, \
-            count(session.volunteer_id) as num_volunteers from organization \
+            count(distinct session.volunteer_id) as num_volunteers from organization \
             LEFT JOIN session on organization.org_id=session.org_id WHERE organization.org_id='%s'" % org_id
     rows = execute_read_query(conn,query)
     return jsonify(rows)
@@ -362,6 +364,17 @@ def read_volunteers():
     GROUP BY volunteer.volunteer_id"""
     rows = execute_read_query(conn,query)
     return jsonify(rows)
+
+@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/read_volunteer_hours
+def read_volunteers_hours(volunteer_id):   
+    query = """select sum(session.total_hours) as total_hours
+                from session
+                where volunteer_id = %s """ % volunteer_id
+
+    rows = execute_read_query(conn,query)
+    return jsonify(rows)
+    
+
 
 @app.route('/update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/update_volunteer
 def update_volunteer():

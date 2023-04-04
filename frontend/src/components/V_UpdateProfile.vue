@@ -315,10 +315,13 @@ export default {
 }}
 </script>
 
-<style>
+<style scoped>
+@media only screen and (min-width: 768px) {
 .container {
   margin: auto;
   padding-left: auto;
-  padding-right: auto
+  padding-right: auto;
+  width: 30%
+}
 }
 </style>

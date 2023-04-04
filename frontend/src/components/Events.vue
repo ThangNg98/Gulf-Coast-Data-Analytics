@@ -3,10 +3,10 @@
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
-    <div class="container"> 
+    <div class="container1 table-wrapper"> 
         <div class="table-responsive-md">
-            <table class="table table-bordered" style="margin:auto; text-align: left; max-width: 50%; margin-top: 2rem">
-                    <thead>
+            <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
+                    <thead class="theadsticky">
                         <tr>
                         <th scope="col">Event Name</th>
                         <th scope="col">Description</th>
@@ -22,17 +22,16 @@
                     </tbody>
                 </table>
         </div>
-        <div style="text-align:right; margin-top: 2rem;">
+        <div style="margin-top: 2rem;margin-left: 30%">
             <router-link class="nav-link" to="/admin/create_event"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Create New Event</button> </router-link>
-        </div>
-
     </div>
+    </div>
+    
     </main>
 </template>
 
 <script>
 import axios from "axios";
-
 export default {
     name: 'Events',
     data() {
@@ -67,17 +66,27 @@ export default {
 }
 </script>
 
-<style>
-.container {
+<style scoped>
+.container1 {
   margin: auto;
   padding-left: auto;
   padding-right: auto
-
 }
-
 .table td {
     word-wrap: break-word;
     min-width: 120px;
     max-width: 160px;
+}
+.theadsticky {
+  position: sticky;
+  top: 0;
+  background-color: #e6e7eb !important;
+}
+
+.table-wrapper {
+  max-height: 700px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
 }
 </style>
