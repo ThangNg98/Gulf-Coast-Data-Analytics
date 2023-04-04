@@ -217,7 +217,7 @@ export default {
                 .then(() =>{
                     this.org_info={}
                     alert('Organization Created')
-                    this.$router.push('/admin/orgs')
+                    this.$router.push('/admin/orgs?success=true')
                 })
                 .catch((error)=>{
                     console.log(error);
