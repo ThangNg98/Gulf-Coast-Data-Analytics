@@ -7,6 +7,7 @@ import axios from 'axios';
 import { createPinia } from 'pinia'
 import piniaPersist from 'pinia-plugin-persist'
 import "bootstrap-icons/font/bootstrap-icons.css"
+import 'vue-transition-css/dist/css/vue-transition.css'
 
 const app = createApp(App)
 const pinia = createPinia()

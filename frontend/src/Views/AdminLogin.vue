@@ -3,54 +3,96 @@
     <!--Header-->
     <h1 class="text-center my-5">Administrator Login</h1>
     <!--Form for Admin Login-->
-    <form @submit.prevent="handleLogin">
-      <div class="input-group mb-3">
+    <form ref="login-form" @submit.prevent="handleLogin" class="needs-validation" novalidate>
+      <div class="input-group mb-3 has-validation">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">
             <i class="bi bi-person-fill"></i>
           </span>
         </div>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="username">
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="username" ref="validationUsername" pattern="^.*\S+.*$" required>
+        <div class="invalid-feedback">
+          Please enter a username.
+        </div>
       </div>
-      <div class="input-group mb-3">
+      <div class="input-group mb-3 has-validation">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">
             <i class="bi bi-lock-fill"></i>
           </span>
         </div>
-        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" v-model="password">
-      </div>
-      <br>
+        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" v-model="password" ref="validationPassword" pattern="^.*\S+.*$" required>
+        <div class="invalid-feedback">
+          Please enter a password.
+        </div>
+      </div>      
+
       <!--Submit Button-->
-      <div class="text-center">
+      <div class="text-center mb-3">
           <button type="submit" class="btn btn-primary">Login</button>
       </div>
+
     </form>
-    <div></div>
-    <div v-if="errorMessage" class="alert alert-danger" role="alert">
-      {{ errorMessage }}
-    </div>
+
+    <Transition name="bounce">
+        <alert-modal v-if="showModal" @close="closeAlertModal" :title="title" :message="message" />
+    </Transition>
+
+
+
 
   </div>
 </template>
 
+
 <script>
 //Import "useAdminLoginStore" to save logged in status as session
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
+import AlertModal from '@/components/AlertModal.vue';
+
+
 
 export default {
+  components: {
+    AlertModal,
+  },
   data() {
     return {
       //variable to hold username
       username: 'admin1',
       //variable to hold password - need to store as hash
       password: 'admin1',
-      errorMessage: null
+      errorMessage: null,
+      showErrorMessage: false,
+      showModal: false,
+      title: '',
+      message: '',
     }
   },
+  mounted() {
+  },
   methods: {
-    //method to log admin in
+    showAlertModal() {
+      this.showModal = true;
+      this.title = 'Login Failed';
+      this.message = 'Invalid Login Credentials. Please try again.';
+    },
+    closeAlertModal() {
+      this.showModal = false;
+      this.title = '';
+      this.message = '';
+    },
     handleLogin() {
+      // Get a reference to the form element
+      const form = this.$refs['login-form']
+
+      // Manually trigger the validation and apply the styles
+      if (form.checkValidity() === false) {
+        form.classList.add('was-validated')
+        return
+      }
+
+      // Perform your login logic here
       if (this.username == 'admin1' && this.password == 'admin1') {
         //calls the "login()" action from the store file, which sets isLoggedIn state to true
         console.log('isLoggedIn store: ', useAdminLoginStore().isLoggedIn)
@@ -59,19 +101,26 @@ export default {
         this.$router.push('/admin/dash')
       }
       else {
-        this.errorMessage = 'Login Failed'
+        this.showAlertModal()
+        // Remove validation state classes from input fields
+        const usernameInput = this.$refs['validationUsername']
+        const passwordInput = this.$refs['validationPassword']
+        usernameInput.classList.remove('is-valid', 'is-invalid')
+        passwordInput.classList.remove('is-valid', 'is-invalid')
+
+        form.classList.remove('was-validated')
       }
     }
-  },
-  mounted() {
-    console.log('mounted isLoggedIn: ', useAdminLoginStore().isLoggedIn)
   }
 }
 </script>
+
 
 <style scoped>
 .container {
   max-width: 500px;
   margin: auto;
 }
+
 </style>
+
