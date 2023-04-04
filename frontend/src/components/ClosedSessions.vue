@@ -50,7 +50,7 @@ export default {
     name: 'ClosedSessions',
     data() {
         return {
-            msg : "Active",
+            msg : "Open",
             msg2 : "Closed",
             sessions:[],
             hoverId: null,
