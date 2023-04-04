@@ -27,7 +27,16 @@ export default {
       isVisible: true
     }
   },
+  mounted() {
+      this.startTimer();
+    },
   methods: {
+    startTimer() {
+        setTimeout(() => {
+          this.isVisible = false;
+          this.$emit("close");
+        }, 5000); // close after 5 seconds
+      },
     closeModal() {
       this.isVisible = false;
       this.$emit("close");
@@ -47,6 +56,27 @@ export default {
   max-width: 90%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
+
+.alert-modal::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #8B0000;
+  animation: decrease-width 5s linear forwards;
+}
+
+@keyframes decrease-width {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
+
 
 
 .alert-modal h4 {
