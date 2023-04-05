@@ -348,6 +348,14 @@ export default {
             });
         },
     },
+    mounted() {
+        console.log('registration mounted')
+        // get the phoneNumber query parameter from the URL
+        const phoneNumber = this.$route.query.phoneNumber;
+        if (phoneNumber) {
+            this.volunteer_info.phone = phoneNumber
+        }
+    },
     methods: {
         showAlertModal() {
             this.showModal = true;
