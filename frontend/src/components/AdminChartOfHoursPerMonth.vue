@@ -48,7 +48,7 @@
             }
         },
         mounted() {
-            this.getMonthsHoursUniques();
+            this.getPastYear();
         }
     }
 </script>
