@@ -413,6 +413,7 @@ export default {
                     this.title = '';
                     this.message = '';
                     this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
+                    this.volunteer_info.emergency_contact_phone = this.volunteer_info.emergency_contact_phone.replace(/[^\d]/g, '');
                     axios
                     .post('http://127.0.0.1:5000/admin_update_volunteer', this.volunteer_info)
                     .then(() =>{

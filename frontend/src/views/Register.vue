@@ -230,7 +230,9 @@ export default {
             errors: {},
             submitPressed: false,
             confirmModal: false,
-            showModal: false
+            showModal: false,
+            title: '',
+            message: '',
         };
     },
     watch: {
@@ -409,6 +411,7 @@ export default {
                 this.title = '';
                 this.message = '';
                 this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
+                this.volunteer_info.emergency_contact_phone = this.volunteer_info.emergency_contact_phone.replace(/[^\d]/g, '');
                 axios
                 .post('http://127.0.0.1:5000/add_volunteer', this.volunteer_info)
                 .then(response => {
@@ -493,18 +496,9 @@ export default {
                 this.errors.emRel = 'Relationship is required.'
             }
             if (Object.keys(this.errors).length === 0) {
-                if (this.updateButtonClicked == true) {
-                    this.updateButtonClicked = false
-                    this.confirmModal = true
-                    this.title = 'Please Confirm Update'
-                    this.message = "Are you sure you want to update this volunteer?"
-                }
-                else if (this.deleteButtonClicked = true) {
-                    this.deleteButtonClicked = false
-                    this.confirmModal = true
-                    this.title = 'Please Confirm Registration'
-                    this.message = "Is the information provided accurate?"
-                }
+                this.confirmModal = true
+                this.title = 'Please Confirm Registration'
+                this.message = "Is the information you provided accurate?"
             }
 
 
