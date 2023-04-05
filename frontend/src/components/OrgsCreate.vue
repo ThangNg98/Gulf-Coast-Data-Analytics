@@ -6,6 +6,9 @@
         <div class="container"> 
             <form @submit.prevent="submitForm">
                 <div>
+                    <div style="margin-top: 1rem; font-weight: bold">
+                    * Required
+                    </div>
                     <label for="orgName" class="form-label">Organization Name *</label>
                     <input type="text" class="form-control" ref="orgName" v-model="org_info.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50">
                     <div class="invalid-feedback">{{errors.orgName}}</div>
@@ -34,9 +37,6 @@
                     <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5">
                     <div class="invalid-feedback">{{errors.zip}}</div>
 
-                    <div style="margin-top: 1rem; font-weight: bold">
-                    * Required
-                </div>
                 </div>
                 <br>
                 <div style="text-align:right; margin-top: 2rem;">
@@ -46,7 +46,6 @@
                     <button type="submit" class="btn btn-primary" style="margin-right:0.5rem">Submit</button>
                 </div>
             </form>
-            <p>errors: {{ errors }}</p>
         </div>
     </main>
 </template>
