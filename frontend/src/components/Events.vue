@@ -31,23 +31,84 @@
             <router-link class="nav-link" to="/admin/create_event"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Create New Event</button> </router-link>
     </div>
     </div>
+
+    <Transition name="bounce">
+        <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
+    </Transition>
+
+    <Transition name="bounce">
+        <UpdateModal v-if="updateModal" @close="closeUpdateModal" :title="title" :message="message" />
+    </Transition>
+
+    <Transition name="bounce">
+        <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
+    </Transition>
     
     </main>
 </template>
 
 <script>
 import axios from "axios";
+import SuccessModal from './SuccessModal.vue'
+import UpdateModal from './UpdateModal.vue'
+import DeleteModal from './DeleteModal.vue'
 export default {
     name: 'Events',
+    components: {
+        SuccessModal,
+        UpdateModal,
+        DeleteModal
+    },
     data() {
         return {
             msg : "List of Events",
             events: [],
             hoverId: null,
+            successModal: false,
+            updateModal: false,
+            deleteModal: false,
+        }
+    },
+    updated() {
+        if (!this.isMounted) {
+            console.log('pseudo mount')
+            const query = new URLSearchParams(this.$route.query);
+            if (query.get('success') === 'true') {
+                console.log('success is true')
+                this.successModal = true;
+                this.title = "Success!"
+                this.message = "Event successfully created."
+            }
+            if (query.get('update') === 'true') {
+                console.log('update is true')
+                this.updateModal = true;
+                this.title = "Updated!"
+                this.message = "Event successfully updated."
+            }
+            if (query.get('delete') === 'true') {
+                console.log('delete is true')
+                this.deleteModal = true;
+                this.title = "Deleted!"
+                this.message = "Event successfully deleted."
+            }
+            this.isMounted = true
         }
     },
     methods: {
-        submitForm() {
+        closeSuccessModal() {
+            this.successModal = false;
+            this.title = '';
+            this.message = '';
+        },
+        closeUpdateModal() {
+            this.updateModal = false;
+            this.title = '';
+            this.message = '';
+        },
+        closeDeleteModal() {
+            this.deleteModal = false;
+            this.title = '';
+            this.message = '';
         },
         getEvents() {
             axios.get('http://127.0.0.1:5000/read_events')

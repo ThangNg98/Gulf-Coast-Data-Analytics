@@ -10,23 +10,23 @@
                     * Required
                     </div>
                     <label for="orgName" class="form-label">Organization Name *</label>
-                    <input type="text" class="form-control" ref="orgName" v-model="org_info.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50">
+                    <input type="text" class="form-control" ref="orgName" v-model="org_info.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.orgName}}</div>
 
                     <label for="address" class="form-label"> Address Line 1 *</label>
-                    <input type="text" class="form-control" ref="address" v-model="org_info.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255">
+                    <input type="text" class="form-control" ref="address" v-model="org_info.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.address}}</div>
 
                     <label for="address2" class="form-label"> Address Line 2</label>
-                    <input type="text" class="form-control" ref="address2" v-model="org_info.address_line_2">
+                    <input type="text" class="form-control" ref="address2" v-model="org_info.address_line_2" :disabled="confirmModal">
 
                     <label for="city" class="form-label"> City *</label>
-                    <input type="text" class="form-control" ref="city" v-model="org_info.city" :class="{ 'is-invalid': errors.city }" :maxlength="60">
+                    <input type="text" class="form-control" ref="city" v-model="org_info.city" :class="{ 'is-invalid': errors.city }" :maxlength="60" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.city}}</div>
 
                     <div>
                         <label for="state_select" class="form-label">State *</label>
-                        <select class="form-select" id="state_select" v-model="org_info.state_id" :class="{ 'is-invalid': errors.state }">
+                        <select class="form-select" id="state_select" v-model="org_info.state_id" :class="{ 'is-invalid': errors.state }" :disabled="confirmModal">
                             <option value="">Select a state</option>
                             <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
                         </select>
@@ -34,27 +34,36 @@
                     </div>
 
                     <label for="exampleFormControlInput1" class="form-label"> Zip *</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5">
+                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.zip}}</div>
 
                 </div>
                 <br>
                 <div style="text-align:right; margin-top: 2rem;">
-                    <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left">
-                        <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link>
+                    <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" :disabled="confirmModal">
+                        <router-link class="nav-link" to="/admin/orgs" > Back to Organizations</router-link>
                     </button>
-                    <button type="submit" class="btn btn-primary" style="margin-right:0.5rem">Submit</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" :disabled="confirmModal">Submit</button>
                 </div>
             </form>
         </div>
+
+        <Transition name="bounce">
+            <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
+        </Transition>
+
     </main>
 </template>
 
 
 <script>
 import axios from "axios";
+import ConfirmModal from './ConfirmModal.vue'
 export default {
     name: 'OrgsCreate',
+    components: {
+        ConfirmModal
+    },
     data() {
         return {
             msg : "Add New Organization",
@@ -120,6 +129,9 @@ export default {
                 { name: 'Wisconsin', id: 50 },
                 { name: 'Wyoming', id: 51 }
             ],
+            confirmModal: false,
+            title: '',
+            message: '',
             errors: {},
             submitPressed: false,
         };
@@ -186,6 +198,23 @@ export default {
         addValidationStyle(name, des) {
             this.errors[name] = des
         },
+        closeConfirmModal(value) {
+            this.confirmModal = false
+            this.title = ''
+            this.message = ''
+            console.log(value)
+            if (value === 'yes') {
+                axios
+                .post('http://127.0.0.1:5000/create_organization', this.org_info)
+                .then(() =>{
+                    this.org_info={}
+                    this.$router.push('/admin/orgs?success=true')
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            }
+        },
         submitForm() {
             this.submitPressed = true
 
@@ -216,16 +245,9 @@ export default {
             }
             if (Object.keys(this.errors).length === 0) {
                 // Submit form
-                axios
-                .post('http://127.0.0.1:5000/create_organization', this.org_info)
-                .then(() =>{
-                    this.org_info={}
-                    alert('Organization Created')
-                    this.$router.push('/admin/orgs?success=true')
-                })
-                .catch((error)=>{
-                    console.log(error);
-                });
+                this.confirmModal = true
+                this.title = 'Please Confirm Creation'
+                this.message = 'Are you sure you want to create this organization?'
             }
         }
     }

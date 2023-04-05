@@ -6,22 +6,25 @@
     <div class="container"> 
         <form @submit.prevent="submitForm">
             <div>
-                <label for="orgName" class="form-label">Organization Name</label>
+                <div style="margin-top: 1rem; font-weight: bold">
+                    * Required
+                </div>
+                <label for="orgName" class="form-label">Organization Name *</label>
                 <input type="text" class="form-control" ref="orgName" v-model="organization.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.orgName}}</div>
 
-                <label for="address" class="form-label"> Address Line 1 </label>
+                <label for="address" class="form-label"> Address Line 1 *</label>
                 <input type="text" class="form-control" ref="address" v-model="organization.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.address}}</div>
 
                 <label for="address2" class="form-label"> Address Line 2 </label>
                 <input type="text" class="form-control" ref="address2" v-model="organization.address_line_2" :disabled="this.confirmModal">
 
-                <label for="city" class="form-label"> City </label>
+                <label for="city" class="form-label"> City *</label>
                 <input type="text" class="form-control" ref="city" v-model="organization.city" :class="{ 'is-invalid': errors.city }" :maxlength="60" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.city}}</div>
 
-                <label for="state_select" class="form-label"> State </label>
+                <label for="state_select" class="form-label"> State *</label>
                 <div>
                     <select class="form-select" ref="state_select" v-model="organization.state_id" :class="{ 'is-invalid': errors.state }" :disabled="this.confirmModal">
                     <option value="">Select a state</option>
@@ -29,7 +32,7 @@
                     </select>
                     <div class="invalid-feedback">{{errors.state}}</div>
                 </div>
-                <label for="zip" class="form-label"> Zip </label>
+                <label for="zip" class="form-label"> Zip *</label>
                 <input type="text" class="form-control" ref="zip" v-model="organization.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.zip}}</div>
             </div>
@@ -223,7 +226,7 @@ export default {
             this.confirmModal = false;
             console.log(value)
             if (value === 'yes') {
-                if (this.title === 'Update') {
+                if (this.title === 'Please Confirm Update') {
                     console.log('update confirm')
                     this.title = '';
                     this.message = '';
@@ -237,7 +240,7 @@ export default {
                         console.log(error);
                     });
                 }
-                else if (this.title === 'Delete') {
+                else if (this.title === 'Please Confirm Delete') {
                     console.log('delete confirm')
                     this.title = '';
                     this.message = '';
@@ -284,14 +287,14 @@ export default {
                     console.log('update clicked')
                     this.updateButtonClicked = false
                     this.confirmModal = true
-                    this.title = 'Update'
+                    this.title = 'Please Confirm Update'
                     this.message = "Are you sure you want to update this organization?"
                 }
                 else if (this.deleteButtonClicked == true) {
                     console.log('delete clicked')
                     this.deleteButtonClicked = false
                     this.confirmModal = true
-                    this.title = 'Delete'
+                    this.title = 'Please Confirm Delete'
                     this.message = "Are you sure you want to delete this organization?"
                 }
             }
