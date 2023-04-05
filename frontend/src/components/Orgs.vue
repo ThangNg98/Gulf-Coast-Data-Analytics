@@ -58,7 +58,9 @@ import DeleteModal from './DeleteModal.vue'
 export default {
     name: 'Orgs',
     components: {
-        SuccessModal
+        SuccessModal,
+        UpdateModal,
+        DeleteModal
     },
     data() {
         return {

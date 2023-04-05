@@ -44,9 +44,9 @@
   <style scoped>
   .alert-modal {
     position: fixed;
-    top: 20rem;
-    right: 1rem;
-    transform: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 1rem 1.25rem;
     width: 400px;
     max-width: 90%;
@@ -82,13 +82,13 @@
   
   @keyframes bounce-in {
     0% {
-      transform: translate(0, 0) scale(0);
+      transform: translate(-50%, -50%) scale(0);
     }
     50% {
-      transform: translate(0, 0) scale(1.25);
+      transform: translate(-50%, -50%) scale(1.25);
     }
     100% {
-      transform: translate(0, 0) scale(1);
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 
