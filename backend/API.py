@@ -513,9 +513,23 @@ def get_volunteer_id(volunteer_phone):
 @app.route('/get_month_hours_uniques', methods=['GET'])
 def get_month_hours_uniques():
     query = """
-        SELECT DATE_FORMAT(session_date, '%M') as MonthName, DATE_FORMAT(session_date, '%Y') as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers
+        SELECT DATE_FORMAT(session_date, '%M') as MonthName, YEAR(session_date) as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers, DATE_FORMAT(session_date, '%m') as MonthNum
         from session
-        GROUP BY MonthName, YearName;
+        GROUP BY MonthName, MonthNum, YEAR(session_date)
+        ORDER BY YEAR(session_date) DESC, MonthNum DESC;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+
+@app.route('/get_past_year', methods=['GET'])
+def get_past_year():
+    query = """
+        SELECT DATE_FORMAT(session_date, '%M') as MonthName, YEAR(session_date) as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers, DATE_FORMAT(session_date, '%m') as MonthNum
+        from session
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)  AND session_date <= NOW()
+        GROUP BY MonthName, MonthNum, YEAR(session_date)
+        ORDER BY YEAR(session_date) DESC, MonthNum DESC;
     """
     rows = execute_read_query(conn, query)
     return jsonify(rows)
