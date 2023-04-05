@@ -37,12 +37,24 @@
         <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
     </Transition>
 
+    
+    <Transition name="bounce">
+        <UpdateModal v-if="updateModal" @close="closeUpdateModal" :title="title" :message="message" />
+    </Transition>
+
+    <Transition name="bounce">
+        <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
+    </Transition>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
 import SuccessModal from './SuccessModal.vue'
+import UpdateModal from './UpdateModal.vue'
+import DeleteModal from './DeleteModal.vue'
+
 export default {
     name: 'Orgs',
     components: {
@@ -54,10 +66,12 @@ export default {
             orgs:[],
             hoverId: null,
             successModal: false,
+            updateModal: false,
+            deleteModal: false,
             title: '',
             message: '',
             isMounted: false
-        }
+        };
     
     },
     updated() {
@@ -70,12 +84,34 @@ export default {
                 this.title = "Success!"
                 this.message = "Organization successfully created."
             }
+            if (query.get('update') === 'true') {
+                console.log('update is true')
+                this.updateModal = true;
+                this.title = "Updated!"
+                this.message = "Organization successfully updated."
+            }
+            if (query.get('delete') === 'true') {
+                console.log('delete is true')
+                this.deleteModal = true;
+                this.title = "Deleted!"
+                this.message = "Organization successfully deleted."
+            }
             this.isMounted = true
         }
     },
     methods: {
         closeSuccessModal() {
             this.successModal = false;
+            this.title = '';
+            this.message = '';
+        },
+        closeUpdateModal() {
+            this.updateModal = false;
+            this.title = '';
+            this.message = '';
+        },
+        closeDeleteModal() {
+            this.deleteModal = false;
             this.title = '';
             this.message = '';
         },
@@ -125,6 +161,7 @@ export default {
     background-color: rgba(230, 231, 235, 1);
     transition: background-color 0.3s ease-in-out;
   }
+
 .table-wrapper {
   max-height: 700px;
   overflow: auto;
