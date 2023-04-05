@@ -412,6 +412,7 @@ export default {
                 if (this.title === 'Please Confirm Update') {
                     this.title = '';
                     this.message = '';
+                    this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
                     axios
                     .post('http://127.0.0.1:5000/admin_update_volunteer', this.volunteer_info)
                     .then(() =>{

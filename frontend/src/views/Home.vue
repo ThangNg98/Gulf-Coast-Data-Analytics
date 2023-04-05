@@ -25,15 +25,24 @@
         </div>
       </form>
     </div>
+
+    <Transition name="bounce">
+        <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
+    </Transition>
+
   </main>
 </template>
   
 <script>
   import axios from 'axios'  
   import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore'
+  import SuccessModal from '../components/SuccessModal.vue'
 
   export default {
     name: 'Home',
+    components: {
+      SuccessModal
+    },
     data() {
       return {
         msg : "Welcome to The Living Legacy Center",
@@ -64,6 +73,7 @@
         //variable that determines whether the error message shows
         error: false,
         volunteerPhoneList: [],
+        successModal: false
       }
     },
     watch: {
@@ -72,6 +82,14 @@
       }
     },
     mounted() {
+      console.log('mounted')
+      const query = new URLSearchParams(this.$route.query);
+      if (query.get('register') === 'true') {
+          console.log('register is true')
+          this.successModal = true;
+          this.title = "You are registered!"
+          this.message = "Please wait until you have been approved."
+      }
       axios
         .get('http://127.0.0.1:5000/volunteer_phone/')
         .then(response => {
@@ -83,6 +101,11 @@
         })
     },
     methods: {
+      closeSuccessModal() {
+            this.successModal = false;
+            this.title = '';
+            this.message = '';
+      },
       formatPhoneNumber(value) {
         if (!value) return value;
         const phoneNumber = value.replace(/[^\d]/g, '');
