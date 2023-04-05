@@ -13,8 +13,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="org in orgs"
-                        @click="editOrgs(org.org_id)">
+                        <tr 
+                        v-for="org in orgs"
+                        @click="editOrgs(org.org_id)" :key="org.org_id"
+                        :style="{ cursor: 'pointer' }"
+                        :class="{ 'hoverRow': hoverId === org.org_id }"
+                        @mouseenter="hoverId = org.org_id"
+                        @mouseleave="hoverId = null">
                             <td style="text-align:left">{{ org.org_name }}</td>
                             <td style="text-align:left">{{ org.address_line_1 }}</td>
                         </tr>
@@ -26,21 +31,53 @@
         </div>
 
     </div>
+
+    <Transition name="bounce">
+        <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
+    </Transition>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
+import SuccessModal from './SuccessModal.vue'
 export default {
     name: 'Orgs',
+    components: {
+        SuccessModal
+    },
     data() {
         return {
             msg : "List of Organizations",
-            orgs:[]
-        };
+            orgs:[],
+            hoverId: null,
+            successModal: false,
+            title: '',
+            message: '',
+            isMounted: false
+        }
     
     },
+    updated() {
+        if (!this.isMounted) {
+            console.log('pseudo mount')
+            const query = new URLSearchParams(this.$route.query);
+            if (query.get('success') === 'true') {
+                console.log('success is true')
+                this.successModal = true;
+                this.title = "Success!"
+                this.message = "Organization successfully created."
+            }
+            this.isMounted = true
+        }
+    },
     methods: {
+        closeSuccessModal() {
+            this.successModal = false;
+            this.title = '';
+            this.message = '';
+        },
         submitForm() {
         },
         getOrgs() {
@@ -83,6 +120,11 @@ export default {
   background-color: #e6e7eb !important;
 }
 
+.hoverRow {
+    background-color: rgba(230, 231, 235, 1);
+    transition: background-color 0.3s ease-in-out;
+  }
+  
 .table-wrapper {
   max-height: 700px;
   overflow: auto;
