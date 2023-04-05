@@ -129,7 +129,7 @@
             console.log('Volunteer found in list')
             console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
             console.log('setVolunteerID before: ', useVolunteerPhoneStore().volunteerID)
-            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id)
+            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id, volunteer.first_name)
             console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
             console.log('setVolunteerID after: ', useVolunteerPhoneStore().volunteerID)
             alert('Login Success')
