@@ -37,7 +37,6 @@
         <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
     </Transition>
 
-    
     <Transition name="bounce">
         <UpdateModal v-if="updateModal" @close="closeUpdateModal" :title="title" :message="message" />
     </Transition>
@@ -116,8 +115,6 @@ export default {
             this.deleteModal = false;
             this.title = '';
             this.message = '';
-        },
-        submitForm() {
         },
         getOrgs() {
             axios.get('http://127.0.0.1:5000/read_orgs')

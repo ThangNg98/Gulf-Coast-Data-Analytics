@@ -79,10 +79,12 @@
 
 .alert-modal h4 {
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .alert-modal p {
   margin-bottom: 0;
+  text-align: left;
 }
 
 .alert-modal-close-button {

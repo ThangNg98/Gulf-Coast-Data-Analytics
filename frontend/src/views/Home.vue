@@ -25,15 +25,30 @@
         </div>
       </form>
     </div>
+
+    <Transition name="bounce">
+        <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
+    </Transition>
+
+    <Transition name="bounce">
+        <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
+    </Transition>
+
   </main>
 </template>
   
 <script>
   import axios from 'axios'  
   import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore'
+  import SuccessModal from '../components/SuccessModal.vue'
+  import ConfirmModal from '../components/ConfirmModal.vue'
 
   export default {
     name: 'Home',
+    components: {
+      SuccessModal,
+      ConfirmModal
+    },
     data() {
       return {
         msg : "Welcome to The Living Legacy Center",
@@ -64,6 +79,10 @@
         //variable that determines whether the error message shows
         error: false,
         volunteerPhoneList: [],
+        successModal: false,
+        confirmModal: false,
+        title: '',
+        message: '',
       }
     },
     watch: {
@@ -72,6 +91,14 @@
       }
     },
     mounted() {
+      console.log('mounted')
+      const query = new URLSearchParams(this.$route.query);
+      if (query.get('register') === 'true') {
+          console.log('register is true')
+          this.successModal = true;
+          this.title = "You are registered!"
+          this.message = "Please wait until you have been approved."
+      }
       axios
         .get('http://127.0.0.1:5000/volunteer_phone/')
         .then(response => {
@@ -83,6 +110,11 @@
         })
     },
     methods: {
+      closeSuccessModal() {
+            this.successModal = false;
+            this.title = '';
+            this.message = '';
+      },
       formatPhoneNumber(value) {
         if (!value) return value;
         const phoneNumber = value.replace(/[^\d]/g, '');
@@ -110,8 +142,27 @@
         )}-${phoneNumber.slice(6, 10)}`;
         }
       },
+      showConfirmModal() {
+        this.confirmModal = true
+        this.title = 'Phone Number Not Found'
+        this.message = 'Would you like to register?'
+      },
+      closeConfirmModal(value) {
+          this.confirmModal = false;
+          if (value === 'yes') {
+              this.title = '';
+              this.message = '';
+              this.$router.push({
+                path: '/register',
+                query: {
+                  phoneNumber: this.phoneNumber
+                }
+              });
+            }
+      },
       //method called when form submits
       handleSubmitForm() {
+        console.log('submit form')
         // error checking - if phone number is not exactly 10 digits, then error variable is set to true, revealing the error message
         const phoneNumberRegex = /^\d{10}$/
 
@@ -137,11 +188,7 @@
           }
           else {
             console.log('Volunteer not found in list')
-            if (confirm("Phone number not found. Would you like to register?") == true) {
-              this.$router.push('/register')
-            } else {
-              this.phoneNumber = "";
-            }
+            this.showConfirmModal()
           }
 
         // input is not 10 digits, form is not submitted and error is revealed

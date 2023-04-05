@@ -5,48 +5,100 @@
     </div>
     <div class="container"> 
         <form @submit.prevent="submitForm">
+            <div style="margin-top: 1rem; font-weight: bold">
+                * Required
+            </div>
             <div>
-                <label for="exampleFormControlInput1" class="form-label">Event Name</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Garden" v-model="event_info.event_name">
+                <label for="eventName" class="form-label">Event Name *</label>
+                <input type="text" class="form-control" ref="eventName" v-model="event_info.event_name" :class="{ 'is-invalid': errors.eventName }" :maxlength="100" :disabled="confirmModal">
+                <div class="invalid-feedback">{{errors.eventName}}</div>
 
-                <label for="exampleFormControlInput1" class="form-label"> Description</label>
-                <textarea class="form-control" id="exampleFormControlInput1" placeholder="Living Legacy's Garden" v-model="event_info.event_description"></textarea>
+                <label for="eventDescription" class="form-label"> Description</label>
+                <textarea class="form-control" ref="eventDescription" v-model="event_info.event_description" :disabled="confirmModal"></textarea>
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/events"> Back to Events</router-link></button>
-                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" >Submit</button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" :disabled="confirmModal"> <router-link class="nav-link" to="/admin/events"> Back to Events</router-link></button>
+                <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" :disabled="confirmModal">Submit</button>
           </div>
         </form>
     </div>
+
+    <Transition name="bounce">
+        <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
+    </Transition>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
+import ConfirmModal from './ConfirmModal.vue'
 export default {
     name: 'EventsCreate',
+    components: {
+        ConfirmModal
+    },
     data() {
         return {
             msg : "Create New Event",
             event_info : {
                 event_name: '',
                 event_description: ''
-            }
+            },
+            confirmModal: false,
+            title: '',
+            message: '',
+            errors: {},
+            submitPressed: false,
         };
     },
+    watch: {
+        'event_info.event_name'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('eventName')
+                } else {
+                    this.addValidationStyle('eventName', 'Organization name is required.')
+                }
+            }
+        },
+    },
     methods: {
+        removeValidationStyle(name) {
+            this.errors[name] = null
+        },
+        addValidationStyle(name, des) {
+            this.errors[name] = des
+        },
+        closeConfirmModal(value) {
+            this.confirmModal = false
+            this.title = ''
+            this.message = ''
+            console.log(value)
+            if (value === 'yes') {
+                axios
+                .post('http://127.0.0.1:5000/create_event', this.event_info)
+                .then(() =>{
+                    this.event_info={}
+                    this.$router.push('/admin/events?success=true')
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+            }
+        },
         submitForm() {
-            axios
-            .post('http://127.0.0.1:5000/create_event', this.event_info)
-            .then(() =>{
-                this.event_info={}
-                alert('Event Created')
-                this.$router.push('/admin/events')
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
+            this.submitPressed = true
+            this.errors = {}
+            if (!this.event_info.event_name) {
+                this.errors.eventName = 'Event name is required.'
+            }
+            if (Object.keys(this.errors).length === 0) {
+                this.confirmModal = true
+                this.title = 'Please Confirm Creation'
+                this.message = 'Are you sure you want to create this event?'
+            }
         }
     }
 }
