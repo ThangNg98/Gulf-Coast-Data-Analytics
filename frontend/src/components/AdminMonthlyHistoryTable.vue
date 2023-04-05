@@ -37,7 +37,7 @@ import axios from 'axios';
         },
         methods: {
             getMonthsHoursUniques() {
-                axios.get('http://127.0.0.1:5000/get_month_hours_uniques')
+                axios.get('http://127.0.0.1:5000/get_full_history')
                 .then(response => {
                     this.monthlyData = response.data;
                 })
