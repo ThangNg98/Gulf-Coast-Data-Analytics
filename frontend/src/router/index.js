@@ -140,7 +140,7 @@ const router = createRouter({
           component: () => import('../components/Orgs.vue'),
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
-            console.log('isLoggedIn: ', isLoggedIn)
+            console.log('redirect to admin/orgs: ')
             if (!isLoggedIn) {
               alert('You do not have access to view this')
               next('/adminlogin')

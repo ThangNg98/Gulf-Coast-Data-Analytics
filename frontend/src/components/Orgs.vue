@@ -32,22 +32,53 @@
         </div>
 
     </div>
+
+    <Transition name="bounce">
+        <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
+    </Transition>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
+import SuccessModal from './SuccessModal.vue'
 export default {
     name: 'Orgs',
+    components: {
+        SuccessModal
+    },
     data() {
         return {
             msg : "List of Organizations",
             orgs:[],
             hoverId: null,
-        };
+            successModal: false,
+            title: '',
+            message: '',
+            isMounted: false
+        }
     
     },
+    updated() {
+        if (!this.isMounted) {
+            console.log('pseudo mount')
+            const query = new URLSearchParams(this.$route.query);
+            if (query.get('success') === 'true') {
+                console.log('success is true')
+                this.successModal = true;
+                this.title = "Success!"
+                this.message = "Organization successfully created."
+            }
+            this.isMounted = true
+        }
+    },
     methods: {
+        closeSuccessModal() {
+            this.successModal = false;
+            this.title = '';
+            this.message = '';
+        },
         submitForm() {
         },
         getOrgs() {
@@ -94,7 +125,6 @@ export default {
     background-color: rgba(230, 231, 235, 1);
     transition: background-color 0.3s ease-in-out;
   }
-
 .table-wrapper {
   max-height: 700px;
   overflow: auto;
