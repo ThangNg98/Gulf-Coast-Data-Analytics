@@ -1,5 +1,83 @@
 <template>
     <main>
+
+      <div class="px-10 pt-20">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
+        <!--Search Volunteer By selection-->
+          <h2 class="text-2xl font-bold">Search Volunteer By</h2>
+          <!-- Displays Volunteer Name search field -->
+          <div class="flex flex-col">
+            <select
+              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              v-model="searchBy"
+            >
+              <option value="Volunteer Name">Volunteer Name</option>
+              <option value="Volunteer Number">Volunteer Number</option>
+            </select>
+          </div>
+          <!--Input box for searching by Volunteer First Name-->
+          <div class="flex flex-col" v-if="searchBy === 'Volunteer Name'">
+            <label class="block">
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="firstName"
+                v-on:keyup.enter="handleSubmitForm"
+                placeholder="Enter first name"
+              />
+            </label>
+          </div>
+          <!--Input box for searching by Volunteer Last Name-->
+          <div class="flex flex-col" v-if="searchBy === 'Volunteer Name'">
+            <label class="block">
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="lastName"
+                v-on:keyup.enter="handleSubmitForm"
+                placeholder="Enter last name"
+              />
+            </label>
+          </div>
+          <!-- Displays Volunteer Number search field -->
+          <div class="flex flex-col" v-if="searchBy === 'Volunteer Number'">
+            <input
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              type="text"
+              v-model="phone"
+              v-on:keyup.enter="handleSubmitForm"
+              placeholder="Enter Volunteer Phone Number"
+            />
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
+          <div></div>
+          <div></div>
+          <!--Clear Search button-->
+          <div class="mt-5 grid-cols-2">
+            <button
+              class="mr-10 border border-red-700 bg-white text-red-700 rounded"
+              @click="clearSearch"
+              type="submit"
+            >
+              Clear Search
+            </button>
+            <!--Search Client button-->
+            <button
+              class="bg-red-700 text-white rounded"
+              @click="handleSubmitForm"
+              type="submit"
+            >
+              Search Client
+            </button>
+          </div>
+        </div>
+      </div>
+
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
@@ -9,11 +87,12 @@
                     <thead class="theadsticky">
                         <tr>
                         <th scope="col">Volunteer Name</th>
+                        <th style="width:5%" scope="col">Phone Number</th>
                         <th style="width:5%" scope="col">Total Hours</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="volunteer in volunteers"
+                        <tr v-for="volunteer in volunteersFiltered"
                         @click="editVolunteers(volunteer.volunteer_id)"
                         :key="volunteer.volunteer_id"
                         :style="{ cursor: 'pointer' }"
@@ -23,6 +102,7 @@
                         
                         >
                             <td style="text-align:left">{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
+                            <td style="text-align:left">{{ volunteer.phone }}</td>
                             <!-- This v-if statement needs to check if the value is null and if it is display a 0 if it isnt then display the value-->
                             <td v-if="volunteer.total_hours == null">0</td>
                             <td v-else>{{ volunteer.total_hours }}</td>
@@ -63,7 +143,12 @@ export default {
             deleteModal: false,
             title: '',
             message: '',
-            isMounted: false
+            isMounted: false,
+            searchBy: '',
+            firstName: '',
+            lastName: '',
+            phone: '',
+            volunteersFiltered: []
 
         };
     },
@@ -104,14 +189,51 @@ export default {
                 for (var i = 0; i < response.data.length; i++) {
                     this.volunteers.push(response.data[i]);
                 }
+                this.setVolunteersList()
             })
             .catch(error => {
                 console.log(error);
             });
         },
+        setVolunteersList() {
+            this.volunteersFiltered = this.volunteers
+        },
         editVolunteers(volunteer_id) {
             this.$router.push({ name: 'VolunteersUpdate', params: { volunteer_id: volunteer_id } });
-        } 
+        },
+        //method called when user searches by Volunteer name or number
+        handleSubmitForm() {
+        //if user searches by Volunteer name
+            if (this.searchBy === 'Volunteer Name') {
+            //if user searches by both first name and last name
+                if (this.firstName && this.lastName) {
+                //filter the Volunteer list by first and last name
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.first_name.toLowerCase().includes(this.firstName.toLowerCase()) && volunteer.last_name.toLowerCase().includes(this.lastName.toLowerCase()));
+                } 
+                //if user searches only by first name
+                else if (this.firstName && !this.lastName) {
+                //filter the Volunteer list by first name only
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.first_name.toLowerCase().includes(this.firstName.toLowerCase()));
+                } 
+                //if user searches only by last name
+                else if (this.lastName && !this.firstName) {
+                //filter the volunteer list by last name only
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.last_name.toLowerCase().includes(this.lastName.toLowerCase()));
+                }
+            //if user searches by client phone number
+            } else if (this.searchBy === 'Volunteer Number') {
+            //filter the client list by phone number
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.phone.includes(this.phone));
+            }
+        },
+        //method called when user clicks "Clear Search" button
+        clearSearch() {
+        // Resets all the variables
+        this.searchBy = ''
+        this.name = ''
+        this.phone = ''
+        this.setVolunteersList()
+        },
     },
     mounted() {
         this.getVolunteers();

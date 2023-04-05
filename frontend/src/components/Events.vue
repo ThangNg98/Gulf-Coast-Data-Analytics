@@ -47,13 +47,13 @@
             >
               Clear Search
             </button>
-            <!--Search Service button-->
+            <!--Search Event button-->
             <button
               class="bg-red-700 text-white rounded"
               @click="handleSubmitForm"
               type="submit"
             >
-              Search Service
+              Search Event
             </button>
           </div>
     <div class="container1 table-wrapper"> 
