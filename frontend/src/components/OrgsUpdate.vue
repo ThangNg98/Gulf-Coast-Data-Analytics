@@ -6,29 +6,38 @@
     <div class="container"> 
         <form @submit.prevent="submitForm">
             <div>
-                <label for="exampleFormControlInput1" class="form-label">Organization Name</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.org_name">
-                <label for="exampleFormControlInput1" class="form-label"> Address Line 1 </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.address_line_1">
-                <label for="exampleFormControlInput1" class="form-label"> Address Line 2 </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.address_line_2">
-                <label for="exampleFormControlInput1" class="form-label"> City </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.city">
-                <label for="exampleFormControlInput1" class="form-label"> State </label>
+                <label for="orgName" class="form-label">Organization Name</label>
+                <input type="text" class="form-control" ref="orgName" v-model="organization.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50" :disabled="this.confirmModal">
+                <div class="invalid-feedback">{{errors.orgName}}</div>
+
+                <label for="address" class="form-label"> Address Line 1 </label>
+                <input type="text" class="form-control" ref="address" v-model="organization.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255" :disabled="this.confirmModal">
+                <div class="invalid-feedback">{{errors.address}}</div>
+
+                <label for="address2" class="form-label"> Address Line 2 </label>
+                <input type="text" class="form-control" ref="address2" v-model="organization.address_line_2" :disabled="this.confirmModal">
+
+                <label for="city" class="form-label"> City </label>
+                <input type="text" class="form-control" ref="city" v-model="organization.city" :class="{ 'is-invalid': errors.city }" :maxlength="60" :disabled="this.confirmModal">
+                <div class="invalid-feedback">{{errors.city}}</div>
+
+                <label for="state_select" class="form-label"> State </label>
                 <div>
-                    <select class="form-select"  v-model="organization.state_id">
+                    <select class="form-select" ref="state_select" v-model="organization.state_id" :class="{ 'is-invalid': errors.state }" :disabled="this.confirmModal">
                     <option value="">Select a state</option>
                     <option v-for="state in states" :key="state.id" :value="state.id">{{ state.name }}</option>
                     </select>
+                    <div class="invalid-feedback">{{errors.state}}</div>
                 </div>
-                <label for="exampleFormControlInput1" class="form-label"> Zip </label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" v-model="organization.zip">
+                <label for="zip" class="form-label"> Zip </label>
+                <input type="text" class="form-control" ref="zip" v-model="organization.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="this.confirmModal">
+                <div class="invalid-feedback">{{errors.zip}}</div>
             </div>
             <br>
             <div style="text-align:right; margin-top: 2rem;">
-                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" > <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
-                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked = true">Delete</button>
-                <button type="submit" class="btn btn-primary" @click="updateButtonClicked = true">Update </button>
+                <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" :disabled="this.confirmModal"> <router-link class="nav-link" to="/admin/orgs"> Back to Organizations</router-link></button>
+                <button type="submit" class="btn btn-danger" style="margin-right:0.5rem" @click="deleteButtonClicked = true" :disabled="this.confirmModal">Delete</button>
+                <button type="submit" class="btn btn-primary" @click="updateButtonClicked = true" :disabled="this.confirmModal">Update </button>
             </div>
         </form>
         <div class="table-responsive-md">
@@ -50,13 +59,22 @@
                 </table>
         </div>
     </div>
+
+    <Transition name="bounce">
+        <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
+    </Transition>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
+import ConfirmModal from './ConfirmModal.vue'
 export default {
     name: 'OrgsUpdate',
+    components: {
+        ConfirmModal
+    },
     data() {
         return {
             msg : "Update Organization",
@@ -127,8 +145,58 @@ export default {
                 { name: 'West Virginia', id: 49 },
                 { name: 'Wisconsin', id: 50 },
                 { name: 'Wyoming', id: 51 }
-                ]
+            ],
+            errors: {},
+            submitPressed: false,
+            confirmModal: false
         };
+    },
+    watch: {
+        'organization.org_name'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('orgName')
+                } else {
+                    this.addValidationStyle('orgName', 'Organization name is required.')
+                }
+            }
+        },
+        'organization.address_line_1'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('address')
+                } else {
+                    this.addValidationStyle('address', 'Address is required.')
+                }
+            }
+        },
+        'organization.city'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('city')
+                } else {
+                    this.addValidationStyle('city', 'City is required.')
+                }
+            }
+        },
+        'organization.state_id'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('state')
+                } else {
+                    this.addValidationStyle('state', 'State is required.')
+                }
+            }
+        },
+        'org_info.zip'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('zip')
+                } else {
+                    this.addValidationStyle('zip', 'Zip code is required.')
+                }
+            }
+        }
     },
     created() {
         axios.get(`http://127.0.0.1:5000/get_org/${this.$route.params.org_id}`).then(response => {
@@ -145,29 +213,87 @@ export default {
         })
     },
     methods: {
-        submitForm() {
-            if (this.updateButtonClicked == true) {
-                this.updateButtonClicked = false
-                axios
-                .post('http://127.0.0.1:5000/update_organization', this.organization)
-                .then(() =>{
-                    this.organization={}
-                    alert('Organization Updated')
-                    this.$router.push('/admin/orgs')
-                })
-                .catch((error)=>{
-                    console.log(error);
-                });
+        removeValidationStyle(name) {
+            this.errors[name] = null
+        },
+        addValidationStyle(name, des) {
+            this.errors[name] = des
+        },
+        closeConfirmModal(value) {
+            this.confirmModal = false;
+            console.log(value)
+            if (value === 'yes') {
+                if (this.title === 'Update') {
+                    console.log('update confirm')
+                    this.title = '';
+                    this.message = '';
+                    axios
+                    .post('http://127.0.0.1:5000/update_organization', this.organization)
+                    .then(() =>{
+                        this.organization={}
+                        this.$router.push('/admin/orgs?update=true')
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                    });
+                }
+                else if (this.title === 'Delete') {
+                    console.log('delete confirm')
+                    this.title = '';
+                    this.message = '';
+                    axios
+                    .post('http://127.0.0.1:5000/delete_organization', this.organization)
+                    .then(() =>{
+                        this.organization={}
+                        this.$router.push('/admin/orgs?delete=true')
+                    })
+                }
             }
-            else if (this.deleteButtonClicked == true) {
-                this.deleteButtonClicked = false
-                axios
-                .post('http://127.0.0.1:5000/delete_organization', this.organization)
-                .then(() =>{
-                    this.organization={}
-                    alert('Organization Deleted')
-                    this.$router.push('/admin/orgs')
-                })
+        },
+        submitForm() {
+
+            this.submitPressed = true
+
+            this.errors = {}
+
+            if (!this.organization.org_name) {
+                this.errors.orgName = "Organization name is required."
+            }
+            if (!this.organization.address_line_1) {
+                this.errors.address = 'Address is required.'
+            }
+            if (!this.organization.city) {
+                this.errors.city = 'City is required.'
+            }
+            if (!this.organization.state_id) {
+                this.errors.state = 'State is required.'
+            }
+            if (!this.organization.zip) {
+                this.errors.zip = 'Zip code is required.'
+            }
+            if (this.organization.zip) {
+                if (!/^\d+$/.test(this.organization.zip)) {
+                    this.errors.zip = 'Zip code must be digits only.'
+                }
+                else if (this.organization.zip.length !== 5) {
+                    this.errors.zip = 'Zip code must be 5 digits in length.'
+                }
+            }
+            if (Object.keys(this.errors).length === 0) {
+                if (this.updateButtonClicked == true) {
+                    console.log('update clicked')
+                    this.updateButtonClicked = false
+                    this.confirmModal = true
+                    this.title = 'Update'
+                    this.message = "Are you sure you want to update this organization?"
+                }
+                else if (this.deleteButtonClicked == true) {
+                    console.log('delete clicked')
+                    this.deleteButtonClicked = false
+                    this.confirmModal = true
+                    this.title = 'Delete'
+                    this.message = "Are you sure you want to delete this organization?"
+                }
             }
         }
     }

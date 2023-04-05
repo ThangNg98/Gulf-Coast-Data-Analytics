@@ -104,7 +104,7 @@ def check_out():
 def read_sessions():
 
     query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
-            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
+            DATE_FORMAT(session.session_date, '%m/%d/%Y') AS session_date,
             event.event_name,
             organization.org_name,
             DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
@@ -117,7 +117,7 @@ def read_sessions():
             JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
             WHERE session.session_status_id = 1 AND session.time_out IS NULL
-            ORDER BY volunteer_name; """ 
+             """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -126,12 +126,13 @@ def read_sessions():
 def read_closed_sessions():
 
     query = """ SELECT session.session_id, CONCAT(volunteer.first_name, ' ', volunteer.last_name) AS volunteer_name,
-            DATE_FORMAT(session.session_date, '%Y %M %d') AS session_date,
+            DATE_FORMAT(session.session_date, '%m/%d/%Y') AS session_date,
             event.event_name,
             organization.org_name,
             DATE_FORMAT(session.time_in, '%h:%i %p') AS time_in,
             DATE_FORMAT(session.time_out, '%h:%i %p') AS time_out,
             session_comment,
+            total_hours,
             volunteer.phone
             FROM session
             JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
@@ -139,7 +140,7 @@ def read_closed_sessions():
             JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
             WHERE session.session_status_id = 1 AND session.time_out IS NOT NULL
-            ORDER BY volunteer_name; """ 
+             """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)    
         # Helmut = gets all sessions
@@ -245,7 +246,7 @@ def get_event(event_id): # returns all the events in the events table that have 
 @app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
 def read_events(): # returns all the events in the events table that have active status "1"
     
-    query = "SELECT * FROM event WHERE event.event_status_id = 1" 
+    query = "SELECT * FROM event WHERE event.event_status_id = 1 ORDER BY event_name" 
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -311,7 +312,7 @@ def get_org(org_id): # returns all the orgs in the organizations table that have
 @app.route('/read_orgs', methods = ['GET']) # http://127.0.0.1:5000/read_orgs
 def read_orgs():
     
-    query = "SELECT * FROM organization WHERE org_status_id = 1" # query for selecting all active orgs
+    query = "SELECT * FROM organization WHERE org_status_id = 1 ORDER BY org_name" # query for selecting all active orgs
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -361,7 +362,8 @@ def read_volunteers():
     LEFT JOIN session 
     ON volunteer.volunteer_id=session.volunteer_id 
     WHERE volunteer.volunteer_status_id = 1 
-    GROUP BY volunteer.volunteer_id"""
+    GROUP BY volunteer.volunteer_id
+    ORDER BY first_name"""
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
@@ -455,7 +457,7 @@ def get_volunteer(volunteer_id):
 @app.route('/volunteer_phone/', methods = ['GET'])
 def volunteer_phone():
     query = """
-        SELECT volunteer_id, phone
+        SELECT volunteer_id, phone, first_name
         FROM volunteer
     """
     rows = execute_read_query(conn,query)
@@ -507,6 +509,7 @@ def get_volunteer_id(volunteer_phone):
         AND volunteer_status_id = 1
     """ % volunteer_phone
     rows = execute_read_query(conn, query)
+    print(rows)
     return jsonify(rows)
 
 ############# ADMIN DASHBOARD #############

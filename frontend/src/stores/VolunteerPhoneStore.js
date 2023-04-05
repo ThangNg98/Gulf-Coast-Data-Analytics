@@ -10,9 +10,10 @@ export const useVolunteerPhoneStore = defineStore('volunteerphone', {
   }),
   //actions that can be called by Vue components to log the user in and log them out
   actions: {
-    setVolunteerPhone(phone, ID) {
+    setVolunteerPhone(phone, ID, name) {
       this.volunteerPhone = phone
       this.volunteerID = ID
+      this.volunteer_first_name = name
 
     },
     clearVolunteerPhone() {

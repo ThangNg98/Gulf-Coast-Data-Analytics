@@ -9,17 +9,17 @@
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
                     <thead class="theadsticky">
                         <tr>
-                        <th scope="col">Volunteer Name</th>
-                        <th scope="col">Session Date</th>
-                        <th scope="col">Event</th>
-                        <th scope="col">Organization</th>
+                        <th :style="{ cursor: 'pointer' }" @click="sortBy ='volunteer_name'" scope="col">Volunteer Name</th>
+                        <th :style="{ cursor: 'pointer' }" @click="sortBy='session_date'" scope="col">Session Date</th>
+                        <th :style="{ cursor: 'pointer' }" @click="sortBy='event_name'" scope="col">Event</th>
+                        <th :style="{ cursor: 'pointer' }" @click="sortBy='org_name'" scope="col">Organization</th>
                         <th scope="col">Time In</th>
                         <th scope="col">Session Comments</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr 
-                            v-for="session in sessions" 
+                            v-for="session in sortedItems" 
                             :key="session.session_id"
                             @click="editSessions(session.session_id)" 
                             :style="{ cursor: 'pointer' }"
@@ -51,8 +51,28 @@ export default {
             msg2 : "Closed",
             sessions:[],
             hoverId: null,
+            sortBy: 'volunteer_name',
+            sortDesc: false
         };
     },
+    computed: {
+        sortedItems() {
+            const field = this.sortBy;
+            const order = this.sortDesc ? -1 : 1;
+
+            // Make a copy of the original array to avoid modifying the original data
+            const sessions = this.sessions;
+
+            // Sort the array by the specified field and order
+            sessions.sort((a, b) => {
+                if (a[field] < b[field]) return -1 * order;
+                if (a[field] > b[field]) return 1 * order;
+                return 0;
+      });
+
+      return sessions;
+    }
+},
     methods: {
         submitForm() {
         },
