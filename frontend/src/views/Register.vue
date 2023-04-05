@@ -4,25 +4,28 @@
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
     <div class="container"> 
+        <div style="margin-top: 1rem; font-weight: bold">
+            * Required
+        </div>
         <h3 style="text-align:left"> Volunteer</h3>
         <form @submit.prevent="submitForm">
             <div style="text-align:left">
                 <div class="row">
                     <div class="row">
                     <div class="col-6"> 
-                        <label for="exampleFormControlInput1" class="form-label">First Name</label>
+                        <label for="exampleFormControlInput1" class="form-label">First Name *</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.first_name">
                     </div> </div>
                     <div class="row">
                     <div class="col-8"> 
-                        <label for="exampleFormControlInput1" class="form-label">Last Name</label>
+                        <label for="exampleFormControlInput1" class="form-label">Last Name *</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.last_name">
                     </div></div>
                 </div>
                 <div class="row">
                     <div class="row">
                     <div class="col-6"> 
-                        <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                        <label for="exampleFormControlInput1" class="form-label">Phone Number *</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.phone" maxlength="14">
                     </div>
                     </div>
@@ -33,7 +36,7 @@
                     </div></div>
                     <div class="row">
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
+                        <label for="exampleFormControlInput1" class="form-label">Address Line 1 *</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.address_line_1">
                     </div>
                 </div>
@@ -45,11 +48,11 @@
                 </div>
                 <div class="row">
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">City</label>
+                        <label for="exampleFormControlInput1" class="form-label">City *</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.city">
                     </div>
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">State</label>
+                        <label for="exampleFormControlInput1" class="form-label">State *</label>
                         <div>
                             <div>
                             <select class="form-select" v-model="volunteer_info.state_id">
@@ -60,36 +63,36 @@
                         </div>
                     </div>
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">Zip</label>
+                        <label for="exampleFormControlInput1" class="form-label">Zip *</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.zip">
                     </div>
                 </div>
                 </div>
             </div>
             <br>
-            <h3 style="text-align:left"> Emergency Contact</h3>
+            <h3 style="text-align:left"> Emergency Contact *</h3>
             <div style="text-align:left">
                 <div class="row">
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter First Name" v-model="volunteer_info.emergency_contact_fname">
+                        <label for="exampleFormControlInput1" class="form-label">First Name *</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.emergency_contact_fname">
                     </div>
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Last Name" v-model="volunteer_info.emergency_contact_lname">
+                        <label for="exampleFormControlInput1" class="form-label">Last Name *</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.emergency_contact_lname">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number" v-model="volunteer_info.emergency_contact_phone">
+                        <label for="exampleFormControlInput1" class="form-label">Phone Number *</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.emergency_contact_phone">
                     </div>
                     <div class="col"> 
-                        <label for="exampleFormControlInput1" class="form-label">Relationship</label>
+                        <label for="exampleFormControlInput1" class="form-label">Relationship *</label>
                         <div>
                             <div>
                             <select class="form-select" v-model="volunteer_info.rel_id">
-                                <option value="">Relationship</option>
+                                <option value="">Select a Relationship</option>
                                 <option v-for="relationship in filteredRelationships" :key="relationship.id" :value="relationship.id">{{ relationship.name }}</option>
                             </select>
                             </div>
