@@ -14,7 +14,13 @@
                     </thead>
                     <tbody>
                         <tr v-for="org in orgs"
-                        @click="editOrgs(org.org_id)" :key="org.org_id">
+                        @click="editOrgs(org.org_id)"
+                        :key="org.org_id"
+                        :style="{ cursor: 'pointer' }"
+                        :class="{ 'hoverRow': hoverId === org.org_id}"
+                        @mouseenter="hoverId = org.org_id"
+                        @mouseleave="hoverId = null"
+                        >
                             <td style="text-align:left">{{ org.org_name }}</td>
                             <td style="text-align:left">{{ org.address_line_1 }}</td>
                         </tr>
@@ -28,6 +34,11 @@
     </div>
 
     <Transition name="bounce">
+        <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
+    </Transition>
+
+    
+    <Transition name="bounce">
         <UpdateModal v-if="updateModal" @close="closeUpdateModal" :title="title" :message="message" />
     </Transition>
 
@@ -40,19 +51,20 @@
 
 <script>
 import axios from "axios";
+import SuccessModal from './SuccessModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import DeleteModal from './DeleteModal.vue'
 
 export default {
     name: 'Orgs',
     components: {
-        UpdateModal,
-        DeleteModal
+        SuccessModal
     },
     data() {
         return {
             msg : "List of Organizations",
             orgs:[],
+            hoverId: null,
             successModal: false,
             updateModal: false,
             deleteModal: false,
@@ -88,6 +100,11 @@ export default {
         }
     },
     methods: {
+        closeSuccessModal() {
+            this.successModal = false;
+            this.title = '';
+            this.message = '';
+        },
         closeUpdateModal() {
             this.updateModal = false;
             this.title = '';
@@ -97,6 +114,8 @@ export default {
             this.deleteModal = false;
             this.title = '';
             this.message = '';
+        },
+        submitForm() {
         },
         getOrgs() {
             axios.get('http://127.0.0.1:5000/read_orgs')
@@ -137,6 +156,11 @@ export default {
   top: 0;
   background-color: #e6e7eb !important;
 }
+
+.hoverRow {
+    background-color: rgba(230, 231, 235, 1);
+    transition: background-color 0.3s ease-in-out;
+  }
 
 .table-wrapper {
   max-height: 700px;

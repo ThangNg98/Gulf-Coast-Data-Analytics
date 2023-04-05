@@ -15,6 +15,11 @@
                     <tbody>
                         <tr 
                         @click="editEvent(event.event_id)"
+                        :key="event.event_id"
+                        :style="{ cursor: 'pointer' }"
+                        :class="{ 'hoverRow': hoverId === event.event_id }"
+                        @mouseenter="hoverId = event.event_id"
+                        @mouseleave="hoverId = null"
                         v-for="event in events" >
                             <td style="text-align:left">{{ event.event_name }}</td>
                             <td style="text-align:left">{{ event.event_description }}</td>
@@ -37,7 +42,8 @@ export default {
     data() {
         return {
             msg : "List of Events",
-            events: []
+            events: [],
+            hoverId: null,
         }
     },
     methods: {
@@ -77,6 +83,12 @@ export default {
     min-width: 120px;
     max-width: 160px;
 }
+
+.hoverRow {
+    background-color: rgba(230, 231, 235, 1);
+    transition: background-color 0.3s ease-in-out;
+  }
+
 .theadsticky {
   position: sticky;
   top: 0;
