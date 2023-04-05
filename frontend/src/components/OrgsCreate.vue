@@ -207,8 +207,13 @@ export default {
             if (!this.org_info.zip) {
                 this.errors.zip = 'Zip code is required.'
             }
-            if (this.org_info.zip && !/^\d+$/.test(this.org_info.zip)) {
-                this.errors.zip = 'Zip code must be digits only.'
+            if (this.org_info.zip) {
+                if (!/^\d+$/.test(this.org_info.zip)) {
+                    this.errors.zip = 'Zip code must be digits only.'
+                }
+                else if (this.org_info.zip.length !== 5) {
+                    this.errors.zip = 'Zip code must be 5 digits in length.'
+                }
             }
             if (Object.keys(this.errors).length === 0) {
                 // Submit form
