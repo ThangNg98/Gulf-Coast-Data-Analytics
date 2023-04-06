@@ -139,6 +139,8 @@
         <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
 
+    <p>waiverSigned: {{ waiverSigned }}</p>
+
 
     </main>
 </template>
@@ -265,10 +267,10 @@ export default {
             //filter the client list by phone number
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.phone.includes(this.phone));
             } else if (this.searchBy === 'Waiver Signed') {
-              if (this.waiverSigned) {
+              if (this.waiverSigned == true) {
                 console.log('waiverSigned selected')
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 1)
-              } else if (!this.waiverSigned) {
+              } else if (this.waiverSigned == false) {
                 console.log('not waiverSigned selected')
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 2)
               }
