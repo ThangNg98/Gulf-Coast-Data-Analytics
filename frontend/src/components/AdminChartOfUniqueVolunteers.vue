@@ -5,6 +5,7 @@
 </template>
 <script>
     import Chart from 'chart.js/auto';
+    import axios from 'axios';
     export default {
         data() {
             return {
@@ -28,7 +29,7 @@
                         labels: this.months,
                         datasets: [{
                             label: '# of Unique Volunteers',
-                            data: this.volunteerss,
+                            data: this.volunteers,
                             borderWidth: 1
                         }]
                         },
