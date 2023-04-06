@@ -6,7 +6,7 @@
         </div>
         <div class="d-flex flex-wrap">
             <!--monthly history table-->
-            <div class="mb-3 w-50">
+            <div class="mb-3 w-50 p-5">
                 <h6 class="text-center">Monthly History in the Last 6 Months</h6>
                 <MonthlyTable ref="componentA"></MonthlyTable>
             </div>
@@ -16,7 +16,7 @@
                 <MonthlyHoursChart ref="componentB"  v-if="componentBVisible"></MonthlyHoursChart>
             </div>-->
             <!--last year's total unique volunteers-->
-            <div class="mb-3 w-50">
+            <div class="mb-3 w-50 p-5">
                 <h6 class="text-center">Number of Volunteers per Month in the Last 6 Months</h6>
                 <MonthlyUniqueVolunteersChart ref="componentB" v-if="componentBVisible"></MonthlyUniqueVolunteersChart>
             </div>
