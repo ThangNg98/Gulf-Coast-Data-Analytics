@@ -52,6 +52,10 @@
             <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
         </Transition>
 
+        <div>
+            <LoadingModal v-if="isLoading"></LoadingModal>
+        </div>
+
     </main>
 </template>
 
@@ -59,10 +63,14 @@
 <script>
 import axios from "axios";
 import ConfirmModal from './ConfirmModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { createOrgAPI } from '../api/api.js'
 export default {
     name: 'OrgsCreate',
     components: {
-        ConfirmModal
+        ConfirmModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -134,6 +142,7 @@ export default {
             message: '',
             errors: {},
             submitPressed: false,
+            isLoading: false,
         };
     },
     watch: {
@@ -204,15 +213,16 @@ export default {
             this.message = ''
             console.log(value)
             if (value === 'yes') {
-                axios
-                .post('http://127.0.0.1:5000/create_organization', this.org_info)
-                .then(() =>{
-                    this.org_info={}
-                    this.$router.push('/admin/orgs?success=true')
-                })
-                .catch((error)=>{
-                    console.log(error);
-                });
+                this.createOrg();
+            }
+        },
+        async createOrg() {
+            try {
+                await createOrgAPI(this.org_info);
+                this.org_info={}
+                this.$router.push('/admin/orgs?success=true')
+            } catch (error) {
+                console.log(error)
             }
         },
         submitForm() {

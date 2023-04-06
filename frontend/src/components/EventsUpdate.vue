@@ -49,16 +49,24 @@
         <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
 import ConfirmModal from './ConfirmModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getEventAPI, updateEventAPI, deleteEventAPI } from '../api/api.js'
 export default {
     name: 'EventsUpdate',
     components: {
-        ConfirmModal
+        ConfirmModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -74,7 +82,8 @@ export default {
             num_volunteers: 0,
             errors: {},
             submitPressed: false,
-            confirmModal: false
+            confirmModal: false,
+            isLoading: false
         };
     },
     watch: {
@@ -89,15 +98,23 @@ export default {
         },
     },
     created() {
-    axios.get(`http://127.0.0.1:5000/get_event/${this.$route.params.event_id}`).then(response => {
-        this.events.event_id = response.data[0].event_id;
-        this.events.event_name = response.data[0].event_name;
-        this.events.event_description = response.data[0].event_description;
-        this.hours = response.data[0].total_hours;
-        this.num_volunteers = response.data[0].num_volunteers;
-    });
+        this.loadData();
     },
     methods: {
+        async loadData() {
+            this.isLoading = true;
+            try {
+                const response = await getEventAPI(this.$route.params.event_id);
+                this.events.event_id = response.data[0].event_id;
+                this.events.event_name = response.data[0].event_name;
+                this.events.event_description = response.data[0].event_description;
+                this.hours = response.data[0].total_hours;
+                this.num_volunteers = response.data[0].num_volunteers;
+            } catch (error) {
+                console.log(error)
+            }
+            this.isLoading = false;
+        },
         removeValidationStyle(name) {
             this.errors[name] = null
         },
@@ -112,31 +129,33 @@ export default {
                     console.log('update confirm')
                     this.title = '';
                     this.message = '';
-                    axios
-                    .post('http://127.0.0.1:5000/update_event', this.events)
-                    .then(() =>{
-                        this.events={}
-                        this.$router.push('/admin/events?update=true')
-                    })
-                    .catch((error)=>{
-                        console.log(error);
-                    });
+                    this.updateEvent();
 
                 }
                 else if (this.title === 'Please Confirm Delete') {
                     console.log('delete confirm')
                     this.title = '';
                     this.message = '';
-                    axios
-                    .post('http://127.0.0.1:5000/delete_event', this.events)
-                    .then(() =>{
-                        this.events={}
-                        this.$router.push('/admin/events?delete=true')
-                    })
-                    .catch((error)=>{
-                        console.log(error);
-                    });
+                    this.deleteEvent();
                 }
+            }
+        },
+        async updateEvent() {
+            try {
+                await updateEventAPI(this.events);
+                this.events={}
+                this.$router.push('/admin/events?update=true')
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async deleteEvent() {
+            try {
+                await deleteEventAPI(this.events);
+                this.events={}
+                this.$router.push('/admin/events?delete=true')
+            } catch (error) {
+                console.log(error)
             }
         },
         submitForm() {

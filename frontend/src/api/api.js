@@ -86,3 +86,154 @@ export async function checkOutAPI(session) {
         throw error;
     }
 };
+
+export async function getPhoneListAPI() {
+    try {
+        const response = await axios.get('http://127.0.0.1:5000/volunteer_phone/');
+        return response
+    } catch (error) {
+      console.log(error);
+      throw (error);
+    }
+};
+
+export async function getVolunteerIDAPI(phone) {
+  try {
+      const response = await axios.get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`);
+      return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getVolunteerAPI(id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/get_volunteer/${id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateVolunteerAPI(volunteer_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/update_volunteer', volunteer_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function createEventAPI(event_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/create_event', event_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getEventAPI(event_id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/get_event/${event_id}`);
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateEventAPI(events) {
+  try {
+    await axios.post('http://127.0.0.1:5000/update_event', events)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function deleteEventAPI(events) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_event', events)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function createOrgAPI(org_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/create_organization', org_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getOrgAPI(org_id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/get_org/${org_id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateOrgAPI(organization) {
+  try {
+    await axios.post('http://127.0.0.1:5000/update_organization', organization);
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function deleteOrgAPI(organization) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_organization', organization)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getVolunteersAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/read_volunteers');
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getVolunteerHoursAPI(id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function adminUpdateVolunteerAPI(volunteer_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/admin_update_volunteer', volunteer_info);
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function adminDeleteVolunteerAPI(volunteer_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_volunteer', volunteer_info);
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
