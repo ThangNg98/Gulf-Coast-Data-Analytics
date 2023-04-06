@@ -58,7 +58,7 @@ def create_session():
     session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
 
-    if (org_id == None):
+    if (org_id == None or session_comment == None):
         query = """
             INSERT INTO session (
                 time_in,
@@ -114,7 +114,7 @@ def read_sessions():
             FROM session
             JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
             JOIN event ON session.event_id = event.event_id
-            JOIN organization ON session.org_id = organization.org_id
+            LEFT OUTER JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
             WHERE session.session_status_id = 1 AND session.time_out IS NULL
              """ 
@@ -137,7 +137,7 @@ def read_closed_sessions():
             FROM session
             JOIN volunteer ON session.volunteer_id = volunteer.volunteer_id
             JOIN event ON session.event_id = event.event_id
-            JOIN organization ON session.org_id = organization.org_id
+            LEFT OUTER JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
             WHERE session.session_status_id = 1 AND session.time_out IS NOT NULL
              """ 

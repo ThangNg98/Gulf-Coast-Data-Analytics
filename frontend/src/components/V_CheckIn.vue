@@ -6,7 +6,6 @@
             <div class="mb-3 d-flex justify-content-between">
                 <label for="eventSelect" class="text-start"><h4>Event</h4></label>
                 <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn">
-                <option :value=null>-</option>
                 <option v-for="event in events" :value="event.event_id" :key="event.event_id">
                     {{ event.event_name }}
                 </option>
@@ -16,7 +15,7 @@
             <div class="mb-3 d-flex justify-content-between">
                 <label for="orgSelect"><h4>Organization</h4></label>
                 <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn">
-                    <option :value=null>-</option>
+                    <option :value=null></option>
                     <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
                 </select>
             </div>
@@ -44,7 +43,7 @@
                 
         </div>
     </div>
-    <div v-if="alreadyCheckedIn">
+    <div class="container" v-if="alreadyCheckedIn">
         <h2 style="text-align: center"> Current Session</h2>
         <table class="table table-bordered" style="margin:auto; text-align: center; margin-top: 2rem;">
                     <thead>
@@ -91,7 +90,7 @@ export default {
                 time_in: null,//now.time(),
                 time_out: null,
                 session_date: this.getDate(),//now.date(), 
-                session_comment: null,
+                session_comment: '',
                 org_id: null, 
                 event_id: null, 
                 session_status_id: "1",
@@ -184,7 +183,7 @@ export default {
             if (org) {
                 this.current_org_name = org.org_name
             } else {
-                this.current_org_name = 'None'
+                this.current_org_name = ''
             }
         },
         async update_session_axios() { //call axios
