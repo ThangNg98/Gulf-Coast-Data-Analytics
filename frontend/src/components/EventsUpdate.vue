@@ -99,14 +99,6 @@ export default {
     },
     created() {
         this.loadData();
-    // // axios.get(`http://127.0.0.1:5000/get_event/${this.$route.params.event_id}`)
-    //        .then(response => {
-        // //     this.events.event_id = response.data[0].event_id;
-        // //     this.events.event_name = response.data[0].event_name;
-        // //     this.events.event_description = response.data[0].event_description;
-        // //     this.hours = response.data[0].total_hours;
-        // //     this.num_volunteers = response.data[0].num_volunteers;
-    // });
     },
     methods: {
         async loadData() {
@@ -138,15 +130,6 @@ export default {
                     this.title = '';
                     this.message = '';
                     this.updateEvent();
-                    // axios
-                    // .post('http://127.0.0.1:5000/update_event', this.events)
-                    // .then(() =>{
-                    //     this.events={}
-                    //     this.$router.push('/admin/events?update=true')
-                    // })
-                    // .catch((error)=>{
-                    //     console.log(error);
-                    // });
 
                 }
                 else if (this.title === 'Please Confirm Delete') {
@@ -154,15 +137,6 @@ export default {
                     this.title = '';
                     this.message = '';
                     this.deleteEvent();
-                    // axios
-                    // .post('http://127.0.0.1:5000/delete_event', this.events)
-                    // .then(() =>{
-                    //     this.events={}
-                    //     this.$router.push('/admin/events?delete=true')
-                    // })
-                    // .catch((error)=>{
-                    //     console.log(error);
-                    // });
                 }
             }
         },

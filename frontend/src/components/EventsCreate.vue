@@ -86,15 +86,6 @@ export default {
             console.log(value)
             if (value === 'yes') {
                 this.createEvent();
-                // axios
-                // .post('http://127.0.0.1:5000/create_event', this.event_info)
-                // .then(() =>{
-                //     this.event_info={}
-                //     this.$router.push('/admin/events?success=true')
-                // })
-                // .catch((error)=>{
-                //     console.log(error);
-                // });
             }
         },
         async createEvent() {

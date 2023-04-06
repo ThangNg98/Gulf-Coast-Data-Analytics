@@ -162,3 +162,40 @@ export async function deleteEventAPI(events) {
     throw (error);
   }
 };
+
+export async function createOrgAPI(org_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/create_organization', org_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getOrgAPI(org_id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/get_org/${org_id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateOrgAPI(organization) {
+  try {
+    await axios.post('http://127.0.0.1:5000/update_organization', organization);
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function deleteOrgAPI(organization) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_organization', organization)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+}
