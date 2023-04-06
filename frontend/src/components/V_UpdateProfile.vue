@@ -112,21 +112,29 @@
         <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
 </template>
 
 <script>
 import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore.js'
 import ConfirmModal from './ConfirmModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getVolunteerIDAPI, getVolunteerAPI, updateVolunteerAPI } from '../api/api.js'
 import axios from "axios";
 export default {
     name: 'Register',
     components: {
-        ConfirmModal        
+        ConfirmModal,
+        LoadingModal,        
     },
     data() {
         return {
             msg:"Update Volunteer",
-            volunteer_info: { //use axios to call current information connected to current user
+            volunteer_info: {
                 volunteer_id: null,
                 first_name: null,
                 last_name: null,
@@ -212,6 +220,7 @@ export default {
             confirmModal: false,
             title: '',
             message: '',
+            isLoading: false,
         };
     },
     watch: {
@@ -331,14 +340,37 @@ export default {
     },
     mounted() {
         console.log('v_update profile mounted')
-        setTimeout(() => {
-            this.getVolunteerID();
-        }, 500);
-        setTimeout(() => {
-        this.getVolunteerData();
-        }, 1000);
+        this.loadData();
     },
     methods: {
+        async loadData() {
+            this.isLoading = true;
+            try {
+                await this.getVolunteerID();
+                await this.getVolunteerData();
+            } catch (error) {
+                console.log(error)
+            }
+            this.isLoading = false;
+        },
+        async getVolunteerID() {
+            const phone = useVolunteerPhoneStore().volunteerPhone
+            console.log('phone:', phone)
+            try {
+                const response = await getVolunteerIDAPI(phone);
+                this.volunteer_info.volunteer_id = response.data[0].volunteer_id
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getVolunteerData() {
+            try {
+                const response = await getVolunteerAPI(this.volunteer_info.volunteer_id)
+                this.volunteer_info = response.data[0]
+            } catch (error) {
+                console.log(error)
+            }
+        },
         removeValidationStyle(name) {
             this.errors[name] = null
         },
@@ -383,17 +415,32 @@ export default {
                 this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
                 console.log('LOOK HERE this.volunteer_info.phone', this.volunteer_info.phone)
                 this.volunteer_info.emergency_contact_phone = this.volunteer_info.emergency_contact_phone.replace(/[^\d]/g, '');
-                axios
-                .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
-                .then(() =>{
-                    this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
-                    useVolunteerPhoneStore().setVolunteerPhone(this.volunteer_info.phone, this.volunteer_info.volunteer_id, this.volunteer_info.first_name)
-                    console.log('useVolunteerPhoneStore.volunteerPhone', useVolunteerPhoneStore().volunteerPhone)
-                    this.$router.push('/profile/history?update=true')
-                })
-                .catch((error)=>{
-                    console.log(error);
-                });
+                this.updateVolunteer();
+                // axios
+                // .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
+                // .then(() =>{
+                //     this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
+                //     useVolunteerPhoneStore().setVolunteerPhone(this.volunteer_info.phone, this.volunteer_info.volunteer_id, this.volunteer_info.first_name)
+                //     console.log('useVolunteerPhoneStore.volunteerPhone', useVolunteerPhoneStore().volunteerPhone)
+                //     this.$router.push('/profile/history?update=true')
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                // });
+            }
+        },
+        async updateVolunteer() {
+            try {
+                await updateVolunteerAPI(this.volunteer_info);
+                this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
+                useVolunteerPhoneStore().setVolunteerPhone(
+                    this.volunteer_info.phone, 
+                    this.volunteer_info.volunteer_id, 
+                    this.volunteer_info.first_name
+                );
+                this.$router.push('/profile/history?update=true');
+            } catch (error) {
+                console.log(error)
             }
         },
         submitForm() {
@@ -467,29 +514,6 @@ export default {
                 this.message = "Are you sure you want to update your information?"
             }
     },
-    getVolunteerID() {
-            const phone = useVolunteerPhoneStore().volunteerPhone
-            console.log('phone:', phone)
-            axios
-                .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
-                .then((response) => {
-                    this.volunteer_info.volunteer_id = response.data[0].volunteer_id
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        },
-    getVolunteerData() {
-        axios
-            .get(`http://127.0.0.1:5000/get_volunteer/${this.volunteer_info.volunteer_id}`)
-            .then((response) => {
-                this.volunteer_info = response.data[0]
-                console.log(this.volunteer_info)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
 }}
 </script>
 

@@ -86,3 +86,42 @@ export async function checkOutAPI(session) {
         throw error;
     }
 };
+
+export async function getPhoneListAPI() {
+    try {
+        const response = axios.get('http://127.0.0.1:5000/volunteer_phone/');
+        return response
+    } catch (error) {
+      console.log(error);
+      throw (error);
+    }
+};
+
+export async function getVolunteerIDAPI(phone) {
+  try {
+      const response = await axios.get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`);
+      return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getVolunteerAPI(id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/get_volunteer/${id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateVolunteerAPI(volunteer_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/update_volunteer', volunteer_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
