@@ -516,9 +516,12 @@ def get_volunteer_id(volunteer_phone):
 @app.route('/get_hist_6', methods=['GET'])
 def get_full_history():
     query = """
-        SELECT DATE_FORMAT(session_date, '%M') as MonthName, YEAR(session_date) as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers, COUNT(volunteer_id) as TotalVolunteers, DATE_FORMAT(session_date, '%m') as MonthNum
+        SELECT DATE_FORMAT(session.session_date, '%M') as MonthName, YEAR(session.session_date) as YearName,
+        SUM(session.total_hours) as TotalHours, COUNT(DISTINCT session.volunteer_id) as UniqueVolunteers,
+        COUNT(session.volunteer_id) as TotalVolunteers, DATE_FORMAT(session.session_date, '%m') as MonthNum
         from session
-        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW()
+        JOIN volunteer ON session.volunteer_id=volunteer.volunteer_id
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer.volunteer_status_id = 1
         GROUP BY MonthName, MonthNum, YEAR(session_date)
         ORDER BY YEAR(session_date) DESC, MonthNum DESC;
     """

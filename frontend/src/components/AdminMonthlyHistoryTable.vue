@@ -26,10 +26,7 @@ import axios from 'axios';
                     {
                         MonthName: '',
                         YearName: null,
-                        TotalHours: null,
-                        UniqueVolunteers: null,
-                        TotalVolunteers: null,
-                        MonthNum: null,
+                        TotalHours: null
                     }
                 ]
             }
