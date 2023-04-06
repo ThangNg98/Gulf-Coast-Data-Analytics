@@ -513,11 +513,12 @@ def get_volunteer_id(volunteer_phone):
     return jsonify(rows)
 
 ############# ADMIN DASHBOARD #############
-@app.route('/get_full_history', methods=['GET'])
+@app.route('/get_hist_6', methods=['GET'])
 def get_full_history():
     query = """
         SELECT DATE_FORMAT(session_date, '%M') as MonthName, YEAR(session_date) as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers, DATE_FORMAT(session_date, '%m') as MonthNum
         from session
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW()
         GROUP BY MonthName, MonthNum, YEAR(session_date)
         ORDER BY YEAR(session_date) DESC, MonthNum DESC;
     """
@@ -528,7 +529,7 @@ def get_full_history():
 @app.route('/get_past_year', methods=['GET'])
 def get_past_year():
     query = """
-        SELECT DATE_FORMAT(session_date, '%M') as MonthName, YEAR(session_date) as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers, DATE_FORMAT(session_date, '%m') as MonthNum
+        SELECT DATE_FORMAT(session_date, '%M') as MonthName, YEAR(session_date) as YearName ,SUM(total_hours) as TotalHours, COUNT(DISTINCT volunteer_id) as UniqueVolunteers, COUNT(volunteer_id) as TotalVolunteers, DATE_FORMAT(session_date, '%m') as MonthNum
         from session
         WHERE session_date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)  AND session_date <= NOW()
         GROUP BY MonthName, MonthNum, YEAR(session_date)

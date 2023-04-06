@@ -5,7 +5,6 @@
                     <tr>
                     <th scope="col">Month, Year</th>
                     <th scope="col">Total Hours Worked</th>
-                    <th scope="col">Number of Unique Volunteers</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -13,7 +12,6 @@
                     <tr v-for="month in monthlyData">
                         <td>{{month.MonthName}}, {{month.YearName}}</td>
                         <td>{{month.TotalHours}}</td>
-                        <td>{{month.UniqueVolunteers}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -37,7 +35,7 @@ import axios from 'axios';
         },
         methods: {
             async load() {
-                await axios.get('http://127.0.0.1:5000/get_full_history')
+                await axios.get('http://127.0.0.1:5000/get_hist_6')
                 .then(response => {
                     this.monthlyData = response.data;
                 })
