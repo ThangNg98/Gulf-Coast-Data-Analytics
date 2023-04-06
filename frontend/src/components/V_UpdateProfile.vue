@@ -330,6 +330,7 @@ export default {
         },
     },
     mounted() {
+        console.log('v_update profile mounted')
         setTimeout(() => {
             this.getVolunteerID();
         }, 500);
@@ -380,10 +381,14 @@ export default {
                 this.title = '';
                 this.message = '';
                 this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
+                console.log('LOOK HERE this.volunteer_info.phone', this.volunteer_info.phone)
                 this.volunteer_info.emergency_contact_phone = this.volunteer_info.emergency_contact_phone.replace(/[^\d]/g, '');
                 axios
                 .post('http://127.0.0.1:5000/update_volunteer', this.volunteer_info)
                 .then(() =>{
+                    this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
+                    useVolunteerPhoneStore().setVolunteerPhone(this.volunteer_info.phone, this.volunteer_info.volunteer_id, this.volunteer_info.first_name)
+                    console.log('useVolunteerPhoneStore.volunteerPhone', useVolunteerPhoneStore().volunteerPhone)
                     this.$router.push('/profile/history?update=true')
                 })
                 .catch((error)=>{
@@ -464,6 +469,7 @@ export default {
     },
     getVolunteerID() {
             const phone = useVolunteerPhoneStore().volunteerPhone
+            console.log('phone:', phone)
             axios
                 .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
                 .then((response) => {
