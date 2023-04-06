@@ -141,21 +141,29 @@
         <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
 import ConfirmModal from './ConfirmModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getVolunteerAPI, getVolunteerHoursAPI, adminUpdateVolunteerAPI, adminDeleteVolunteerAPI } from '../api/api.js'
 export default {
     name: 'Register',
     components: {
-        ConfirmModal
+        ConfirmModal,
+        LoadingModal,
     },
     data() {
         return {
             msg:"Update Volunteer",
-            volunteer_info: { //use axios to call current information connected to current user
+            volunteer_info: {
                 volunteer_id:'',
                 first_name: '',
                 last_name: '',
@@ -243,7 +251,8 @@ export default {
             ],
             errors: {},
             submitPressed: false,
-            confirmModal: false
+            confirmModal: false,
+            isLoading: false,
     };
     },
     watch: {
@@ -369,7 +378,67 @@ export default {
             });
         },
     },
+    created() {
+        this.loadData();
+        // axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
+        //     axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${this.$route.params.volunteer_id}`)
+        //             .then(response => {
+        //                 this.volunteer_info.total_hours = response.data[0].total_hours
+        //             })
+        //             .catch(error => {
+        //                 console.log(error);
+        //     });
+        //     console.log('response.data[0].date_waiver_signed: ', response.data[0].date_waiver_signed)
+        //     if (response.data[0].date_waiver_signed == null) {
+        //         console.log('date_waiver_signed is null')
+        //         this.volunteer_info = response.data[0]
+        //         this.volunteer_info.date_waiver_signed = null
+        //     }
+        //     else {
+        //         console.log('date_waiver_signed is not null')
+        //         // parse the date string and format it in 'YYYY-MM-DD' format
+        //         this.volunteer_info = response.data[0]
+        //         this.volunteer_info.date_waiver_signed = new Date(this.volunteer_info.date_waiver_signed).toISOString().slice(0, 10);
+        //     }
+        // })
+    },
     methods: {
+        async loadData() {
+            this.isLoading = true;
+            try {
+                await this.getVolunteer();
+                await this.getVolunteerHours();
+            } catch (error) {
+                console.log(error)
+            }
+            this.isLoading = false;
+        },
+        async getVolunteer() {
+            try {
+                const response = await getVolunteerAPI(this.$route.params.volunteer_id);
+                if (response.data[0].date_waiver_signed == null) {
+                    console.log('date_waiver_signed is null')
+                    this.volunteer_info = response.data[0]
+                    this.volunteer_info.date_waiver_signed = null
+                }
+                else {
+                    console.log('date_waiver_signed is not null')
+                    // parse the date string and format it in 'YYYY-MM-DD' format
+                    this.volunteer_info = response.data[0]
+                    this.volunteer_info.date_waiver_signed = new Date(this.volunteer_info.date_waiver_signed).toISOString().slice(0, 10);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getVolunteerHours() {
+            try {
+                const response = await getVolunteerHoursAPI(this.$route.params.volunteer_id);
+                this.volunteer_info.total_hours = response.data[0].total_hours;
+            } catch (error) {
+                console.log(error)
+            }
+        },
         removeValidationStyle(name) {
             this.errors[name] = null
         },
@@ -414,27 +483,47 @@ export default {
                     this.message = '';
                     this.volunteer_info.phone = this.volunteer_info.phone.replace(/[^\d]/g, '');
                     this.volunteer_info.emergency_contact_phone = this.volunteer_info.emergency_contact_phone.replace(/[^\d]/g, '');
-                    axios
-                    .post('http://127.0.0.1:5000/admin_update_volunteer', this.volunteer_info)
-                    .then(() =>{
-                        console.log(this.volunteer_info.date_waiver_signed)
-                        this.volunteer_info={}
-                        this.$router.push('/admin/volunteers?update=true')
+                    this.updateVolunteer();
+                    // axios
+                    // .post('http://127.0.0.1:5000/admin_update_volunteer', this.volunteer_info)
+                    // .then(() =>{
+                    //     console.log(this.volunteer_info.date_waiver_signed)
+                    //     this.volunteer_info={}
+                    //     this.$router.push('/admin/volunteers?update=true')
                         
-                    })
-                    .catch((error)=>{
-                        console.log(error);
-                    });
+                    // })
+                    // .catch((error)=>{
+                    //     console.log(error);
+                    // });
                 } else if (this.title === 'Please Confirm Delete') {
                     this.title = '';
                     this.message = '';
-                    axios
-                    .post('http://127.0.0.1:5000/delete_volunteer', this.volunteer_info)
-                    .then(() =>{
-                        this.volunteer_info={}
-                        this.$router.push('/admin/volunteers?delete=true')
-                    })
+                    this.deleteVolunteer();
+                    // axios
+                    // .post('http://127.0.0.1:5000/delete_volunteer', this.volunteer_info)
+                    // .then(() =>{
+                    //     this.volunteer_info={}
+                    //     this.$router.push('/admin/volunteers?delete=true')
+                    // })
                 }
+            }
+        },
+        async updateVolunteer() {
+            try {
+                await adminUpdateVolunteerAPI(this.volunteer_info);
+                this.volunteer_info={}
+                this.$router.push('/admin/volunteers?update=true')
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async deleteVolunteer() {
+            try {
+                await adminDeleteVolunteerAPI(this.volunteer_info);
+                this.volunteer_info={}
+                this.$router.push('/admin/volunteers?delete=true')
+            } catch (error) {
+                console.log(error)
             }
         },
         submitForm() {
@@ -527,30 +616,7 @@ export default {
             const formattedDate = date.toISOString().slice(0, 10)
             this.date = formattedDate
         },
-    },
-    created() {
-        axios.get(`http://127.0.0.1:5000/get_volunteer/${this.$route.params.volunteer_id}`).then(response => {
-            axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${this.$route.params.volunteer_id}`)
-                    .then(response => {
-                        this.volunteer_info.total_hours = response.data[0].total_hours
-                    })
-                    .catch(error => {
-                        console.log(error);
-            });
-            console.log('response.data[0].date_waiver_signed: ', response.data[0].date_waiver_signed)
-            if (response.data[0].date_waiver_signed == null) {
-                console.log('date_waiver_signed is null')
-                this.volunteer_info = response.data[0]
-                this.volunteer_info.date_waiver_signed = ''
-            }
-            else {
-                console.log('date_waiver_signed is not null')
-                // parse the date string and format it in 'YYYY-MM-DD' format
-                this.volunteer_info = response.data[0]
-                this.volunteer_info.date_waiver_signed = new Date(this.volunteer_info.date_waiver_signed).toISOString().slice(0, 10);
-            }
-        })
-    },
+    }
 }
 </script>
 

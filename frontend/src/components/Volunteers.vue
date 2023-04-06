@@ -102,7 +102,7 @@
                         
                         >
                             <td style="text-align:left">{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
-                            <td style="text-align:left">{{ volunteer.phone }}</td>
+                            <td style="text-align:left">{{ formatPhone(volunteer.phone) }}</td>
                             <!-- This v-if statement needs to check if the value is null and if it is display a 0 if it isnt then display the value-->
                             <td v-if="volunteer.total_hours == null">0</td>
                             <td v-else>{{ volunteer.total_hours }}</td>
@@ -120,6 +120,10 @@
         <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
 
     </main>
 </template>
@@ -128,11 +132,15 @@
 import axios from "axios";
 import UpdateModal from './UpdateModal.vue'
 import DeleteModal from './DeleteModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getVolunteersAPI } from '../api/api.js'
 export default {
     name: 'Volunteers',
     components: {
         UpdateModal,
-        DeleteModal
+        DeleteModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -148,7 +156,8 @@ export default {
             firstName: '',
             lastName: '',
             phone: '',
-            volunteersFiltered: []
+            volunteersFiltered: [],
+            isLoading: false
 
         };
     },
@@ -171,7 +180,24 @@ export default {
             this.isMounted = true
         }
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
+      async loadData() {
+        this.isLoading = true;
+        try {
+          const response = await getVolunteersAPI();
+          // iterate through JSON response and add volunteers to the volunteer array
+          for (var i = 0; i < response.data.length; i++) {
+              this.volunteers.push(response.data[i]);
+          }
+          this.setVolunteersList()
+        } catch (error) {
+          console.log(error)
+        };
+        this.isLoading = false;
+      },
         closeUpdateModal() {
             this.updateModal = false;
             this.title = '';
@@ -182,19 +208,17 @@ export default {
             this.title = '';
             this.message = '';
         },
-        getVolunteers() {
-            axios.get('http://127.0.0.1:5000/read_volunteers')
-            .then(response => {
-                // iterate through JSON response and add volunteers to the volunteer array
-                for (var i = 0; i < response.data.length; i++) {
-                    this.volunteers.push(response.data[i]);
-                }
-                this.setVolunteersList()
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        },
+            // axios.get('http://127.0.0.1:5000/read_volunteers')
+            // .then(response => {
+            //     // iterate through JSON response and add volunteers to the volunteer array
+            //     for (var i = 0; i < response.data.length; i++) {
+            //         this.volunteers.push(response.data[i]);
+            //     }
+            //     this.setVolunteersList()
+            // })
+            // .catch(error => {
+            //     console.log(error);
+            // });
         setVolunteersList() {
             this.volunteersFiltered = this.volunteers
         },
@@ -234,10 +258,15 @@ export default {
         this.phone = ''
         this.setVolunteersList()
         },
+        formatPhone(phone) {
+          const cleaned = ('' + phone).replace(/\D/g, '');
+          const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+          if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+          }
+          return phone;
+        },
     },
-    mounted() {
-        this.getVolunteers();
-    }
 }
 </script>
 

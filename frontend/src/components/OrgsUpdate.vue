@@ -212,19 +212,6 @@ export default {
     },
     created() {
         this.loadData();
-        // axios.get(`http://127.0.0.1:5000/get_org/${this.$route.params.org_id}`)
-        // .then(response => {
-            // this.organization.org_id = response.data[0].org_id;
-            // this.organization.org_name = response.data[0].org_name;
-            // this.organization.address_line_1 = response.data[0].address_line_1;
-            // this.organization.address_line_2 = response.data[0].address_line_2;
-            // this.organization.city = response.data[0].city;
-            // this.organization.state_id = response.data[0].state_id;
-            // this.organization.zip = response.data[0].zip;
-            // this.organization.org_status_id = response.data[0].org_status_id;
-            // this.hours = response.data[0].total_hours;
-            // this.num_volunteers = response.data[0].num_volunteers
-        // })
     },
     methods: {
         async loadData() {
@@ -261,27 +248,12 @@ export default {
                     this.title = '';
                     this.message = '';
                     this.updateOrg();
-                    // axios
-                    // .post('http://127.0.0.1:5000/update_organization', this.organization)
-                    // .then(() =>{
-                    //     this.organization={}
-                    //     this.$router.push('/admin/orgs?update=true')
-                    // })
-                    // .catch((error)=>{
-                    //     console.log(error);
-                    // });
                 }
                 else if (this.title === 'Please Confirm Delete') {
                     console.log('delete confirm')
                     this.title = '';
                     this.message = '';
                     this.deleteOrg();
-                    // axios
-                    // .post('http://127.0.0.1:5000/delete_organization', this.organization)
-                    // .then(() =>{
-                    //     this.organization={}
-                    //     this.$router.push('/admin/orgs?delete=true')
-                    // })
                 }
             }
         },

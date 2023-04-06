@@ -198,4 +198,42 @@ export async function deleteOrgAPI(organization) {
     console.log(error);
     throw (error);
   }
-}
+};
+
+export async function getVolunteersAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/read_volunteers');
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getVolunteerHoursAPI(id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function adminUpdateVolunteerAPI(volunteer_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/admin_update_volunteer', volunteer_info);
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function adminDeleteVolunteerAPI(volunteer_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_volunteer', volunteer_info);
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
