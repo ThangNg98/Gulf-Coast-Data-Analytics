@@ -18,14 +18,13 @@
             <!--last year's total unique volunteers-->
             <div class="mb-3 w-50">
                 <h6 class="text-center">Number of Volunteers per Month in the Last Year</h6>
-                <MonthlyUniqueVolunteersChart ref="componentC" v-if="componentCVisible"></MonthlyUniqueVolunteersChart>
+                <MonthlyUniqueVolunteersChart ref="componentB" v-if="componentBVisible"></MonthlyUniqueVolunteersChart>
             </div>
         </div>
     </div>
 </template>
 <script>
 import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
-import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
 import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
 
@@ -33,25 +32,21 @@ import { useAdminLoginStore } from '@/stores/AdminLoginStore'
         name: 'Admin Dashboard View',
         components: {
             MonthlyTable,
-            MonthlyHoursChart,
             MonthlyUniqueVolunteersChart
         },
         data() {
             return {
-                componentBVisible: false,
-                componentCVisible: false
+                componentBVisible: false
             }
         },
         created() {
             console.log('isLoggedIn store at DashView: ', useAdminLoginStore().isLoggedIn);
         },
         async mounted() {
+            console.log('mounted')
             await this.$refs.componentA.load().then(async () => {
                 this.componentBVisible = true;
                 await this.$refs.componentB;
-            }).then(async () => {
-                this.componentCVisible = true;
-                await this.$refs.componentC;
             });
         },
     }

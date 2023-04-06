@@ -28,6 +28,7 @@ import axios from 'axios';
                         YearName: null,
                         TotalHours: null,
                         UniqueVolunteers: null,
+                        TotalVolunteers: null,
                         MonthNum: null,
                     }
                 ]
@@ -45,7 +46,6 @@ import axios from 'axios';
             }
         },
         created() {
-            this.load();
         }
     }
 </script>
