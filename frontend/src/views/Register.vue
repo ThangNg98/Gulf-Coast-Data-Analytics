@@ -516,19 +516,30 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  margin: auto;
-  padding-left: auto;
-  padding-right: auto
+@media only screen and (min-width: 768px) {
+    .container {
+      margin: auto;
+      padding-left: auto;
+      padding-right: auto;
+      width: 50%
+    }
+    }
 
+@media only screen and (min-width: 992px) {
+.container {
+    margin: auto;
+    padding-left: auto;
+    padding-right: auto;
+    width: 70%
+}
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 1200px) {
 .container {
-  margin: auto;
-  padding-left: auto;
-  padding-right: auto;
-  width: 25%
+    margin: auto;
+    padding-left: auto;
+    padding-right: auto;
+    width: 45%
 }
 }
 </style>

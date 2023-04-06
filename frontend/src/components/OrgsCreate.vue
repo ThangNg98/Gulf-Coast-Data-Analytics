@@ -5,7 +5,7 @@
         </div>
         <div class="container"> 
             <form @submit.prevent="submitForm">
-                <div>
+                <div style="text-align:left">
                     <div style="margin-top: 1rem; font-weight: bold">
                     * Required
                     </div>
@@ -26,7 +26,7 @@
 
                     <div>
                         <label for="state_select" class="form-label">State *</label>
-                        <select class="form-select" id="state_select" v-model="org_info.state_id" :class="{ 'is-invalid': errors.state }" :disabled="confirmModal">
+                        <select style="width: 50%" class="form-select" id="state_select" v-model="org_info.state_id" :class="{ 'is-invalid': errors.state }" :disabled="confirmModal">
                             <option value="">Select a state</option>
                             <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
                         </select>
@@ -34,16 +34,16 @@
                     </div>
 
                     <label for="exampleFormControlInput1" class="form-label"> Zip *</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="confirmModal">
+                    <input style="width: 50%" type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.zip}}</div>
 
                 </div>
                 <br>
                 <div style="text-align:right; margin-top: 2rem;">
-                    <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left" :disabled="confirmModal">
+                    <button type="button" class="btn btn-success" style="margin-right:0.5rem; text-align:left; margin-bottom: 1rem" :disabled="confirmModal">
                         <router-link class="nav-link" to="/admin/orgs" > Back to Organizations</router-link>
                     </button>
-                    <button type="submit" class="btn btn-primary" style="margin-right:0.5rem" :disabled="confirmModal">Submit</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right:0.5rem; margin-bottom: 1rem" :disabled="confirmModal">Submit</button>
                 </div>
             </form>
         </div>
@@ -260,7 +260,27 @@ export default {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
-  width: 25%
+  width: 50%
 }
 }
+
+@media only screen and (min-width: 992px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 40%
+}
+}
+
+@media only screen and (min-width: 1200px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 35%
+}
+}
+
+
 </style>

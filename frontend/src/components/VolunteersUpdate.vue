@@ -3,7 +3,7 @@
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
-    <div class="container"> 
+    <div class="container" style="text-align:left"> 
         <div style="margin-top: 1rem; font-weight: bold">
             * Required
         </div>
@@ -555,17 +555,30 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  margin: auto;
-  padding-left: auto;
-  padding-right: auto
-}
 @media only screen and (min-width: 768px) {
+    .container {
+      margin: auto;
+      padding-left: auto;
+      padding-right: auto;
+      width: 50%
+    }
+    }
+
+@media only screen and (min-width: 992px) {
 .container {
-  margin: auto;
-  padding-left: auto;
-  padding-right: auto;
-  width: 25%
+    margin: auto;
+    padding-left: auto;
+    padding-right: auto;
+    width: 40%
+}
+}
+
+@media only screen and (min-width: 1200px) {
+.container {
+    margin: auto;
+    padding-left: auto;
+    padding-right: auto;
+    width: 35%
 }
 }
 </style>

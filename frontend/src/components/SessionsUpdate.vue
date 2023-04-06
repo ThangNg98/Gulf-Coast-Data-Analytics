@@ -3,7 +3,7 @@
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ session_info.full_name }}'s Active Session</h1>
     </div>
-    <div class="container"> 
+    <div class="container" style="text-align:left"> 
         <form @submit.prevent="submitForm">
             <div>
                 <div class="row">
@@ -188,8 +188,25 @@ export default {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
-  width: 35%
+  width: 50%
 }
 }
 
+@media only screen and (min-width: 992px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 40%
+}
+}
+
+@media only screen and (min-width: 1200px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 35%
+}
+}
 </style>

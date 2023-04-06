@@ -5,7 +5,7 @@
     </div>
     <div class="container"> 
         <form @submit.prevent="submitForm">
-            <div>
+            <div style="text-align:left">
                 <div style="margin-top: 1rem; font-weight: bold">
                     * Required
                 </div>
@@ -26,14 +26,14 @@
 
                 <label for="state_select" class="form-label"> State *</label>
                 <div>
-                    <select class="form-select" ref="state_select" v-model="organization.state_id" :class="{ 'is-invalid': errors.state }" :disabled="this.confirmModal">
+                    <select style="width: 50%" class="form-select" ref="state_select" v-model="organization.state_id" :class="{ 'is-invalid': errors.state }" :disabled="this.confirmModal">
                     <option value="">Select a state</option>
                     <option v-for="state in states" :key="state.id" :value="state.id">{{ state.name }}</option>
                     </select>
                     <div class="invalid-feedback">{{errors.state}}</div>
                 </div>
                 <label for="zip" class="form-label"> Zip *</label>
-                <input type="text" class="form-control" ref="zip" v-model="organization.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="this.confirmModal">
+                <input style="width: 50%" type="text" class="form-control" ref="zip" v-model="organization.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.zip}}</div>
             </div>
             <br>
@@ -309,7 +309,25 @@ export default {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
-  width: 25%
+  width: 50%
+}
+}
+
+@media only screen and (min-width: 992px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 40%
+}
+}
+
+@media only screen and (min-width: 1200px) {
+.container {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
+  width: 35%
 }
 }
 </style>
