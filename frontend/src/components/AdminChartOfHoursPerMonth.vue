@@ -14,7 +14,7 @@
             }
         },
         methods: {
-            async getPastYear() {
+            async load() {
                 await axios.get('http://127.0.0.1:5000/get_past_year')
                 .then(response => {
                     for (var i = 0; i < response.data.length; i++) {
@@ -47,8 +47,8 @@
                 });
             }
         },
-        mounted() {
-            this.getPastYear();
+        created() {
+            this.load();
         }
     }
 </script>

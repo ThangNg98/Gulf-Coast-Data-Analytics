@@ -4,39 +4,56 @@
         <div class="text-center">
             <h1 style="margin-top: 2rem; margin-bottom: 2rem">Admin Dashboard</h1>
         </div>
-        <div>
+        <div class="d-flex flex-wrap">
             <!--monthly history table-->
-            <h6 class="text-center">Monthly History</h6>
-            <div class="mb-3"><MonthlyTable></MonthlyTable></div>
+            <div class="mb-3 w-50">
+                <h6 class="text-center">Total Monthly History</h6>
+                <MonthlyTable ref="componentA"></MonthlyTable>
+            </div>
             <!--last year's total hours-->
-            <h6 class="text-center">Total Hours per Month in the Last Year</h6>
-            <div class="mb-3"><MonthlyHoursChart></MonthlyHoursChart></div>
+            <div class="mb-3 w-50">
+                <h6 class="text-center">Total Hours per Month in the Last Year</h6>
+                <MonthlyHoursChart ref="componentB"  v-if="componentBVisible"></MonthlyHoursChart>
+            </div>
             <!--last year's total unique volunteers-->
-            <h6 class="text-center">Number of Unique Volunteers per Month in the Last Year</h6>
-            <div class="mb-3"><MonthlyUniqueVolunteersChart></MonthlyUniqueVolunteersChart></div>
+            <div class="mb-3 w-50">
+                <h6 class="text-center">Number of Unique Volunteers per Month in the Last Year</h6>
+                <MonthlyUniqueVolunteersChart ref="componentC" v-if="componentCVisible"></MonthlyUniqueVolunteersChart>
+            </div>
         </div>
     </div>
 </template>
 <script>
-//import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
-//import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
-//import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
+import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
+import MonthlyHoursChart from "@/components/AdminChartOfHoursPerMonth.vue"
+import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
-import { defineAsyncComponent } from "vue"
-
-//const MonthlyTable = await import("@/components/AdminMonthlyHistoryTable.vue");
-//const MonthlyHoursChart = await import("@/components/AdminChartOfHoursPerMonth.vue");
 
     export default {
         name: 'Admin Dashboard View',
         components: {
-            MonthlyTable: defineAsyncComponent(() => import('@/components/AdminMonthlyHistoryTable.vue')),
-            MonthlyHoursChart: defineAsyncComponent(() => import("@/components/AdminChartOfHoursPerMonth.vue")),
-            MonthlyUniqueVolunteersChart: defineAsyncComponent(() => import('@/components/AdminChartOfUniqueVolunteers.vue'))
+            MonthlyTable,
+            MonthlyHoursChart,
+            MonthlyUniqueVolunteersChart
+        },
+        data() {
+            return {
+                componentBVisible: false,
+                componentCVisible: false
+            }
         },
         created() {
-            console.log('isLoggedIn store at DashView: ', useAdminLoginStore().isLoggedIn)
-        }
+            console.log('isLoggedIn store at DashView: ', useAdminLoginStore().isLoggedIn);
+        },
+        async mounted() {
+            await this.$refs.componentA.load().then(async () => {
+                this.componentBVisible = true;
+                await this.$refs.componentB;
+            }).then(async () => {
+                this.componentCVisible = true;
+                await this.$refs.componentC;
+            });
+        },
     }
 </script>
 
