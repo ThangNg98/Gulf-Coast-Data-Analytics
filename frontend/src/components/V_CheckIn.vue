@@ -2,10 +2,13 @@
     <div class="container">
     <div class="d-flex justify-content-center">
         <div class="d-inline-flex flex-column w-25 text-start" style="min-width:300px">
+            <div v-if="errors.eventSelect" style="color: #dc3545;">
+                Event is required
+            </div>
             <!--event selection-->
             <div class="mb-3 d-flex justify-content-between">
                 <label for="eventSelect" class="text-start"><h4>Event</h4></label>
-                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn">
+                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" ref="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn || confirmModal" :class="{ 'is-invalid': errors.eventSelect }">
                 <option v-for="event in events" :value="event.event_id" :key="event.event_id">
                     {{ event.event_name }}
                 </option>
@@ -14,7 +17,7 @@
             <!--org selection-->
             <div class="mb-3 d-flex justify-content-between">
                 <label for="orgSelect"><h4>Organization</h4></label>
-                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn">
+                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn || confirmModal">
                     <option :value=null></option>
                     <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
                 </select>
@@ -22,7 +25,7 @@
 
             <div class="d-flex justify-content-between">
                 <label for="orgSelect"><h4>Comments</h4></label>
-                <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" :disabled="alreadyCheckedIn" v-model="session.session_comment">  </textarea>
+                <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" :disabled="alreadyCheckedIn || confirmModal" v-model="session.session_comment">  </textarea>
             </div>
         </div>
     </div>
@@ -34,13 +37,12 @@
                     <div class="d-inline-block float-start p-2">You are checked out</div><div 
                     class="d-inline-block float-end h-100" 
                     style="width:100px"><button class="w-100 h-100" type="button" 
-                    @click="checkedInButton = true; getTime(); create_session(); alreadyCheckedIn = !alreadyCheckedIn" 
-                    :disabled="alreadyCheckedIn">Check In</button></div>
+                    @click="checkedInButton = true; getTime(); create_session();" 
+                    :disabled="alreadyCheckedIn || confirmModal">Check In</button></div>
                 </div>
                 <div :class="{ 'text-muted': !alreadyCheckedIn }" class="p-2 float-end">
-                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios(); alreadyCheckedIn = !alreadyCheckedIn;" :disabled="!alreadyCheckedIn">Check Out</button></div>
+                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios();" :disabled="!alreadyCheckedIn || confirmModal">Check Out</button></div>
                 </div>
-                
         </div>
     </div>
     <div class="container" v-if="alreadyCheckedIn">
@@ -64,7 +66,12 @@
                     </tbody>
                 </table>
     </div>
-    </div>
+    </div>    
+
+    <Transition name="bounce">
+        <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
+    </Transition>
+
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
@@ -72,12 +79,14 @@
 <script>
 import axios from 'axios';
 import { useVolunteerPhoneStore } from '../stores/VolunteerPhoneStore'
+import ConfirmModal from './ConfirmModal.vue'
 import LoadingModal from './LoadingModal.vue'
 import { useLoadingStore } from '../stores/LoadingStore'
 import { checkMostRecentAPI, getEventsAPI, getOrgsAPI, createSessionAPI, checkOutAPI } from '../api/api.js'
 
 export default {
     components: {
+        ConfirmModal,
         LoadingModal
     },
     data() {
@@ -102,7 +111,21 @@ export default {
             current_event_name: null,
             current_org_name: null,
             time_in: null,
-            isLoading: false
+            isLoading: false,
+            errors: {},
+            submitPressed: false,
+            confirmModal: false,
+        }
+    },
+    watch: {
+        'session.event_id'(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('eventSelect')
+                } else {
+                    this.addValidationStyle('eventSelect', 'Event is required.')
+                }
+            }
         }
     },
     mounted() {
@@ -125,16 +148,36 @@ export default {
         }
         this.isLoading = false;
         },
+        removeValidationStyle(name) {
+            this.errors[name] = null
+        },
+        addValidationStyle(name, des) {
+            this.errors[name] = des
+        },
+        closeConfirmModal(value) {
+            this.confirmModal = false
+            if (value === 'yes') {
+                if (this.title === 'Please Confirm Check In') {
+                    this.title = '';
+                    this.message = '';
+                    this.create_session_call();
+                } else if (this.title === 'Please Confirm Check Out') {
+                    this.title = '';
+                    this.message = '';
+                    this.update_session_axios_call();
+                }
+            }
+        },
         async checkMostRecent() {
             try {
                 const result = await checkMostRecentAPI(this.session.volunteer_id);
                 console.log('result:', result)
                 this.alreadyCheckedIn = result.alreadyCheckedIn;
-                this.session.session_id = result.session?.session_id;
-                this.session.org_id = result.session?.org_id;
-                this.session.event_id = result.session?.event_id;
-                this.session.time_in = result.session?.time_in;
-                this.session.session_comment = result.session?.session_comment;
+                this.session.session_id = result.session?.session_id ?? null;
+                this.session.org_id = result.session?.org_id ?? null;
+                this.session.event_id = result.session?.event_id ?? null;
+                this.session.time_in = result.session?.time_in ?? null;
+                this.session.session_comment = result.session?.session_comment ?? null;
                 console.log('this.alreadyCheckedIn:',  this.alreadyCheckedIn)
                 console.log('this.session.session_id:',  this.alreadyCheckedIn)
                 console.log('this.session.org_id:', this.session.org_id)
@@ -163,9 +206,24 @@ export default {
                 console.log(error)
             }
         },
-        async create_session() {
-            this.time_in = this.getTime();
-            console.log('this.session:', this.session)
+        create_session() {
+            this.submitPressed = true;
+            this.errors = {};
+            if (!this.session.event_id) {
+                console.log('this.session.event_id', this.session.event_id)
+                this.errors.eventSelect = 'Event is required.'
+            }
+            if (Object.keys(this.errors).length === 0) {
+                console.log('Object.keys(this.errors).length', Object.keys(this.errors).length)
+                this.time_in = this.getTime();
+                console.log('CREATE SESSION this.session:', this.session);
+                this.confirmModal = true
+                this.title = 'Please Confirm Check In'
+                this.message = "Are you sure you want to check in?"
+            }
+        },
+        async create_session_call() {
+            this.alreadyCheckedIn = !this.alreadyCheckedIn
             try {
                 await createSessionAPI(this.session)
                 this.getCurrentInfo()
@@ -186,11 +244,19 @@ export default {
                 this.current_org_name = ''
             }
         },
-        async update_session_axios() { //call axios
+        update_session_axios() {
+            this.confirmModal = true
+            this.title = 'Please Confirm Check Out'
+            this.message = "Are you sure you want to check out?"
+        },
+        async update_session_axios_call() {
+            this.alreadyCheckedIn = !this.alreadyCheckedIn;
             this.isLoading = true;
             await this.update_session_axios_1();
             await this.update_session_axios_2();
             this.isLoading = false;
+            this.errors = {};
+            this.submitPressed = false;
         },
         async update_session_axios_1() {
             console.log('this.session.volunteer_id:', this.session.volunteer_id)
