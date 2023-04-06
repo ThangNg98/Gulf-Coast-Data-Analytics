@@ -96,6 +96,10 @@
     <Transition name="bounce">
         <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
     </Transition>
+
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
     
     </main>
 </template>
@@ -105,12 +109,16 @@ import axios from "axios";
 import SuccessModal from './SuccessModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import DeleteModal from './DeleteModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getEventsAPI } from '../api/api.js'
 export default {
     name: 'Events',
     components: {
         SuccessModal,
         UpdateModal,
-        DeleteModal
+        DeleteModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -123,7 +131,8 @@ export default {
             searchBy: '',
             name: '',
             desc: '',
-            eventsFiltered: []
+            eventsFiltered: [],
+            isLoading: false
         }
     },
     updated() {
@@ -151,7 +160,24 @@ export default {
             this.isMounted = true
         }
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
+      async loadData() {
+        this.isLoading = true;
+        try {
+          const response = await getEventsAPI();
+          // iterate through JSON response and add events to events array
+          for (var i = 0; i < response.data.length; i++) {
+              this.events.push(response.data[i]);
+          }
+          this.setEventsList();
+        } catch (error) {
+          console.log(error)
+        }
+        this.isLoading = false;
+      },
         closeSuccessModal() {
             this.successModal = false;
             this.title = '';
@@ -166,19 +192,6 @@ export default {
             this.deleteModal = false;
             this.title = '';
             this.message = '';
-        },
-        getEvents() {
-            axios.get('http://127.0.0.1:5000/read_events')
-            .then(response => {
-                // iterate through JSON response and add events to events array
-                for (var i = 0; i < response.data.length; i++) {
-                    this.events.push(response.data[i]);
-                }
-                this.setEventsList()
-            })
-            .catch(error => {
-                console.log(error);
-            });
         },
         setEventsList() {
             this.eventsFiltered = this.events
@@ -208,9 +221,6 @@ export default {
             this.setEventsList()
         },
     },
-    mounted() {
-        this.getEvents();
-    }
 }
 </script>
 

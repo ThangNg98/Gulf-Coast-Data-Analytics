@@ -89,7 +89,7 @@ export async function checkOutAPI(session) {
 
 export async function getPhoneListAPI() {
     try {
-        const response = axios.get('http://127.0.0.1:5000/volunteer_phone/');
+        const response = await axios.get('http://127.0.0.1:5000/volunteer_phone/');
         return response
     } catch (error) {
       console.log(error);
@@ -120,6 +120,43 @@ export async function getVolunteerAPI(id) {
 export async function updateVolunteerAPI(volunteer_info) {
   try {
     await axios.post('http://127.0.0.1:5000/update_volunteer', volunteer_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function createEventAPI(event_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/create_event', event_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getEventAPI(event_id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/get_event/${event_id}`);
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateEventAPI(events) {
+  try {
+    await axios.post('http://127.0.0.1:5000/update_event', events)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function deleteEventAPI(events) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_event', events)
   } catch (error) {
     console.log(error);
     throw (error);

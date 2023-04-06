@@ -28,16 +28,23 @@
         <ConfirmModal v-if="confirmModal" @close="closeConfirmModal" :title="title" :message="message"/>
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
     </main>
 </template>
 
 <script>
 import axios from "axios";
 import ConfirmModal from './ConfirmModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { createEventAPI } from '../api/api.js'
 export default {
     name: 'EventsCreate',
     components: {
-        ConfirmModal
+        ConfirmModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -51,6 +58,7 @@ export default {
             message: '',
             errors: {},
             submitPressed: false,
+            isLoading: false,
         };
     },
     watch: {
@@ -77,15 +85,25 @@ export default {
             this.message = ''
             console.log(value)
             if (value === 'yes') {
-                axios
-                .post('http://127.0.0.1:5000/create_event', this.event_info)
-                .then(() =>{
-                    this.event_info={}
-                    this.$router.push('/admin/events?success=true')
-                })
-                .catch((error)=>{
-                    console.log(error);
-                });
+                this.createEvent();
+                // axios
+                // .post('http://127.0.0.1:5000/create_event', this.event_info)
+                // .then(() =>{
+                //     this.event_info={}
+                //     this.$router.push('/admin/events?success=true')
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                // });
+            }
+        },
+        async createEvent() {
+            try {
+                await createEventAPI(this.event_info);
+                this.event_info={}
+                this.$router.push('/admin/events?success=true')
+            } catch(error) {
+                console.log(error)
             }
         },
         submitForm() {
