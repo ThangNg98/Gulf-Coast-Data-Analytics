@@ -16,7 +16,7 @@
         },
         methods: {
             async load() {
-                await axios.get('http://127.0.0.1:5000/get_past_year')
+                await axios.get('http://127.0.0.1:5000/get_hist_6')
                 .then(response => {
                     for (var i = 0; i < response.data.length; i++) {
                         this.months.push(response.data[i].MonthName);

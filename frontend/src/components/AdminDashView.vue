@@ -17,7 +17,7 @@
             </div>-->
             <!--last year's total unique volunteers-->
             <div class="mb-3 w-50">
-                <h6 class="text-center">Number of Volunteers per Month in the Last Year</h6>
+                <h6 class="text-center">Number of Volunteers per Month in the Last 6 Months</h6>
                 <MonthlyUniqueVolunteersChart ref="componentB" v-if="componentBVisible"></MonthlyUniqueVolunteersChart>
             </div>
         </div>
