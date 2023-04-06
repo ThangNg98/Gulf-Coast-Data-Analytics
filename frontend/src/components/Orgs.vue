@@ -99,6 +99,10 @@
         <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
     </main>
 </template>
 
@@ -107,13 +111,17 @@ import axios from "axios";
 import SuccessModal from './SuccessModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import DeleteModal from './DeleteModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getOrgsAPI } from '../api/api.js'
 
 export default {
     name: 'Orgs',
     components: {
         SuccessModal,
         UpdateModal,
-        DeleteModal
+        DeleteModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -129,7 +137,8 @@ export default {
             searchBy: '',
             name: '',
             address: '',
-            orgsFiltered: []
+            orgsFiltered: [],
+            isLoading: false,
         };
     
     },
@@ -158,7 +167,24 @@ export default {
             this.isMounted = true
         }
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
+      async loadData() {
+        this.isLoading = true;
+        try {
+          const response = await getOrgsAPI();
+          // iterate through JSON response and add orgs to orgs array
+          for (var i = 0; i < response.data.length; i++) {
+              this.orgs.push(response.data[i]);
+          }
+          this.setOrgsList()
+        } catch (error) {
+          console.log(error)
+        };
+        this.isLoading = false;
+      },
         closeSuccessModal() {
             this.successModal = false;
             this.title = '';
@@ -173,19 +199,6 @@ export default {
             this.deleteModal = false;
             this.title = '';
             this.message = '';
-        },
-        getOrgs() {
-            axios.get('http://127.0.0.1:5000/read_orgs')
-            .then(response => {
-                // iterate through JSON response and add orgs to orgs array
-                for (var i = 0; i < response.data.length; i++) {
-                    this.orgs.push(response.data[i]);
-                }
-                this.setOrgsList()
-            })
-            .catch(error => {
-                console.log(error);
-            });
         },
         setOrgsList() {
             this.orgsFiltered = this.orgs
@@ -214,9 +227,6 @@ export default {
             this.address = ''
             this.setOrgsList()
         },
-    },
-    mounted() {
-        this.getOrgs();
     }
 }
 </script>

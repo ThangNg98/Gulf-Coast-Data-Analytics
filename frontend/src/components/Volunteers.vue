@@ -15,6 +15,7 @@
             >
               <option value="Volunteer Name">Volunteer Name</option>
               <option value="Volunteer Number">Volunteer Number</option>
+              <option value="Waiver Signed">Waiver Signed</option>
             </select>
           </div>
           <!--Input box for searching by Volunteer First Name-->
@@ -51,6 +52,20 @@
               placeholder="Enter Volunteer Phone Number"
             />
           </div>
+          <div class="flex flex-col" v-if="searchBy === 'Waiver Signed'">
+          <div>
+            <label>
+              <input type="radio" v-model="waiverSigned" value="true">
+              Volunteers who have signed
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="radio" v-model="waiverSigned" value="false">
+              Volunteers who have not signed
+            </label>
+          </div>
+        </div>
         </div>
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
@@ -76,7 +91,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div>   
 
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
@@ -102,7 +117,7 @@
                         
                         >
                             <td style="text-align:left">{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
-                            <td style="text-align:left">{{ volunteer.phone }}</td>
+                            <td style="text-align:left">{{ formatPhone(volunteer.phone) }}</td>
                             <!-- This v-if statement needs to check if the value is null and if it is display a 0 if it isnt then display the value-->
                             <td v-if="volunteer.total_hours == null">0</td>
                             <td v-else>{{ volunteer.total_hours }}</td>
@@ -120,6 +135,10 @@
         <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
     </Transition>
 
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
 
     </main>
 </template>
@@ -128,11 +147,15 @@
 import axios from "axios";
 import UpdateModal from './UpdateModal.vue'
 import DeleteModal from './DeleteModal.vue'
+import LoadingModal from './LoadingModal.vue'
+import { useLoadingStore } from '../stores/LoadingStore'
+import { getVolunteersAPI } from '../api/api.js'
 export default {
     name: 'Volunteers',
     components: {
         UpdateModal,
-        DeleteModal
+        DeleteModal,
+        LoadingModal,
     },
     data() {
         return {
@@ -148,7 +171,9 @@ export default {
             firstName: '',
             lastName: '',
             phone: '',
-            volunteersFiltered: []
+            waiverSigned: false,
+            volunteersFiltered: [],
+            isLoading: false
 
         };
     },
@@ -171,7 +196,24 @@ export default {
             this.isMounted = true
         }
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
+      async loadData() {
+        this.isLoading = true;
+        try {
+          const response = await getVolunteersAPI();
+          // iterate through JSON response and add volunteers to the volunteer array
+          for (var i = 0; i < response.data.length; i++) {
+              this.volunteers.push(response.data[i]);
+          }
+          this.setVolunteersList()
+        } catch (error) {
+          console.log(error)
+        };
+        this.isLoading = false;
+      },
         closeUpdateModal() {
             this.updateModal = false;
             this.title = '';
@@ -182,19 +224,17 @@ export default {
             this.title = '';
             this.message = '';
         },
-        getVolunteers() {
-            axios.get('http://127.0.0.1:5000/read_volunteers')
-            .then(response => {
-                // iterate through JSON response and add volunteers to the volunteer array
-                for (var i = 0; i < response.data.length; i++) {
-                    this.volunteers.push(response.data[i]);
-                }
-                this.setVolunteersList()
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        },
+            // axios.get('http://127.0.0.1:5000/read_volunteers')
+            // .then(response => {
+            //     // iterate through JSON response and add volunteers to the volunteer array
+            //     for (var i = 0; i < response.data.length; i++) {
+            //         this.volunteers.push(response.data[i]);
+            //     }
+            //     this.setVolunteersList()
+            // })
+            // .catch(error => {
+            //     console.log(error);
+            // });
         setVolunteersList() {
             this.volunteersFiltered = this.volunteers
         },
@@ -224,7 +264,15 @@ export default {
             } else if (this.searchBy === 'Volunteer Number') {
             //filter the client list by phone number
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.phone.includes(this.phone));
-            }
+            } else if (this.searchBy === 'Waiver Signed') {
+              if (this.waiverSigned) {
+                console.log('waiverSigned selected')
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 1)
+              } else if (!this.waiverSigned) {
+                console.log('not waiverSigned selected')
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 2)
+              }
+            };
         },
         //method called when user clicks "Clear Search" button
         clearSearch() {
@@ -234,10 +282,15 @@ export default {
         this.phone = ''
         this.setVolunteersList()
         },
+        formatPhone(phone) {
+          const cleaned = ('' + phone).replace(/\D/g, '');
+          const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+          if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+          }
+          return phone;
+        },
     },
-    mounted() {
-        this.getVolunteers();
-    }
 }
 </script>
 

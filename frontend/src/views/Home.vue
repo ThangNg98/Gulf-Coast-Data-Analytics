@@ -33,6 +33,10 @@
     <Transition name="bounce">
         <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
     </Transition>
+    
+    <div>
+        <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
 
   </main>
 </template>
@@ -42,12 +46,16 @@
   import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore'
   import SuccessModal from '../components/SuccessModal.vue'
   import ConfirmModal from '../components/ConfirmModal.vue'
+  import LoadingModal from '../components/LoadingModal.vue'
+  import { useLoadingStore } from '../stores/LoadingStore'
+  import { getPhoneListAPI } from '../api/api.js'
 
   export default {
     name: 'Home',
     components: {
       SuccessModal,
-      ConfirmModal
+      ConfirmModal,
+      LoadingModal,
     },
     data() {
       return {
@@ -83,6 +91,7 @@
         confirmModal: false,
         title: '',
         message: '',
+        isLoading: false,
       }
     },
     watch: {
@@ -99,17 +108,28 @@
           this.title = "You are registered!"
           this.message = "Please wait until you have been approved."
       }
-      axios
-        .get('http://127.0.0.1:5000/volunteer_phone/')
-        .then(response => {
-          console.log('volunteer_phone response:', response)
-          this.volunteerPhoneList = response.data;
-        })
-        .catch(error => {
-          console.log(error);
-        })
+      this.loadData();
+      // axios
+      //   .get('http://127.0.0.1:5000/volunteer_phone/')
+      //   .then(response => {
+      //     console.log('volunteer_phone response:', response)
+      //     this.volunteerPhoneList = response.data;
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   })
     },
     methods: {
+      async loadData() {
+        this.isLoading = true;
+        try {
+          const response = await getPhoneListAPI();
+          this.volunteerPhoneList = response.data
+        } catch (error) {
+          console.log(error);
+        }
+        this.isLoading = false;
+      },
       closeSuccessModal() {
             this.successModal = false;
             this.title = '';
