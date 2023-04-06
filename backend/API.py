@@ -50,6 +50,7 @@ def check_most_recent(volunteer_id):
 @app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
 def create_session():
     request_data = request.get_json() # stores json input into variables
+    print('request_data create session', request_data)
     time_in = request_data['time_in']
     session_date = request_data['session_date']
     session_comment = request_data['session_comment']
