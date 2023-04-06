@@ -127,7 +127,7 @@
                                 <input type="checkbox" v-model="waiverSigned" :disabled="confirmModal">
                             </td>
                             <td>
-                                <input type="date" id="date" v-model="volunteer_info.date_waiver_signed" @input="formatDate" :disabled="confirmModal">
+                                <input type="date" id="date" v-model="volunteer_info.date_waiver_signed" @input="formatDate" :disabled="confirmModal || !waiverSigned">
                             </td>
                             <td v-if="volunteer_info.total_hours != null" > {{ this.volunteer_info.total_hours }}</td>
                             <td v-else> 0 </td>
@@ -365,6 +365,9 @@ export default {
             },
             set(value) {
                 this.volunteer_info.waiver_signed = value ? 1 : 2;
+                if (!value) {
+                    this.volunteer_info.date_waiver_signed = null;
+                }
             }
         },
         filteredStates() {

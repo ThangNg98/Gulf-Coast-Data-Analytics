@@ -15,6 +15,7 @@
             >
               <option value="Volunteer Name">Volunteer Name</option>
               <option value="Volunteer Number">Volunteer Number</option>
+              <option value="Waiver Signed">Waiver Signed</option>
             </select>
           </div>
           <!--Input box for searching by Volunteer First Name-->
@@ -51,6 +52,20 @@
               placeholder="Enter Volunteer Phone Number"
             />
           </div>
+          <div class="flex flex-col" v-if="searchBy === 'Waiver Signed'">
+          <div>
+            <label>
+              <input type="radio" v-model="waiverSigned" value="true">
+              Volunteers who have signed
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="radio" v-model="waiverSigned" value="false">
+              Volunteers who have not signed
+            </label>
+          </div>
+        </div>
         </div>
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
@@ -76,7 +91,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div>   
 
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
@@ -156,6 +171,7 @@ export default {
             firstName: '',
             lastName: '',
             phone: '',
+            waiverSigned: false,
             volunteersFiltered: [],
             isLoading: false
 
@@ -248,7 +264,15 @@ export default {
             } else if (this.searchBy === 'Volunteer Number') {
             //filter the client list by phone number
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.phone.includes(this.phone));
-            }
+            } else if (this.searchBy === 'Waiver Signed') {
+              if (this.waiverSigned) {
+                console.log('waiverSigned selected')
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 1)
+              } else if (!this.waiverSigned) {
+                console.log('not waiverSigned selected')
+                this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 2)
+              }
+            };
         },
         //method called when user clicks "Clear Search" button
         clearSearch() {
