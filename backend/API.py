@@ -512,5 +512,22 @@ def get_volunteer_id(volunteer_phone):
     print(rows)
     return jsonify(rows)
 
+############# ADMIN DASHBOARD #############
+@app.route('/get_hist_6', methods=['GET'])
+def get_full_history():
+    query = """
+        SELECT DATE_FORMAT(session.session_date, '%M') as MonthName, YEAR(session.session_date) as YearName,
+        SUM(session.total_hours) as TotalHours, COUNT(DISTINCT session.volunteer_id) as UniqueVolunteers,
+        COUNT(session.volunteer_id) as TotalVolunteers, DATE_FORMAT(session.session_date, '%m') as MonthNum
+        from session
+        JOIN volunteer ON session.volunteer_id=volunteer.volunteer_id
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer.volunteer_status_id = 1
+        GROUP BY MonthName, MonthNum, YEAR(session_date)
+        ORDER BY YEAR(session_date) DESC, MonthNum DESC;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+
 if __name__ == "__main__":
     app.run()

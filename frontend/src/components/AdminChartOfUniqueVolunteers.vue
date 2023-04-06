@@ -5,34 +5,76 @@
 </template>
 <script>
     import Chart from 'chart.js/auto';
+    import axios from 'axios';
     export default {
         data() {
             return {
-                months: ['January', 'February', 'March', 'April', 'May'], // get past ~5 months
-                volunteers: ['55', '30', '35', '10', '45'], // get past total hours for months
+                months: [], // get past 12 months
+                volunteers: [], // get past total hours for months
+                totalVolunteers: [],
             }
         },
-        mounted() {
-            const ctx = document.getElementById('monthlyVolunteers');
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                labels: this.months,
-                datasets: [{
-                    label: '# of Unique Volunteers',
-                    data: this.volunteers,
-                    borderWidth: 1
-                }]
-                },
-                options: {
-                scales: {
-                    y: {
-                    beginAtZero: true
+        methods: {
+            async load() {
+                await axios.get('http://127.0.0.1:5000/get_hist_6')
+                .then(response => {
+                    for (var i = 0; i < response.data.length; i++) {
+                        this.months.push(response.data[i].MonthName);
+                        this.volunteers.push(response.data[i].UniqueVolunteers);
+                        this.totalVolunteers.push(response.data[i].TotalVolunteers);
                     }
-                }
-                }
-            });
+                    const ctx = document.getElementById('monthlyVolunteers');
+
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                        labels: this.months,
+                        datasets: [
+                            {
+                                label: '# of Unique Volunteers',
+                                data: this.volunteers,
+                                borderWidth: 1
+                            },
+                            {
+                                label: '# of Total Volunteers',
+                                data: this.totalVolunteers,
+                                borderWidth: 1
+                            }
+                    ]
+                        },
+                        options: {
+                        responsive: true,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        stacked: false,
+                        scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+
+                            // grid line settings
+                            grid: {
+                            drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            },
+                        }
+                        }
+                    }});
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+        },
+        created() {
+            this.load();
         }
     }
 </script>
