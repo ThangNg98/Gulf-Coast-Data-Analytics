@@ -1,8 +1,62 @@
 <template>
     <main>
+        <h2 class="text-2xl font-bold">Search Organization By</h2>
+          <!-- Displays Organization Name and Address selection -->
+          <div class="flex flex-col">
+            <select
+              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              v-model="searchBy"
+            >
+              <option value="Organization Name">Organization Name</option>
+              <option value="Organization Address">Organization Address</option>
+            </select>
+          </div>
+          <!--Display Organization name search field-->
+          <div class="flex flex-col" v-if="searchBy === 'Organization Name'">
+            <label class="block">
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="name"
+                v-on:keyup.enter="handleSubmitForm"
+                placeholder="Enter organization name"
+              />
+            </label>
+          </div>
+          <!--Display Organization address search field-->
+          <div class="flex flex-col" v-if="searchBy === 'Organization Address'">
+            <label class="block">
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="address"
+                v-on:keyup.enter="handleSubmitForm"
+                placeholder="Enter organization address"
+              />
+            </label>
+          </div>
+          <div class="mt-5 grid-cols-2">
+            <!--Clear Search button-->
+            <button
+              class="mr-10 border border-red-700 bg-white text-red-700 rounded"
+              @click="clearSearch"
+              type="submit"
+            >
+              Clear Search
+            </button>
+            <!--Search Organization button-->
+            <button
+              class="bg-red-700 text-white rounded"
+              @click="handleSubmitForm"
+              type="submit"
+            >
+              Search Organization
+            </button>
+          </div>
     <div>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
+
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
@@ -13,7 +67,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="org in orgs"
+                        <tr v-for="org in orgsFiltered"
                         @click="editOrgs(org.org_id)"
                         :key="org.org_id"
                         :style="{ cursor: 'pointer' }"
@@ -71,7 +125,11 @@ export default {
             deleteModal: false,
             title: '',
             message: '',
-            isMounted: false
+            isMounted: false,
+            searchBy: '',
+            name: '',
+            address: '',
+            orgsFiltered: []
         };
     
     },
@@ -123,15 +181,39 @@ export default {
                 for (var i = 0; i < response.data.length; i++) {
                     this.orgs.push(response.data[i]);
                 }
+                this.setOrgsList()
             })
             .catch(error => {
                 console.log(error);
             });
         },
+        setOrgsList() {
+            this.orgsFiltered = this.orgs
+        },
         editOrgs(org_id) {
             this.$router.push({ name: 'OrgsUpdate', params: 
             { org_id: org_id } });
-        }
+        },
+        handleSubmitForm() {
+        //if user searched by Organization name
+            if (this.searchBy === 'Organization Name') {
+            //filter the Organizations list by Organization name
+                this.orgsFiltered = this.orgs.filter((org) => org.org_name.toLowerCase().includes(this.name.toLowerCase()));
+            } 
+            //if user searched by Organization address
+            else if (this.searchBy === 'Organization Address') {
+                //filter the Organizations list by Organization address
+                this.orgsFiltered = this.orgs.filter((org) => org.address_line_1.toLowerCase().includes(this.address.toLowerCase()));
+            }
+        },
+        //method called when user clicks "Clear Search" button
+        clearSearch() {
+            // Resets all the variables
+            this.searchBy = ''
+            this.name = ''
+            this.address = ''
+            this.setOrgsList()
+        },
     },
     mounted() {
         this.getOrgs();
