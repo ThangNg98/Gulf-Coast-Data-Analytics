@@ -4,7 +4,7 @@
             Select Report
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Dates by Time Report</button></li>
+            <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Dates by Total Hours Report</button></li>
             <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHours = !showOrgsHours">Organizations - Hours Report</button></li>
             <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Organizations - Volunteers Report</button></li>
             <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Organizations - Hours and Volunteers Report</button></li>

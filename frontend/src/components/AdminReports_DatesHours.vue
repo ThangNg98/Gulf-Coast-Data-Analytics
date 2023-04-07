@@ -140,7 +140,6 @@ export default {
                     ...item,
                     total_hours: parseFloat(item.total_hours),
                 }));
-                console.log('this.dates', this.dates)
                 this.setDatesList();
             } catch (error) {
                 console.log(error)
@@ -154,6 +153,7 @@ export default {
             }            
 
             this.datesFiltered = filterAndGroupData(this.dates, this.startDate, this.endDate, this.grouping, this.fillMissingDates);
+            console.log('this.datesFiltered', this.datesFiltered)
         },
         handleFilter() {
             if (!this.startDate && !this.endDate) {
