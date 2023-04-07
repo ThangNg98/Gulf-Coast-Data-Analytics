@@ -1,7 +1,7 @@
 <template>
     <div class="container1"> 
           <div style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
-              Organization by Hours and Volunteers
+              Events by Hours and Volunteers
           </div>
           <div style="margin:auto; text-align: left; max-width: 30%; margin-top: 2rem">
             Filter By:
@@ -54,16 +54,16 @@
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
                   <tr>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='org_name'">Organization</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_org'">Total hours</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='event_name'">Event</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_event'">Total hours</th>
                   <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">Number of Volunteers</th>
                   </tr>
               </thead>
               <tbody>
-                  <tr v-for="org in sortedItems" :key="org.org_id" style="text-align:left">
-                      <td style="text-align:left"> {{ org.org_name }}</td>
-                      <td style="text-align:left"> {{ org.total_hours_per_org }}</td>
-                      <td style="text-align:left"> {{ org.num_volunteers }}</td>
+                  <tr v-for="event in sortedItems" :key="event.event_id" style="text-align:left">
+                      <td style="text-align:left"> {{ event.event_name }}</td>
+                      <td style="text-align:left"> {{ event.total_hours_per_event }}</td>
+                      <td style="text-align:left"> {{ event.num_volunteers }}</td>
                   </tr>
 
               </tbody>
@@ -79,22 +79,22 @@
 
 <script>
 import LoadingModal from './LoadingModal.vue'
-import { getOrgsHoursVolunteersAPI } from '../api/api.js'
+import { getEventsHoursVolunteersAPI } from '../api/api.js'
 export default {
-  name: 'OrgsHoursVolunteers',
+  name: 'EventsHoursVolunteers',
   components: {
       LoadingModal,
   },
   data() {
       return {
-          orgs: [],
+          events: [],
           isLoading: false,
-          sortBy: 'num_volunteers',
+          sortBy: 'total_hours_per_event',
           sortDesc: false,
           searchBy: '',
           total_hours: null,
           number_of_volunteers: null,
-          orgsFiltered: [],
+          eventsFiltered: [],
       }
   },
   mounted() {
@@ -106,57 +106,56 @@ export default {
         let order = this.sortDesc ? -1 : 1;
 
         // If sorting by total hours, reverse the sort order to make higher hours come first
-        if (field === 'num_volunteers' || field === 'total_hours_per_org') {
+        if (field === 'num_volunteers' || field === 'total_hours_per_event') {
             order *= -1;
         }
 
         // Make a copy of the original array to avoid modifying the original data
-        const orgs = this.orgsFiltered.slice();
+        const events = this.eventsFiltered.slice();
 
         // Sort the array by the specified field and order
-        orgs.sort((a, b) => {
+        events.sort((a, b) => {
             if (a[field] < b[field]) return -1 * order;
             if (a[field] > b[field]) return 1 * order;
             return 0;
         });
 
-        return orgs;
+        return events;
     },
   },
   methods: {
       async loadData() {
           this.isLoading = true;
           try {
-              const response = await getOrgsHoursVolunteersAPI();
-              this.orgs = response.data;
-              this.setOrgsList();
+              const response = await getEventsHoursVolunteersAPI();
+              this.events = response.data;
+              console.log('events:', this.events)
+              this.setEventsList();
           } catch (error) {
               console.log(error)
           }
           this.isLoading = false;
       },
-      setOrgsList() {
-        console.log('setOrgsList called')
-            this.orgsFiltered = this.orgs
+      setEventsList() {
+        console.log('setEventsList called')
+            this.eventsFiltered = this.events
       },
       handleFilter() {
         console.log('filter handled')
         if (this.searchBy === 'Total Hours') {
             console.log('filter by total hours')
-            //filter the Organizations list by Organization name
-            this.orgsFiltered = this.orgs.filter((org) => {
-                const totalHours = parseFloat(org.total_hours_per_org);
+            this.eventsFiltered = this.events.filter((event) => {
+                const totalHours = parseFloat(event.total_hours_per_event);
                 return totalHours >= this.total_hours;
             });
-            console.log('orgsFiltered after filter', this.orgsFiltered)
 
             } 
             //if user searched by Organization address
             else if (this.searchBy === 'Number of Volunteers') {
                 console.log('filter by num volunteers')
                 //filter the Organizations list by Organization address
-                this.orgsFiltered = this.orgs.filter((org) => {
-                    const totalVolunteers = parseFloat(org.num_volunteers);
+                this.eventsFiltered = this.events.filter((event) => {
+                    const totalVolunteers = parseFloat(event.num_volunteers);
                     return totalVolunteers >= this.number_of_volunteers;
                 });
             }
@@ -166,7 +165,7 @@ export default {
             this.searchBy = ''
             this.total_hours = ''
             this.number_of_volunteers = ''
-            this.setOrgsList()
+            this.setEventsList()
         },
   },
 }

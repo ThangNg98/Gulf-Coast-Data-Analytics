@@ -1,7 +1,7 @@
 <template>
     <div class="container1"> 
           <div style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
-              Organization Volunteers
+              Organizations by Volunteers
           </div>
           <div style="margin:auto; text-align: left; max-width: 30%; margin-top: 2rem">
             Filter By Number of Volunteers
