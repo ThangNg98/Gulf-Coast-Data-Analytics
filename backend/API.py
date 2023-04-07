@@ -529,7 +529,7 @@ def get_full_history():
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
-############# ADMIN REPORTS #############
+# Admin Reports
 @app.route('/getOrgsHours', methods=['GET'])
 def getOrgsHours():
     query = """
