@@ -1,9 +1,14 @@
 <template>
-    <button @click="clearComponents(); showOrgsHours = !showOrgsHours">Click me to show OrgsHours</button>
-    <div></div>
-    <button @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Click me to show OrgsVolunteers</button>
-    <div></div>
-    <button @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Click me to show OrgsHoursVolunteers</button>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Report
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHours = !showOrgsHours">Organization Hours Report</button></li>
+            <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Organization Volunteers Report</button></li>
+            <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Organization Hours and Volunteers Report</button></li>
+        </ul>
+    </div>
 
     <OrgsHours v-if="showOrgsHours"/>
     
