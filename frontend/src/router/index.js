@@ -134,6 +134,23 @@ const router = createRouter({
           }
         },
         {
+          path: '/admin/reports',
+          name: 'AdminReports',
+          props: true,
+          component: () => import('../components/AdminReports.vue'),
+          beforeEnter: (to, from, next) => {
+            const isLoggedIn = useAdminLoginStore().isLoggedIn
+            console.log('isLoggedIn: ', isLoggedIn)
+            if (!isLoggedIn) {
+              alert('You do not have access to view this')
+              next('/adminlogin')
+            } else {
+              // continue to the requested route if user is logged in
+              next()
+            }
+          }
+        },
+        {
           path: '/admin/orgs',
           name: 'Orgs',
           props: true,
