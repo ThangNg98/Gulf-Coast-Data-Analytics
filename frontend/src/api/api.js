@@ -267,3 +267,33 @@ export async function getOrgsHoursVolunteersAPI() {
     throw (error);
   }
 };
+
+export async function getEventsHoursAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/getEventsHours');
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getEventsVolunteersAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/getEventsVolunteers');
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getEventsHoursVolunteersAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/getEventsHoursVolunteers');
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};

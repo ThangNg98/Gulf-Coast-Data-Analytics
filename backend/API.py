@@ -575,5 +575,50 @@ def getOrgsHoursVolunteers():
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
+@app.route('/getEventsHours', methods=['GET'])
+def getEventsHours():
+    query = """
+        SELECT s.event_id, e.event_name, SUM(s.total_hours) AS total_hours_per_event
+        FROM session s
+        JOIN event e
+        ON s.event_id = e.event_id
+        WHERE e.event_status_id = 1
+        GROUP BY s.event_id;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+@app.route('/getEventsVolunteers', methods=['GET'])
+def getEventsVolunteers():
+    query = """
+        SELECT s.event_id, e.event_name, COUNT(s.volunteer_id) as num_volunteers
+        FROM session s
+        JOIN event e
+        ON s.event_id = e.event_id
+        JOIN volunteer v
+        ON s.volunteer_id = v.volunteer_id
+        WHERE e.event_status_id = 1
+        AND v.volunteer_status_id = 1
+        GROUP BY s.event_id;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+@app.route('/getEventsHoursVolunteers', methods=['GET'])
+def getEventsHoursVolunteers():
+    query = """
+        SELECT s.event_id, e.event_name, SUM(s.total_hours) AS total_hours_per_event, COUNT(s.volunteer_id) as num_volunteers
+        FROM session s
+        JOIN event e
+        ON s.event_id = e.event_id
+        JOIN volunteer v
+        ON s.volunteer_id = v.volunteer_id
+        WHERE e.event_status_id = 1
+        AND v.volunteer_status_id = 1
+        GROUP BY s.event_id;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
 if __name__ == "__main__":
     app.run()

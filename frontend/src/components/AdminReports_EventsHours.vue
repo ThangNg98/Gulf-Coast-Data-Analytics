@@ -1,7 +1,7 @@
 <template>
     <div class="container1"> 
           <div style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
-              Organizations by Hours
+              Events by Hours
           </div>
           <div style="margin:auto; text-align: left; max-width: 30%; margin-top: 2rem">
             Filter By Total Hours
@@ -34,14 +34,14 @@
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
                   <tr>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='org_name'">Organization</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_org'">Hours</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='event_name'">Event</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_event'">Hours</th>
                   </tr>
               </thead>
               <tbody>
-                  <tr v-for="org in sortedItems" :key="org.org_id" style="text-align:left">
-                      <td style="text-align:left"> {{ org.org_name }}</td>
-                      <td style="text-align:left"> {{ org.total_hours_per_org }}</td>
+                  <tr v-for="event in sortedItems" :key="event.event_id" style="text-align:left">
+                      <td style="text-align:left"> {{ event.event_name }}</td>
+                      <td style="text-align:left"> {{ event.total_hours_per_event }}</td>
                   </tr>
 
               </tbody>
@@ -57,20 +57,20 @@
 
 <script>
 import LoadingModal from './LoadingModal.vue'
-import { getOrgsHoursAPI } from '../api/api.js'
+import { getEventsHoursAPI } from '../api/api.js'
 export default {
-  name: 'OrgsHours',
+  name: 'EventsHours',
   components: {
       LoadingModal,
   },
   data() {
       return {
-          orgs: [],
+          events: [],
           isLoading: false,
-          sortBy: 'organization_hours',
+          sortBy: 'event_hours',
           sortDesc: false,
           total_hours: null,
-          orgsFiltered: [],
+          eventsFiltered: [],
       }
   },
   mounted() {
@@ -82,51 +82,52 @@ export default {
         let order = this.sortDesc ? -1 : 1;
 
         // If sorting by total hours, reverse the sort order to make higher hours come first
-        if (field === 'total_hours_per_org') {
+        if (field === 'total_hours_per_event') {
             order *= -1;
         }
 
         // Make a copy of the original array to avoid modifying the original data
-        const orgs = this.orgsFiltered.slice();
+        const events = this.eventsFiltered.slice();
 
         // Sort the array by the specified field and order
-        orgs.sort((a, b) => {
+        events.sort((a, b) => {
             if (a[field] < b[field]) return -1 * order;
             if (a[field] > b[field]) return 1 * order;
             return 0;
         });
 
-        return orgs;
+        return events;
     },
   },
   methods: {
       async loadData() {
+        console.log('data loaded')
           this.isLoading = true;
           try {
-              const response = await getOrgsHoursAPI();
-              this.orgs = response.data;
-              this.setOrgsList();
+              const response = await getEventsHoursAPI();
+              this.events = response.data;
+              this.setEventsList();
           } catch (error) {
               console.log(error)
           }
           this.isLoading = false;
       },
-      setOrgsList() {
-        console.log('setOrgsList called')
-            this.orgsFiltered = this.orgs
+      setEventsList() {
+        console.log('setEventsList called')
+            this.eventsFiltered = this.events
       },
       handleFilter() {
         console.log('filter by total hours')
         //filter the Organizations list by Organization address
-        this.orgsFiltered = this.orgs.filter((org) => {
-            const totalHours = parseFloat(org.total_hours_per_org);
+        this.eventsFiltered = this.events.filter((event) => {
+            const totalHours = parseFloat(event.total_hours_per_event);
             return totalHours >= this.total_hours;
         });
       },
       clearFilter() {
             // Resets all the variables
             this.total_hours = ''
-            this.setOrgsList();
+            this.setEventsList();
         },
   },
 }
