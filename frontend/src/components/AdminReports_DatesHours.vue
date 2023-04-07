@@ -17,7 +17,7 @@
         </select>
         <!-- <button @click="renderChart">Render Chart</button> -->
         </div>
-        <label for="fill-missing-dates">Fill missing dates:</label>
+        <label for="fill-missing-dates">Include Time Periods with 0 Hours:</label>
         <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched">
     </div>
 
