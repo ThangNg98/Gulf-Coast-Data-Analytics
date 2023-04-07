@@ -1,5 +1,22 @@
 import moment from 'moment';
 
+function getDateFormat(grouping) {
+  switch (grouping) {
+    case 'day':
+      return 'MM-DD-YYYY';
+    case 'week':
+      return 'MM-DD-YYYY';
+    case 'month':
+      return 'YYYY-MM';
+    case 'quarter':
+      return 'YYYY-[Q]Q';
+    case 'year':
+      return 'YYYY';
+    default:
+      return 'YYYY-MM-DD';
+  }
+}
+
 
 function fillMissingDatesInData(groupedData, startDate, endDate, grouping) {
     const result = [];
@@ -38,6 +55,13 @@ function fillMissingDatesInData(groupedData, startDate, endDate, grouping) {
   
       currentDate.add(1, grouping);
     }
+
+    result.sort((a, b) => {
+      const dateA = moment(a.session_date, getDateFormat(grouping));
+      const dateB = moment(b.session_date, getDateFormat(grouping));
+      return dateB.isBefore(dateA) ? -1 : 1;
+    });
+    
   
     return result;
   }
