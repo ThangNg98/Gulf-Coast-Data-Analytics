@@ -13,9 +13,11 @@
     "bootstrap-icons": "^1.10.3",
     "chart.js": "^4.2.1",
     "cors": "^2.8.5",
+    "moment": "^2.29.4",
     "pinia": "^2.0.33",
     "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.2.45",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.1.6",
     "vue-transition-css": "^1.0.5"
   },

@@ -620,5 +620,16 @@ def getEventsHoursVolunteers():
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
+@app.route('/getDatesHours', methods=['GET'])
+def getDatesHours():
+    query = """
+        SELECT session_date, sum(total_hours) AS total_hours
+        FROM session
+        GROUP BY session_date
+        ORDER BY session_date desc;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
 if __name__ == "__main__":
     app.run()

@@ -4,6 +4,7 @@
             Select Report
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Hours by Time Report</button></li>
             <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHours = !showOrgsHours">Organizations - Hours Report</button></li>
             <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Organizations - Volunteers Report</button></li>
             <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Organizations - Hours and Volunteers Report</button></li>
@@ -24,6 +25,8 @@
     <EventsVolunteers v-if="showEventsVolunteers" />
 
     <EventsHoursVolunteers v-if="showEventsHoursVolunteers" />
+
+    <DatesHours v-if="showDatesHours" />
 </template>
 
 <script>
@@ -33,6 +36,7 @@ import OrgsHoursVolunteers from './AdminReports_OrgsHoursVolunteers.vue'
 import EventsHours from './AdminReports_EventsHours.vue'
 import EventsVolunteers from './AdminReports_EventsVolunteers.vue'
 import EventsHoursVolunteers from './AdminReports_EventsHoursVolunteers.vue'
+import DatesHours from './AdminReports_DatesHours.vue'
 export default {
     name: 'Reports',
     components: {
@@ -42,6 +46,7 @@ export default {
         EventsHours,
         EventsVolunteers,
         EventsHoursVolunteers,
+        DatesHours,
     },
     data() {
         return {
@@ -51,6 +56,7 @@ export default {
             showEventsHours: false,
             showEventsVolunteers: false,
             showEventsHoursVolunteers: false,
+            showDatesHours: false,
         }
     },
     mounted() {
@@ -64,6 +70,7 @@ export default {
             this.showEventsHours = false;
             this.showEventsVolunteers = false;
             this.showEventsHoursVolunteers = false;
+            this.showDatesHours = false;
         }
     },
 }
