@@ -4,11 +4,11 @@
         <!-- <canvas ref="chart"></canvas> -->
         <div>
         <label for="start-date">Start Date:</label>
-        <input type="date" id="start-date" v-model="startDate">
+        <input type="date" id="start-date" v-model="startDate" :disabled="currentlySearched">
         <label for="end-date">End Date:</label>
-        <input type="date" id="end-date" v-model="endDate">
+        <input type="date" id="end-date" v-model="endDate" :disabled="currentlySearched">
         <label for="grouping">Group by:</label>
-        <select id="grouping" v-model="tempGrouping">
+        <select id="grouping" v-model="tempGrouping" :disabled="currentlySearched">
             <option value="day">Daily</option>
             <option value="week">Weekly</option>
             <option value="month">Monthly</option>
@@ -18,7 +18,7 @@
         <!-- <button @click="renderChart">Render Chart</button> -->
         </div>
         <label for="fill-missing-dates">Fill missing dates:</label>
-        <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates">
+        <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched">
     </div>
 
     <div class="mt-5 grid-cols-2">
@@ -34,7 +34,7 @@
             <!--Search Organization button-->
             <button
               @click="handleFilter"
-            >
+              :disabled="currentlySearched">
               Apply Search
             </button>
     </div>
@@ -45,7 +45,12 @@
                 <table class="table table-striped table-hover" style="margin:auto; text-align: center; max-width: 50%;">
                     <thead class="theadsticky">
                         <tr>
-                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='date'">{{ dateLabel }}</th>
+                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" 
+                            @click="() => {
+                                sortBy = 'date';
+                                sortOrder.date *= -1;
+                            }"
+                            >{{ dateLabel }}</th>
                             <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">Total Hours</th>
                         </tr>
                     </thead>
@@ -82,7 +87,10 @@ export default {
             showTable: false,
             dateLabel: '',
             sortBy: 'date',
-            sortDesc: false,
+            sortOrder: {
+                date: 1,
+                total_hours: -1,
+            },
             datesFiltered: [],
             startDate: '',
             endDate: '',
@@ -90,27 +98,36 @@ export default {
             tempGrouping: 'day',
             errors: null,
             fillMissingDates: false,
+            currentlySearched: false,
         }
     },
     computed: {
         sortedItems() {
             const field = this.sortBy;
-            let order = this.sortDesc ? 1 : -1;
+            const order = this.sortOrder[field];
 
-            // If sorting by total hours, reverse the sort order to make higher hours come first
             // Make a copy of the original array to avoid modifying the original data
             const dates = this.datesFiltered.slice();
 
             // Sort the array by the specified field and order
             dates.sort((a, b) => {
-                if (a[field] < b[field]) return -1 * order;
-                if (a[field] > b[field]) return 1 * order;
-                return 0;
+                if (field === 'date') {
+                    const dateA = new Date(a[field]);
+                    const dateB = new Date(b[field]);
+                    if (dateA < dateB) return -1 * order;
+                    if (dateA > dateB) return 1 * order;
+                    return 0;
+                } else {
+                    if (a[field] < b[field]) return -1 * order;
+                    if (a[field] > b[field]) return 1 * order;
+                    return 0;
+                }
             });
 
             return dates;
         },
     },
+
     mounted() {
         this.loadData();
     },
@@ -134,9 +151,7 @@ export default {
             if (!this.startDate || !this.endDate || !this.grouping) {
                 this.datesFiltered = this.dates;
                 return;
-            }
-
-            console.log('this.fillMissingDates', this.fillMissingDates)
+            }            
 
             this.datesFiltered = filterAndGroupData(this.dates, this.startDate, this.endDate, this.grouping, this.fillMissingDates);
         },
@@ -150,6 +165,7 @@ export default {
             } else {
                 this.errors = null;
                 this.grouping = this.tempGrouping;
+                this.currentlySearched = true;
                 this.setDatesList();
                 this.showTable = true;
             }
@@ -159,6 +175,7 @@ export default {
             this.startDate = '';
             this.endDate = '';
             this.grouping = 'day';
+            this.currentlySearched = false;
             this.datesFiltered = this.dates;
             this.showTable = false;
         },
@@ -230,6 +247,12 @@ padding-right: auto
 .table-container {
     height: 50vh;
     overflow: auto;
+}
+
+.theadsticky {
+  position: sticky;
+  top: 0;
+  background-color: white !important;
 }
 
 </style>
