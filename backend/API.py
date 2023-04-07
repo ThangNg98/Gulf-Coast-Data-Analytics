@@ -529,6 +529,51 @@ def get_full_history():
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
+############# ADMIN REPORTS #############
+@app.route('/getOrgsHours', methods=['GET'])
+def getOrgsHours():
+    query = """
+        SELECT s.org_id, o.org_name, SUM(s.total_hours) AS total_hours_per_org
+        FROM session s
+        JOIN organization o
+        ON s.org_id = o.org_id
+        WHERE o.org_status_id = 1
+        GROUP BY org_id;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+@app.route('/getOrgsVolunteers', methods=['GET'])
+def getOrgsVolunteers():
+        query = """
+            SELECT s.org_id, o.org_name, COUNT(s.volunteer_id) as num_volunteers
+            FROM session s
+            JOIN organization o
+            ON s.org_id = o.org_id
+            JOIN volunteer v
+            ON s.volunteer_id = v.volunteer_id
+            WHERE o.org_status_id = 1
+            AND v.volunteer_status_id = 1
+            GROUP BY s.org_id;
+        """
+        rows = execute_read_query(conn, query)
+        return jsonify(rows)
+
+@app.route('/getOrgsHoursVolunteers', methods=['GET'])
+def getOrgsHoursVolunteers():
+    query = """
+        SELECT s.org_id, o.org_name, SUM(s.total_hours) AS total_hours_per_org, COUNT(s.volunteer_id) as num_volunteers
+        FROM session s
+        JOIN organization o
+        ON s.org_id = o.org_id
+        JOIN volunteer v
+        ON s.volunteer_id = v.volunteer_id
+        WHERE o.org_status_id = 1
+        AND v.volunteer_status_id = 1
+        GROUP BY s.org_id;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
 
 if __name__ == "__main__":
     app.run()

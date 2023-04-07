@@ -20,6 +20,9 @@
                     <router-link class="nav-link text-primary" to="/admin/dash">Dashboard</router-link>
                   </li>
                   <li class="nav-item">
+                    <router-link class="nav-link text-primary" to="/admin/reports">Reports</router-link>
+                  </li>
+                  <li class="nav-item">
                     <router-link class="nav-link text-primary" to="/admin/events">Events</router-link>
                   </li>
                   <li class="nav-item">
