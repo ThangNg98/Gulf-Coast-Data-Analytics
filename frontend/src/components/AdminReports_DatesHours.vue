@@ -1,43 +1,54 @@
 <template>
 
-    <div>
-        <!-- <canvas ref="chart"></canvas> -->
-        <div>
-        <label for="start-date">Start Date:</label>
-        <input type="date" id="start-date" v-model="startDate" :disabled="currentlySearched">
-        <label for="end-date">End Date:</label>
-        <input type="date" id="end-date" v-model="endDate" :disabled="currentlySearched">
-        <label for="grouping">Group by:</label>
-        <select id="grouping" v-model="tempGrouping" :disabled="currentlySearched">
-            <option value="day">Daily</option>
-            <option value="week">Weekly</option>
-            <option value="month">Monthly</option>
-            <option value="quarter">Quarterly</option>
-            <option value="year">Yearly</option>
+<div class="main-container">
+  <div class="form-container">
+    <div class="row mb-3">
+      <div class="col-12 col-md-6">
+        <label for="start-date" class="form-label">Start Date:</label>
+        <input type="date" ref="start-date" v-model="startDate" :disabled="currentlySearched" class="form-control" :class="{ 'is-invalid': errors.Start }">
+        <div class="invalid-feedback">{{errors.Start}}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <label for="end-date" class="form-label">End Date:</label>
+        <input type="date" ref="end-date" v-model="endDate" :disabled="currentlySearched" class="form-control" :class="{ 'is-invalid': errors.End }">
+        <div class="invalid-feedback">{{errors.End}}</div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-12 col-md-6">
+        <label for="grouping" class="form-label">Group by:</label>
+        <select id="grouping" v-model="tempGrouping" :disabled="currentlySearched" class="form-select">
+          <option value="day">Daily</option>
+          <option value="week">Weekly</option>
+          <option value="month">Monthly</option>
+          <option value="quarter">Quarterly</option>
+          <option value="year">Yearly</option>
         </select>
-        <!-- <button @click="renderChart">Render Chart</button> -->
+      </div>
+      <div class="col-12 col-md-6 d-flex align-items-center">
+        <div>
+          <label for="fill-missing-dates" class="form-check-label ms-2">Include Time Periods with 0 Hours:</label>
+          <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched" class="form-check-input">
         </div>
-        <label for="fill-missing-dates">Include Time Periods with 0 Hours:</label>
-        <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched">
+      </div>
     </div>
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="button-container mt-2 d-flex justify-content-center gap-3">
+          <button @click="clearFilter" class="btn btn-outline-secondary">
+            Clear Search
+          </button>
+          <button @click="handleFilter" :disabled="currentlySearched" class="btn btn-primary">
+            Apply Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <div class="mt-5 grid-cols-2">
-        <div v-if="errors" style="color: #dc3545;">
-            {{ errors }}
-        </div>
-            <!--Clear Search button-->
-            <button
-              @click="clearFilter"
-            >
-              Clear Search
-            </button>
-            <!--Search Date button-->
-            <button
-              @click="handleFilter"
-              :disabled="currentlySearched">
-              Apply Search
-            </button>
-    </div>
+
+
 
     <div class="container1" v-if="showTable">
         <div class="table-container">
@@ -79,6 +90,7 @@
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
+
 </template>
 
 <script>
@@ -104,11 +116,12 @@ export default {
                 total_hours: -1,
             },
             datesFiltered: [],
-            startDate: '',
-            endDate: '',
+            startDate: null,
+            endDate: null,
             grouping: 'day',
             tempGrouping: 'day',
-            errors: null,
+            submitPressed: false,
+            errors: {},
             fillMissingDates: false,
             currentlySearched: false,
             chart: null,
@@ -143,30 +156,66 @@ export default {
         chartData() {
             // Sort datesFiltered in ascending order by date
             const sortedDatesFiltered = this.datesFiltered.slice().sort((a, b) => {
-                const dateA = new Date(a.session_date);
-                const dateB = new Date(b.session_date);
-                return dateA - dateB;
+                const dateA = a.session_date;
+                const dateB = b.session_date;
+
+                if (dateA.includes('-Q') && dateB.includes('-Q')) {
+                    const [yearA, quarterA] = dateA.split('-');
+                    const [yearB, quarterB] = dateB.split('-');
+                    const valueA = parseInt(yearA) * 10 + parseInt(quarterA[1]);
+                    const valueB = parseInt(yearB) * 10 + parseInt(quarterB[1]);
+                    return valueA - valueB;
+                }
+
+                return new Date(dateA) - new Date(dateB);
             });
 
             return {
                 labels: sortedDatesFiltered.map((date) => this.formatDate(date.session_date)),
                 datasets: [
-                {
-                    label: 'Total Hours per Date',
-                    data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                },
+                    {
+                        label: 'Total Hours per Date',
+                        data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
                 ],
             };
         },
-    },
 
+    },
+    watch: {
+        startDate(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('Start')
+                } else {
+                    this.addValidationStyle('Start', 'Please enter a start date.')
+                }
+            }
+        },
+        endDate(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('End')
+                } else {
+                    this.addValidationStyle('End', 'Please enter an end date.')
+                }
+            }
+        },
+    },
     mounted() {
         this.loadData();
     },
     methods: {
+        removeValidationStyle(name) {
+            console.log('remove valid')
+            this.errors[name] = null
+        },
+        addValidationStyle(name, des) {
+            this.errors[name] = des
+        },
         async loadData() {
             this.isLoading = true;
             try {
@@ -192,14 +241,16 @@ export default {
             console.log('this.datesFiltered', this.datesFiltered)
         },
         handleFilter() {
+            this.errors = {};
+            this.submitPressed = true;
             if (!this.startDate && !this.endDate) {
-                this.errors = 'Please enter a Start and End Date' 
+                this.errors.Start = 'Please enter a start date.' 
+                this.errors.End = 'Please enter an end date.' 
             } else if (!this.startDate) {
-                this.errors = 'Please enter a Start Date'
+                this.errors.Start = 'Please enter a start date.'
             } else if (!this.endDate) {
-                this.errors = 'Please enter an End Date'
+                this.errors.End = 'Please enter an end date.'
             } else {
-                this.errors = null;
                 this.grouping = this.tempGrouping;
                 this.currentlySearched = true;
                 this.setDatesList();
@@ -213,9 +264,12 @@ export default {
             }
         },
         clearFilter() {
-            this.errors = null;
-            this.startDate = '';
-            this.endDate = '';
+            console.log('errors', this.errors)
+            console.log('errors', this.errors)
+            this.submitPressed = false;
+            this.errors = {};
+            this.startDate = null;
+            this.endDate = null;
             this.grouping = 'day';
             this.currentlySearched = false;
             this.datesFiltered = this.dates;
@@ -303,15 +357,37 @@ export default {
 </script>
 
 <style>
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-container {
+  justify-content: center;
+  gap: 1rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.error-text {
+  color: #dc3545;
+}
+
 .container1 {
-margin: auto;
-padding-left: auto;
-padding-right: auto
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
 }
 
 .table-container {
-    height: 50vh;
-    overflow: auto;
+  height: 50vh;
+  overflow: auto;
 }
 
 .theadsticky {
@@ -327,4 +403,8 @@ padding-right: auto
   height: 40vh;
 }
 
+.error-text {
+  color: #dc3545;
+  margin-right: 1rem;
+}
 </style>

@@ -1,17 +1,19 @@
 <template>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-            Select Report
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Dates by Total Hours Report</button></li>
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHours = !showOrgsHours">Organizations - Hours Report</button></li>
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Organizations - Volunteers Report</button></li>
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Organizations - Hours and Volunteers Report</button></li>
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showEventsHours = !showEventsHours">Events - Hours Report</button></li>
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showEventsVolunteers = !showEventsVolunteers">Events - Volunteers Report</button></li>
-            <li><button class="dropdown-item" type="button" @click="clearComponents(); showEventsHoursVolunteers = !showEventsHoursVolunteers">Events - Hours and Volunteers Report</button></li>
-        </ul>
+    <div class="dropdown-container">
+        <div class="dropdown">
+            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                Select Report
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Dates by Total Hours Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHours = !showOrgsHours">Organizations - Hours Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Organizations - Volunteers Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Organizations - Hours and Volunteers Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showEventsHours = !showEventsHours">Events - Hours Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showEventsVolunteers = !showEventsVolunteers">Events - Volunteers Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showEventsHoursVolunteers = !showEventsHoursVolunteers">Events - Hours and Volunteers Report</button></li>
+            </ul>
+        </div>
     </div>
 
     <OrgsHours v-if="showOrgsHours"/>
@@ -77,9 +79,24 @@ export default {
 </script>
 
 <style>
-.container1 {
-  margin: auto;
-  padding-left: auto;
-  padding-right: auto
+.dropdown-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2vw;
+}
+
+
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
+
+.dropdown-item {
+    font-size: 16px;
+    font-weight: 500;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 </style>
