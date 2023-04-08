@@ -10,7 +10,7 @@ export default {
         new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: this.listOfYears,
+            labels: this.listOfMonths,
             datasets: [{
             label: '# of Hours',
             data: this.listOfHours,
@@ -26,10 +26,12 @@ export default {
         }
         });
     },
+    props: {
+        listOfMonths: Object,
+        listOfHours: Object,
+    },
     data() {
         return {
-            listOfYears: ['2020', '2022', '2023'], //use axios to get list of years this volunteer has worked in
-            listOfHours: [120, 50, 100], //use axios to get list of hours in the same order as years
         }
     }
 }

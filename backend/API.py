@@ -631,5 +631,37 @@ def getDatesHours():
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
+# Volunteer History Page
+#total session history from the last six months
+@app.route('/get_6months_session_history/<volunteer_id>', methods=['GET'])
+def get_volunteer_session_history(volunteer_id):
+    print('volunteer_id:', volunteer_id)
+    query = """
+        select event.event_name as eventName, organization.org_name as orgName, session.total_hours as hours, session.session_date as dateval from session
+join event 
+on event.event_id = session.event_id
+join organization
+on organization.org_id = session.org_id
+WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer_id = '%s';
+    """ % volunteer_id
+    rows = execute_read_query(conn, query)
+    print(rows)
+    return jsonify(rows)
+
+#hours per month in the last six months
+@app.route('/get_6months_hours_history/<volunteer_id>', methods=['GET'])
+def get_volunteer_hours_history(volunteer_id):
+    print('volunteer_id:', volunteer_id)
+    query = """
+        select SUM(session.total_hours) as hours, MONTH(session.session_date) as monthnum, DATE_FORMAT(session.session_date, '%%M') as month, YEAR(session.session_date) as year from session
+WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer_id = '%s'
+GROUP BY month, MONTH(session.session_date), YEAR(session.session_date)
+ORDER BY YEAR(session.session_date) DESC, MONTH(session.session_date) DESC;
+    """ % volunteer_id
+    rows = execute_read_query(conn, query)
+    print(rows)
+    return jsonify(rows)
+
+
 if __name__ == "__main__":
     app.run()

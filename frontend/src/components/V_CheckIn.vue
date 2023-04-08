@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="">
         <div class="d-flex justify-content-center">
             <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
                 <div v-if="errors.eventSelect" style="color: #dc3545;">
