@@ -31,7 +31,7 @@
             >
               Clear Search
             </button>
-            <!--Search Organization button-->
+            <!--Search Date button-->
             <button
               @click="handleFilter"
               :disabled="currentlySearched">
@@ -50,8 +50,14 @@
                                 sortBy = 'date';
                                 sortOrder.date *= -1;
                             }"
-                            >{{ dateLabel }}</th>
-                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">Total Hours</th>
+                            >
+                            {{ dateLabel }}
+                            <i class="bi bi-calendar3"></i>
+                        </th>
+                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">
+                                Total Hours
+                                <i class="bi bi-sort-numeric-down-alt"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,6 +71,10 @@
         </div>
     </div>
 
+    <div class="chart-container" v-show="showTable">
+        <canvas ref="chartCanvas"></canvas>
+    </div>
+
 
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
@@ -75,6 +85,8 @@
 import LoadingModal from './LoadingModal.vue'
 import { getDatesHoursAPI } from '../api/api.js'
 import { filterAndGroupData } from '../helpers/tableHelpers';
+import Chart from 'chart.js/auto';
+import { shallowRef } from 'vue';
 export default {
     name: 'DatesHours',
     components: {
@@ -99,6 +111,8 @@ export default {
             errors: null,
             fillMissingDates: false,
             currentlySearched: false,
+            chart: null,
+            chartFirstCreated: false,
         }
     },
     computed: {
@@ -126,6 +140,27 @@ export default {
 
             return dates;
         },
+        chartData() {
+            // Sort datesFiltered in ascending order by date
+            const sortedDatesFiltered = this.datesFiltered.slice().sort((a, b) => {
+                const dateA = new Date(a.session_date);
+                const dateB = new Date(b.session_date);
+                return dateA - dateB;
+            });
+
+            return {
+                labels: sortedDatesFiltered.map((date) => this.formatDate(date.session_date)),
+                datasets: [
+                {
+                    label: 'Total Hours per Date',
+                    data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                },
+                ],
+            };
+        },
     },
 
     mounted() {
@@ -141,6 +176,7 @@ export default {
                     total_hours: parseFloat(item.total_hours),
                 }));
                 this.setDatesList();
+                console.log('setDates')
             } catch (error) {
                 console.log(error)
             }
@@ -167,6 +203,12 @@ export default {
                 this.grouping = this.tempGrouping;
                 this.currentlySearched = true;
                 this.setDatesList();
+                if (this.chartFirstCreated === false) {
+                    this.chartFirstCreated = true
+                    this.createChart();
+                } else if (this.chartFirstCreated === true) {
+                    this.updateChart();
+                }
                 this.showTable = true;
             }
         },
@@ -181,58 +223,81 @@ export default {
         },
         formatDate(dateString) {
 
-        if (this.grouping === 'day') {
-            this.dateLabel = 'Day'
-        } else if (this.grouping === 'week') {
-            this.dateLabel = 'Week'
-        } else if (this.grouping === 'month') {
-            this.dateLabel = 'Month'
-        } else if (this.grouping === 'quarter') {
-            this.dateLabel = 'Quarter'
-        } else if (this.grouping === 'year') {
-            this.dateLabel = 'Year'
-        }
+            if (this.grouping === 'day') {
+                this.dateLabel = 'Day'
+            } else if (this.grouping === 'week') {
+                this.dateLabel = 'Week'
+            } else if (this.grouping === 'month') {
+                this.dateLabel = 'Month'
+            } else if (this.grouping === 'quarter') {
+                this.dateLabel = 'Quarter'
+            } else if (this.grouping === 'year') {
+                this.dateLabel = 'Year'
+            }
 
-        let date;
+            let date;
 
-        if (dateString.includes('-Q')) {
-            const [year, quarter] = dateString.split('-');
-            date = new Date(year, (parseInt(quarter[1]) - 1) * 3);
-            return `${quarter}-${year}`; // Return the formatted quarter string
-        } else if (dateString.includes('-')) {
-            date = new Date(dateString);
-        } else {
-            return dateString;
-        }
+            if (dateString.includes('-Q')) {
+                const [year, quarter] = dateString.split('-');
+                date = new Date(year, (parseInt(quarter[1]) - 1) * 3);
+                return `${quarter}-${year}`; // Return the formatted quarter string
+            } else if (dateString.includes('-')) {
+                date = new Date(dateString);
+            } else {
+                return dateString;
+            }
 
-        const monthNames = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
 
-        const month = date.getMonth();
-        const day = date.getDate();
-        const year = date.getFullYear();
+            const month = date.getMonth();
+            const day = date.getDate();
+            const year = date.getFullYear();
 
-        if (this.grouping === 'month') {
-            return `${monthNames[month]} - ${year}`;
-        }
+            if (this.grouping === 'month') {
+                return `${monthNames[month]} - ${year}`;
+            }
 
-        if (this.grouping === 'week') {
-            const endDate = new Date(date);
-            endDate.setDate(endDate.getDate() + 6);
-            const endMonth = endDate.getMonth();
-            const endDay = endDate.getDate();
-            const endYear = endDate.getFullYear();
-            return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year} - ${monthNames[endMonth]} ${endDay.toString().padStart(2, '0')}, ${endYear}`;
-        }
+            if (this.grouping === 'week') {
+                const endDate = new Date(date);
+                endDate.setDate(endDate.getDate() + 6);
+                const endMonth = endDate.getMonth();
+                const endDay = endDate.getDate();
+                const endYear = endDate.getFullYear();
+                return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year} - ${monthNames[endMonth]} ${endDay.toString().padStart(2, '0')}, ${endYear}`;
+            }
 
-        return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year}`;
-        }
-
-
-
-
+            return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year}`;
+        },
+        createChart() {
+        console.log('create chart called')
+        console.log('this.$refs.chartCanvas', this.$refs.chartCanvas)
+        const ctx = this.$refs.chartCanvas.getContext('2d');
+        this.chart = shallowRef(
+          new Chart(ctx, {
+          type: 'line',
+          data: this.chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        }));
+      },
+      updateChart() {
+        this.chart.data.labels = this.chartData.labels;
+        console.log('labels updated')
+        this.chart.data.datasets = this.chartData.datasets;
+        console.log('data updated')
+        this.chart.update();
+        console.log('chart updated')
+      },
     }
 }
 </script>
@@ -253,6 +318,13 @@ padding-right: auto
   position: sticky;
   top: 0;
   background-color: white !important;
+}
+
+.chart-container {
+  position: relative;
+  max-width: 100%;
+  margin: 2rem auto;
+  height: 40vh;
 }
 
 </style>
