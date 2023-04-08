@@ -53,6 +53,10 @@
               </tbody>
               </table>
       </div>
+
+      <div class="chart-container">
+        <canvas ref="chartCanvas"></canvas>
+      </div>
     </div>
 
     <div>
@@ -64,6 +68,8 @@
 <script>
 import LoadingModal from './LoadingModal.vue'
 import { getEventsHoursAPI } from '../api/api.js'
+import Chart from 'chart.js/auto';
+import { shallowRef } from 'vue';
 export default {
   name: 'EventsHours',
   components: {
@@ -77,6 +83,7 @@ export default {
           sortDesc: false,
           total_hours: null,
           eventsFiltered: [],
+          chart: null,
       }
   },
   mounted() {
@@ -115,6 +122,20 @@ export default {
 
         return events;
     },
+    chartData() {
+      return {
+        labels: this.eventsFiltered.map((event) => event.event_name),
+        datasets: [
+          {
+            label: 'Total Hours per Event',
+            data: this.eventsFiltered.map((event) => parseFloat(event.total_hours_per_event)),
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
+    },
   },
   methods: {
       async loadData() {
@@ -124,6 +145,7 @@ export default {
               const response = await getEventsHoursAPI();
               this.events = response.data;
               this.setEventsList();
+              this.createChart();
           } catch (error) {
               console.log(error)
           }
@@ -135,17 +157,43 @@ export default {
       },
       handleFilter() {
         console.log('filter by total hours')
-        //filter the Organizations list by Organization address
         this.eventsFiltered = this.events.filter((event) => {
             const totalHours = parseFloat(event.total_hours_per_event);
             return totalHours >= this.total_hours;
         });
+        this.updateChart();
       },
       clearFilter() {
             // Resets all the variables
             this.total_hours = ''
             this.setEventsList();
+            this.updateChart();
         },
+        createChart() {
+        const ctx = this.$refs.chartCanvas.getContext('2d');
+        this.chart = shallowRef(
+          new Chart(ctx, {
+          type: 'bar',
+          data: this.chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        }));
+      },
+      updateChart() {
+        this.chart.data.labels = this.chartData.labels;
+        console.log('labels updated')
+        this.chart.data.datasets = this.chartData.datasets;
+        console.log('data updated')
+        this.chart.update();
+        console.log('chart updated')
+      },
   },
 }
 </script>
