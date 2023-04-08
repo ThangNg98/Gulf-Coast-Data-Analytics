@@ -1,43 +1,54 @@
 <template>
 
-    <div>
-        <!-- <canvas ref="chart"></canvas> -->
-        <div>
-        <label for="start-date">Start Date:</label>
-        <input type="date" id="start-date" v-model="startDate" :disabled="currentlySearched">
-        <label for="end-date">End Date:</label>
-        <input type="date" id="end-date" v-model="endDate" :disabled="currentlySearched">
-        <label for="grouping">Group by:</label>
-        <select id="grouping" v-model="tempGrouping" :disabled="currentlySearched">
-            <option value="day">Daily</option>
-            <option value="week">Weekly</option>
-            <option value="month">Monthly</option>
-            <option value="quarter">Quarterly</option>
-            <option value="year">Yearly</option>
+<div class="main-container">
+  <div class="form-container">
+    <div class="row mb-3">
+      <div class="col-12 col-md-6">
+        <label for="start-date" class="form-label">Start Date:</label>
+        <input type="date" ref="start-date" v-model="startDate" :disabled="currentlySearched" class="form-control" :class="{ 'is-invalid': errors.Start }">
+        <div class="invalid-feedback">{{errors.Start}}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <label for="end-date" class="form-label">End Date:</label>
+        <input type="date" ref="end-date" v-model="endDate" :disabled="currentlySearched" class="form-control" :class="{ 'is-invalid': errors.End }">
+        <div class="invalid-feedback">{{errors.End}}</div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-12 col-md-6">
+        <label for="grouping" class="form-label">Group by:</label>
+        <select id="grouping" v-model="tempGrouping" :disabled="currentlySearched" class="form-select">
+          <option value="day">Daily</option>
+          <option value="week">Weekly</option>
+          <option value="month">Monthly</option>
+          <option value="quarter">Quarterly</option>
+          <option value="year">Yearly</option>
         </select>
-        <!-- <button @click="renderChart">Render Chart</button> -->
+      </div>
+      <div class="col-12 col-md-6 d-flex align-items-center">
+        <div>
+          <label for="fill-missing-dates" class="form-check-label ms-2">Include Time Periods with 0 Hours:</label>
+          <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched" class="form-check-input">
         </div>
-        <label for="fill-missing-dates">Include Time Periods with 0 Hours:</label>
-        <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched">
+      </div>
     </div>
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="button-container mt-2 d-flex justify-content-center gap-3">
+          <button @click="clearFilter" class="btn btn-outline-secondary">
+            Clear Search
+          </button>
+          <button @click="handleFilter" :disabled="currentlySearched" class="btn btn-primary">
+            Apply Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <div class="mt-5 grid-cols-2">
-        <div v-if="errors" style="color: #dc3545;">
-            {{ errors }}
-        </div>
-            <!--Clear Search button-->
-            <button
-              @click="clearFilter"
-            >
-              Clear Search
-            </button>
-            <!--Search Organization button-->
-            <button
-              @click="handleFilter"
-              :disabled="currentlySearched">
-              Apply Search
-            </button>
-    </div>
+
+
 
     <div class="container1" v-if="showTable">
         <div class="table-container">
@@ -50,8 +61,14 @@
                                 sortBy = 'date';
                                 sortOrder.date *= -1;
                             }"
-                            >{{ dateLabel }}</th>
-                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">Total Hours</th>
+                            >
+                            {{ dateLabel }}
+                            <i class="bi bi-calendar3"></i>
+                        </th>
+                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">
+                                Total Hours
+                                <i class="bi bi-sort-numeric-down-alt"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,16 +82,23 @@
         </div>
     </div>
 
+    <div class="chart-container" v-show="showTable">
+        <canvas ref="chartCanvas"></canvas>
+    </div>
+
 
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
+
 </template>
 
 <script>
 import LoadingModal from './LoadingModal.vue'
 import { getDatesHoursAPI } from '../api/api.js'
 import { filterAndGroupData } from '../helpers/tableHelpers';
+import Chart from 'chart.js/auto';
+import { shallowRef } from 'vue';
 export default {
     name: 'DatesHours',
     components: {
@@ -92,13 +116,16 @@ export default {
                 total_hours: -1,
             },
             datesFiltered: [],
-            startDate: '',
-            endDate: '',
+            startDate: null,
+            endDate: null,
             grouping: 'day',
             tempGrouping: 'day',
-            errors: null,
+            submitPressed: false,
+            errors: {},
             fillMissingDates: false,
             currentlySearched: false,
+            chart: null,
+            chartFirstCreated: false,
         }
     },
     computed: {
@@ -126,12 +153,69 @@ export default {
 
             return dates;
         },
-    },
+        chartData() {
+            // Sort datesFiltered in ascending order by date
+            const sortedDatesFiltered = this.datesFiltered.slice().sort((a, b) => {
+                const dateA = a.session_date;
+                const dateB = b.session_date;
 
+                if (dateA.includes('-Q') && dateB.includes('-Q')) {
+                    const [yearA, quarterA] = dateA.split('-');
+                    const [yearB, quarterB] = dateB.split('-');
+                    const valueA = parseInt(yearA) * 10 + parseInt(quarterA[1]);
+                    const valueB = parseInt(yearB) * 10 + parseInt(quarterB[1]);
+                    return valueA - valueB;
+                }
+
+                return new Date(dateA) - new Date(dateB);
+            });
+
+            return {
+                labels: sortedDatesFiltered.map((date) => this.formatDate(date.session_date)),
+                datasets: [
+                    {
+                        label: 'Total Hours per Date',
+                        data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+                ],
+            };
+        },
+
+    },
+    watch: {
+        startDate(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('Start')
+                } else {
+                    this.addValidationStyle('Start', 'Please enter a start date.')
+                }
+            }
+        },
+        endDate(newValue, oldValue) {
+            if (this.submitPressed) {
+                if (newValue) {
+                    this.removeValidationStyle('End')
+                } else {
+                    this.addValidationStyle('End', 'Please enter an end date.')
+                }
+            }
+        },
+    },
     mounted() {
         this.loadData();
     },
     methods: {
+        removeValidationStyle(name) {
+            console.log('remove valid')
+            this.errors[name] = null
+        },
+        addValidationStyle(name, des) {
+            this.errors[name] = des
+        },
         async loadData() {
             this.isLoading = true;
             try {
@@ -141,6 +225,7 @@ export default {
                     total_hours: parseFloat(item.total_hours),
                 }));
                 this.setDatesList();
+                console.log('setDates')
             } catch (error) {
                 console.log(error)
             }
@@ -156,24 +241,35 @@ export default {
             console.log('this.datesFiltered', this.datesFiltered)
         },
         handleFilter() {
+            this.errors = {};
+            this.submitPressed = true;
             if (!this.startDate && !this.endDate) {
-                this.errors = 'Please enter a Start and End Date' 
+                this.errors.Start = 'Please enter a start date.' 
+                this.errors.End = 'Please enter an end date.' 
             } else if (!this.startDate) {
-                this.errors = 'Please enter a Start Date'
+                this.errors.Start = 'Please enter a start date.'
             } else if (!this.endDate) {
-                this.errors = 'Please enter an End Date'
+                this.errors.End = 'Please enter an end date.'
             } else {
-                this.errors = null;
                 this.grouping = this.tempGrouping;
                 this.currentlySearched = true;
                 this.setDatesList();
+                if (this.chartFirstCreated === false) {
+                    this.chartFirstCreated = true
+                    this.createChart();
+                } else if (this.chartFirstCreated === true) {
+                    this.updateChart();
+                }
                 this.showTable = true;
             }
         },
         clearFilter() {
-            this.errors = null;
-            this.startDate = '';
-            this.endDate = '';
+            console.log('errors', this.errors)
+            console.log('errors', this.errors)
+            this.submitPressed = false;
+            this.errors = {};
+            this.startDate = null;
+            this.endDate = null;
             this.grouping = 'day';
             this.currentlySearched = false;
             this.datesFiltered = this.dates;
@@ -181,72 +277,117 @@ export default {
         },
         formatDate(dateString) {
 
-        if (this.grouping === 'day') {
-            this.dateLabel = 'Day'
-        } else if (this.grouping === 'week') {
-            this.dateLabel = 'Week'
-        } else if (this.grouping === 'month') {
-            this.dateLabel = 'Month'
-        } else if (this.grouping === 'quarter') {
-            this.dateLabel = 'Quarter'
-        } else if (this.grouping === 'year') {
-            this.dateLabel = 'Year'
-        }
+            if (this.grouping === 'day') {
+                this.dateLabel = 'Day'
+            } else if (this.grouping === 'week') {
+                this.dateLabel = 'Week'
+            } else if (this.grouping === 'month') {
+                this.dateLabel = 'Month'
+            } else if (this.grouping === 'quarter') {
+                this.dateLabel = 'Quarter'
+            } else if (this.grouping === 'year') {
+                this.dateLabel = 'Year'
+            }
 
-        let date;
+            let date;
 
-        if (dateString.includes('-Q')) {
-            const [year, quarter] = dateString.split('-');
-            date = new Date(year, (parseInt(quarter[1]) - 1) * 3);
-            return `${quarter}-${year}`; // Return the formatted quarter string
-        } else if (dateString.includes('-')) {
-            date = new Date(dateString);
-        } else {
-            return dateString;
-        }
+            if (dateString.includes('-Q')) {
+                const [year, quarter] = dateString.split('-');
+                date = new Date(year, (parseInt(quarter[1]) - 1) * 3);
+                return `${quarter}-${year}`; // Return the formatted quarter string
+            } else if (dateString.includes('-')) {
+                date = new Date(dateString);
+            } else {
+                return dateString;
+            }
 
-        const monthNames = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
 
-        const month = date.getMonth();
-        const day = date.getDate();
-        const year = date.getFullYear();
+            const month = date.getMonth();
+            const day = date.getDate();
+            const year = date.getFullYear();
 
-        if (this.grouping === 'month') {
-            return `${monthNames[month]} - ${year}`;
-        }
+            if (this.grouping === 'month') {
+                return `${monthNames[month]} - ${year}`;
+            }
 
-        if (this.grouping === 'week') {
-            const endDate = new Date(date);
-            endDate.setDate(endDate.getDate() + 6);
-            const endMonth = endDate.getMonth();
-            const endDay = endDate.getDate();
-            const endYear = endDate.getFullYear();
-            return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year} - ${monthNames[endMonth]} ${endDay.toString().padStart(2, '0')}, ${endYear}`;
-        }
+            if (this.grouping === 'week') {
+                const endDate = new Date(date);
+                endDate.setDate(endDate.getDate() + 6);
+                const endMonth = endDate.getMonth();
+                const endDay = endDate.getDate();
+                const endYear = endDate.getFullYear();
+                return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year} - ${monthNames[endMonth]} ${endDay.toString().padStart(2, '0')}, ${endYear}`;
+            }
 
-        return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year}`;
-        }
-
-
-
-
+            return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year}`;
+        },
+        createChart() {
+        console.log('create chart called')
+        console.log('this.$refs.chartCanvas', this.$refs.chartCanvas)
+        const ctx = this.$refs.chartCanvas.getContext('2d');
+        this.chart = shallowRef(
+          new Chart(ctx, {
+          type: 'line',
+          data: this.chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        }));
+      },
+      updateChart() {
+        this.chart.data.labels = this.chartData.labels;
+        console.log('labels updated')
+        this.chart.data.datasets = this.chartData.datasets;
+        console.log('data updated')
+        this.chart.update();
+        console.log('chart updated')
+      },
     }
 }
 </script>
 
 <style>
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-container {
+  justify-content: center;
+  gap: 1rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.error-text {
+  color: #dc3545;
+}
+
 .container1 {
-margin: auto;
-padding-left: auto;
-padding-right: auto
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto;
 }
 
 .table-container {
-    height: 50vh;
-    overflow: auto;
+  height: 50vh;
+  overflow: auto;
 }
 
 .theadsticky {
@@ -255,4 +396,15 @@ padding-right: auto
   background-color: white !important;
 }
 
+.chart-container {
+  position: relative;
+  max-width: 100%;
+  margin: 2rem auto;
+  height: 40vh;
+}
+
+.error-text {
+  color: #dc3545;
+  margin-right: 1rem;
+}
 </style>

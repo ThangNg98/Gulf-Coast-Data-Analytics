@@ -458,7 +458,7 @@ def get_volunteer(volunteer_id):
 @app.route('/volunteer_phone/', methods = ['GET'])
 def volunteer_phone():
     query = """
-        SELECT volunteer_id, phone, first_name
+        SELECT volunteer_id, phone, first_name, waiver_signed
         FROM volunteer
     """
     rows = execute_read_query(conn,query)

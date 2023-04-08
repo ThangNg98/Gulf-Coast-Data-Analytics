@@ -34,8 +34,14 @@
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
                   <tr>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='org_name'">Organization</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_org'">Hours</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='org_name'">
+                    Organization
+                    <i class="bi bi-sort-alpha-down"></i>
+                </th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_org'">
+                    Hours
+                    <i class="bi bi-sort-numeric-down-alt"></i>
+                </th>
                   </tr>
               </thead>
               <tbody>
@@ -47,17 +53,29 @@
               </tbody>
               </table>
       </div>
+
+      
+    <div class="chart-container">
+      <canvas ref="chartCanvas"></canvas>
     </div>
+
+    </div>
+
+
+
 
     <div>
       <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
+
 
 </template>
 
 <script>
 import LoadingModal from './LoadingModal.vue'
 import { getOrgsHoursAPI } from '../api/api.js'
+import Chart from 'chart.js/auto';
+import { shallowRef } from 'vue';
 export default {
   name: 'OrgsHours',
   components: {
@@ -71,6 +89,7 @@ export default {
           sortDesc: false,
           total_hours: null,
           orgsFiltered: [],
+          chart: null,
       }
   },
   mounted() {
@@ -83,7 +102,7 @@ export default {
 
         // If sorting by total hours, reverse the sort order to make higher hours come first
         if (field === 'total_hours_per_org') {
-            order *= -1;
+        order *= -1;
         }
 
         // Make a copy of the original array to avoid modifying the original data
@@ -91,14 +110,39 @@ export default {
 
         // Sort the array by the specified field and order
         orgs.sort((a, b) => {
-            if (a[field] < b[field]) return -1 * order;
-            if (a[field] > b[field]) return 1 * order;
-            return 0;
+        if (field === 'total_hours_per_org') {
+            const aHours = parseFloat(a[field]);
+            const bHours = parseFloat(b[field]);
+            if (aHours < bHours) return -1 * order;
+            if (aHours > bHours) return 1 * order;
+        } else {
+            if (a[field] && b[field]) {
+            const aValue = a[field].toLowerCase();
+            const bValue = b[field].toLowerCase();
+            if (aValue < bValue) return -1 * order;
+            if (aValue > bValue) return 1 * order;
+            }
+        }
+        return 0;
         });
 
         return orgs;
     },
-  },
+    chartData() {
+      return {
+        labels: this.orgsFiltered.map((org) => org.org_name),
+        datasets: [
+          {
+            label: 'Total Hours per Organization',
+            data: this.orgsFiltered.map((org) => parseFloat(org.total_hours_per_org)),
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
+    },
+    },
   methods: {
       async loadData() {
           this.isLoading = true;
@@ -106,6 +150,7 @@ export default {
               const response = await getOrgsHoursAPI();
               this.orgs = response.data;
               this.setOrgsList();
+              this.createChart();
           } catch (error) {
               console.log(error)
           }
@@ -113,7 +158,7 @@ export default {
       },
       setOrgsList() {
         console.log('setOrgsList called')
-            this.orgsFiltered = this.orgs
+            this.orgsFiltered = this.orgs;
       },
       handleFilter() {
         console.log('filter by total hours')
@@ -122,12 +167,42 @@ export default {
             const totalHours = parseFloat(org.total_hours_per_org);
             return totalHours >= this.total_hours;
         });
+        this.updateChart();
       },
       clearFilter() {
-            // Resets all the variables
-            this.total_hours = ''
-            this.setOrgsList();
-        },
+        // Resets all the variables
+        this.total_hours = ''
+        this.setOrgsList();
+        this.updateChart();
+      },
+      createChart() {
+        const ctx = this.$refs.chartCanvas.getContext('2d');
+        this.chart = shallowRef(
+          new Chart(ctx, {
+          type: 'bar',
+          data: this.chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        }));
+      },
+      updateChart() {
+        this.chart.data.labels = this.chartData.labels;
+        console.log('labels updated')
+        this.chart.data.datasets = this.chartData.datasets;
+        console.log('data updated')
+        this.chart.update();
+        console.log('chart updated')
+      },
+
+
+
   },
 }
 </script>
@@ -138,4 +213,14 @@ margin: auto;
 padding-left: auto;
 padding-right: auto
 }
+
+.chart-container {
+  position: relative;
+  max-width: 100%;
+  margin: 2rem auto;
+  height: 40vh;
+}
+
+
+
 </style>

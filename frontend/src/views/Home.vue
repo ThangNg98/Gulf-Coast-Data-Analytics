@@ -33,6 +33,10 @@
     <Transition name="bounce">
         <SuccessModal v-if="successModal" @close="closeSuccessModal" :title="title" :message="message" />
     </Transition>
+
+    <Transition name="bounce">
+        <alert-modal v-if="showModal" @close="closeAlertModal" :title="title" :message="message" />
+    </Transition>
     
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
@@ -47,6 +51,7 @@
   import SuccessModal from '../components/SuccessModal.vue'
   import ConfirmModal from '../components/ConfirmModal.vue'
   import LoadingModal from '../components/LoadingModal.vue'
+  import AlertModal from '@/components/AlertModal.vue';
   import { useLoadingStore } from '../stores/LoadingStore'
   import { getPhoneListAPI } from '../api/api.js'
 
@@ -56,6 +61,7 @@
       SuccessModal,
       ConfirmModal,
       LoadingModal,
+      AlertModal,
     },
     data() {
       return {
@@ -89,6 +95,7 @@
         volunteerPhoneList: [],
         successModal: false,
         confirmModal: false,
+        showModal: false,
         title: '',
         message: '',
         isLoading: false,
@@ -129,6 +136,16 @@
           console.log(error);
         }
         this.isLoading = false;
+      },
+      showAlertModal() {
+      this.showModal = true;
+      this.title = 'Login Failed';
+      this.message = 'Please wait until you are approved by an administrator.';
+      },
+      closeAlertModal() {
+        this.showModal = false;
+        this.title = '';
+        this.message = '';
       },
       closeSuccessModal() {
             this.successModal = false;
@@ -198,13 +215,16 @@
 
           if (volunteer) {
             console.log('Volunteer found in list')
-            console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
-            console.log('setVolunteerID before: ', useVolunteerPhoneStore().volunteerID)
-            useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id, volunteer.first_name)
-            console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
-            console.log('setVolunteerID after: ', useVolunteerPhoneStore().volunteerID)
-            alert('Login Success')
-            this.$router.push('/profile/checkin')
+            if (volunteer.waiver_signed == '2') {
+              this.showAlertModal();
+            } else if (volunteer.waiver_signed == '1') {
+              console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
+              console.log('setVolunteerID before: ', useVolunteerPhoneStore().volunteerID)
+              useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id, volunteer.first_name)
+              console.log('setVolunteerPhone after: ', useVolunteerPhoneStore().volunteerPhone)
+              console.log('setVolunteerID after: ', useVolunteerPhoneStore().volunteerID)
+              this.$router.push('/profile/checkin')
+            }
           }
           else {
             console.log('Volunteer not found in list')
