@@ -173,6 +173,7 @@ export default {
         // Resets all the variables
         this.total_hours = ''
         this.setOrgsList();
+        this.updateChart();
       },
       createChart() {
         const ctx = this.$refs.chartCanvas.getContext('2d');
