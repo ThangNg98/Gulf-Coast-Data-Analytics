@@ -11,33 +11,33 @@
         <form @submit.prevent="submitForm">
             <div style="text-align:left">
                 <div class="row">
-                    <div class="row">
                     <div class="col-6"> 
                         <label for="volFirstName" class="form-label">First Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volFirstName" v-model="volunteer_info.first_name" :class="{ 'is-invalid': errors.volFirstName }" :maxlength="50" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volFirstName}}</div>
-                    </div> </div>
-                    <div class="row">
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-8"> 
                         <label for="volLastName" class="form-label">Last Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volLastName" v-model="volunteer_info.last_name" :class="{ 'is-invalid': errors.volLastName }" :maxlength="50" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volLastName}}</div>
-                    </div></div>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="row">
                     <div class="col-6"> 
                         <label for="volPhone" class="form-label">Phone Number <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volPhone" v-model="volunteer_info.phone" :class="{ 'is-invalid': errors.volPhone }" :maxlength="14" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volPhone}}</div>
                     </div>
-                    </div>
-                    <div class="row">
+                </div>
+                <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1" v-model="volunteer_info.email" :disabled="confirmModal">
-                    </div></div>
-                    <div class="row">
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col"> 
                         <label for="volAddress" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volAddress" v-model="volunteer_info.address_line_1" :class="{ 'is-invalid': errors.volAddress }" :maxlength="255" :disabled="confirmModal">
@@ -74,7 +74,6 @@
                         <div class="invalid-feedback">{{errors.volZip}}</div>
                     </div>
                 </div>
-                </div>
             </div>
             <br>
             <h3 style="text-align:left"> Emergency Contact <span class="text-danger">*</span></h3>
@@ -99,7 +98,9 @@
                         <input type="text" class="form-control" ref="emPhone" v-model="volunteer_info.emergency_contact_phone" :class="{ 'is-invalid': errors.emPhone }" :maxlength="14" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.emPhone}}</div>
                     </div>
-                    <div class="col"> 
+                </div>
+                <div class="row">
+                    <div class="col-9"> 
                         <label for="emRel" class="form-label">Relationship <span class="text-danger">*</span></label>
                         <div>
                             <div>
@@ -220,14 +221,17 @@ export default {
             ],
             relationships: [
                 {name: 'Parent', id: 1},
-                {name: 'Child', id: 2},
-                {name: 'Sibling', id: 3},
-                {name: 'Family', id: 4},
-                {name: 'Friend', id: 5},
-                {name: 'Spouse', id: 6},
-                {name: 'Partner', id: 7},
-                {name: 'Acquiantance', id: 8},
-                {name: 'Other', id: 9}
+                {name: 'Legal Guardian', id: 2},
+                {name: 'Child', id: 3},
+                {name: 'Sibling', id: 4},
+                {name: 'Aunt', id: 5},
+                {name: 'Uncle', id: 6},
+                {name: 'Grandparent', id: 7},
+                {name: 'Spouse', id: 8},
+                {name: 'Partner', id: 9},
+                {name: 'Friend', id: 10},
+                {name: 'Acquiantance', id: 11},
+                {name: 'Other', id: 12}
             ],
             errors: {},
             submitPressed: false,

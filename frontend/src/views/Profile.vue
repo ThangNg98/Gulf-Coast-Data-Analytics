@@ -2,6 +2,7 @@
     <main>
         <div class="text-center">
             <h1 style="margin-top: 2rem; margin-bottom: 2rem"> Welcome, {{ this.first_name }}!</h1> <!--header-->
+            
             <div class="d-inline-block mb-5">
                 <nav class="in-page-nav-bar nav border border-dark">
                     <router-link class="nav-link border-end border-dark p-2" to="/profile/checkin">Check In/Out</router-link>
@@ -10,6 +11,7 @@
                     <router-link class="nav-link p-2" @click="logout" to="/">Logout</router-link>
                 </nav>
             </div>
+            
         </div>
         <div>
             <router-view></router-view>

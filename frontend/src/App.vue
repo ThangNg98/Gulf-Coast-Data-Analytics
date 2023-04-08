@@ -3,14 +3,14 @@
     <!--header-->
     <div id="_container" class="h-auto text-start">
       <header class="w-full">
-        <section style="margin-left: 2rem; margin-top: .5rem">
-            <img class="img-fluid w-25" style="max-width: 100%; margin-bottom: .5rem" src="@\assets\llc_logo.png" />
+        <section style=" margin-top: .5rem">
+            <img class="img-fluid" style="width: 10rem; max-width: 100%; margin-bottom: .5rem" src="@\assets\llc_logo.png" />
         </section>
       </header>
     </div>
     
     <!--body-->
-    <div class="grow w-4/5" style="padding-bottom: 25%;">
+    <div class="grow w-4/5" style="padding-bottom: 10rem;">
       <div>
         <router-view></router-view>
       </div>
@@ -19,8 +19,8 @@
     <!--footer-->
     <div id="_container" class="h-auto w-100 position-absolute bottom-0 text-start">
       <footer class="w-full">
-        <section style="margin-left: 2rem; margin-top: .5rem">
-            <img class="img-fluid w-25" style="max-width: 100%; margin-bottom: .5rem" src="@\assets\llc_logo.png" />
+        <section style="margin-top: .5rem">
+          <img class="img-fluid" style="width: 10rem; max-width: 100%; margin-bottom: .5rem" src="@\assets\llc_logo.png" />
         </section>
       </footer>
     </div>
