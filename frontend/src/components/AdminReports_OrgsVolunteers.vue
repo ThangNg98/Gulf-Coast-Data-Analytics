@@ -34,8 +34,14 @@
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
                   <tr>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='org_name'">Organization</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">Number of Volunteers</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='org_name'">
+                    Organization
+                    <i class="bi bi-sort-alpha-down"></i>
+                </th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">
+                    Number of Volunteers
+                    <i class="bi bi-sort-numeric-down-alt"></i>
+                </th>
                   </tr>
               </thead>
               <tbody>
@@ -91,9 +97,20 @@ export default {
 
         // Sort the array by the specified field and order
         orgs.sort((a, b) => {
-            if (a[field] < b[field]) return -1 * order;
-            if (a[field] > b[field]) return 1 * order;
-            return 0;
+        if (field === 'num_volunteers') {
+            const aHours = a[field];
+            const bHours = b[field];
+            if (aHours < bHours) return -1 * order;
+            if (aHours > bHours) return 1 * order;
+        } else {
+            if (a[field] && b[field]) {
+            const aValue = a[field].toLowerCase();
+            const bValue = b[field].toLowerCase();
+            if (aValue < bValue) return -1 * order;
+            if (aValue > bValue) return 1 * order;
+            }
+        }
+        return 0;
         });
 
         return orgs;

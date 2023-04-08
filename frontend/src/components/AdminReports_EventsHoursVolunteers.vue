@@ -54,9 +54,18 @@
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
                   <tr>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='event_name'">Event</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_event'">Total hours</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">Number of Volunteers</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='event_name'">
+                    Event
+                    <i class="bi bi-sort-alpha-down"></i>
+                  </th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_event'">
+                    Total hours
+                    <i class="bi bi-sort-numeric-down-alt"></i>
+                  </th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">
+                    Number of Volunteers
+                    <i class="bi bi-sort-numeric-down-alt"></i>
+                  </th>
                   </tr>
               </thead>
               <tbody>
@@ -115,9 +124,23 @@ export default {
 
         // Sort the array by the specified field and order
         events.sort((a, b) => {
+        if (field === 'total_hours_per_event') {
+            const aHours = parseFloat(a[field]);
+            const bHours = parseFloat(b[field]);
+            if (aHours < bHours) return -1 * order;
+            if (aHours > bHours) return 1 * order;
+        } else if (field === 'num_volunteers') {
             if (a[field] < b[field]) return -1 * order;
             if (a[field] > b[field]) return 1 * order;
-            return 0;
+        } else {
+            if (a[field] && b[field]) {
+            const aValue = a[field].toLowerCase();
+            const bValue = b[field].toLowerCase();
+            if (aValue < bValue) return -1 * order;
+            if (aValue > bValue) return 1 * order;
+            }
+        }
+        return 0;
         });
 
         return events;

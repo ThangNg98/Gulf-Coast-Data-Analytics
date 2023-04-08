@@ -50,8 +50,14 @@
                                 sortBy = 'date';
                                 sortOrder.date *= -1;
                             }"
-                            >{{ dateLabel }}</th>
-                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">Total Hours</th>
+                            >
+                            {{ dateLabel }}
+                            <i class="bi bi-calendar3"></i>
+                        </th>
+                            <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours'">
+                                Total Hours
+                                <i class="bi bi-sort-numeric-down-alt"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
