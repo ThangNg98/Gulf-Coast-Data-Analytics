@@ -47,7 +47,7 @@ def check_most_recent(volunteer_id):
 
 
 
-@app.route('/create_session', methods = ['POST']) # http://127.0.0.1:5000/
+@app.route('/create_session', methods = ['POST']) # https://llc.onrender.com/
 def create_session():
     request_data = request.get_json() # stores json input into variables
     print('request_data create session', request_data)
@@ -89,7 +89,7 @@ def create_session():
     
     return "Add session request successful"
 
-@app.route('/check_out', methods = ['POST']) # http://127.0.0.1:5000/check_out
+@app.route('/check_out', methods = ['POST']) # https://llc.onrender.com/check_out
 def check_out():
     request_data = request.get_json() # stores json input into variables
     print('request_data:', request_data)
@@ -100,7 +100,7 @@ def check_out():
     execute_query(conn,query)
     return "Add check out time request successful"
 
-@app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
+@app.route('/read_sessions', methods = ['GET']) # https://llc.onrender.com/read_sessions
 #API to get Open Sessions
 def read_sessions():
 
@@ -122,7 +122,7 @@ def read_sessions():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/read_closed_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_closed_sessions
+@app.route('/read_closed_sessions', methods = ['GET']) # https://llc.onrender.com/read_closed_sessions
 #API to get Open Sessions
 def read_closed_sessions():
 
@@ -206,7 +206,7 @@ def update_session():
 
     return "Update request successful"
 
-@app.route('/delete_session', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/delete_session
+@app.route('/delete_session', methods =['POST']) # API allows user to update an event to the database: https://llc.onrender.com/delete_session
 def delete_session():
     request_data = request.get_json() # stores json input into variables
     session_id = request_data['session_id']
@@ -235,7 +235,7 @@ def create_event():
     return "Add event successful"
 
 # this api will get an event by id
-@app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
+@app.route('/get_event/<event_id>', methods = ['GET']) # https://llc.onrender.com/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
     query = "select event.event_id, event.event_name, event.event_description, sum(session.total_hours) as total_hours, \
             count(distinct session.volunteer_id) as num_volunteers from event \
@@ -244,7 +244,7 @@ def get_event(event_id): # returns all the events in the events table that have 
     return jsonify(rows)
 
 
-@app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
+@app.route('/read_events', methods = ['GET']) # https://llc.onrender.com/read_events
 def read_events(): # returns all the events in the events table that have active status "1"
     
     query = "SELECT * FROM event WHERE event.event_status_id = 1 ORDER BY event_name" 
@@ -252,7 +252,7 @@ def read_events(): # returns all the events in the events table that have active
     return jsonify(rows)
 
 
-@app.route('/update_event', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/update_event
+@app.route('/update_event', methods =['POST']) # API allows user to update an event to the database: https://llc.onrender.com/update_event
 def update_event():
     request_data = request.get_json() # stores json input into variables
     event_id = request_data['event_id']
@@ -266,7 +266,7 @@ def update_event():
 
     return "Update request successful"
 
-@app.route('/delete_event', methods =['POST']) # API allows user to update an event to the database: http://127.0.0.1:5000/delete_event
+@app.route('/delete_event', methods =['POST']) # API allows user to update an event to the database: https://llc.onrender.com/delete_event
 def delete_event():
     request_data = request.get_json() # stores json input into variables
     event_id = request_data['event_id']
@@ -281,7 +281,7 @@ def delete_event():
 
 ############# ORGANIZATIONS ###############
 
-@app.route('/create_organization', methods =['POST']) # API allows user to create an organization: http://127.0.0.1:5000/create_organization
+@app.route('/create_organization', methods =['POST']) # API allows user to create an organization: https://llc.onrender.com/create_organization
 def create_organization():
     request_data = request.get_json() # stores json input into variables
     org_name = request_data['org_name']
@@ -299,7 +299,7 @@ def create_organization():
     return "Create Organization Request Successful"
     
 # this api will get an org by id
-@app.route('/get_org/<org_id>', methods = ['GET']) # http://127.0.0.1:5000/get_org/1
+@app.route('/get_org/<org_id>', methods = ['GET']) # https://llc.onrender.com/get_org/1
 def get_org(org_id): # returns all the orgs in the organizations table that have active status "1"
     query = "select organization.org_id, organization.org_name, organization.address_line_1, \
             organization.address_line_2, organization.city, organization.state_id, \
@@ -310,14 +310,14 @@ def get_org(org_id): # returns all the orgs in the organizations table that have
     return jsonify(rows)
 
 
-@app.route('/read_orgs', methods = ['GET']) # http://127.0.0.1:5000/read_orgs
+@app.route('/read_orgs', methods = ['GET']) # https://llc.onrender.com/read_orgs
 def read_orgs():
     
     query = "SELECT * FROM organization WHERE org_status_id = 1 ORDER BY org_name" # query for selecting all active orgs
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: http://127.0.0.1:5000/update_organization
+@app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: https://llc.onrender.com/update_organization
 def update_organization():
     request_data = request.get_json() # stores json input into variables
     org_id = request_data['org_id']
@@ -335,7 +335,7 @@ def update_organization():
 
     return "Update request successful"
 
-@app.route('/delete_organization', methods =['POST']) # API allows user to delete an organization to the database: http://127.0.0.1:5000/delete_organization
+@app.route('/delete_organization', methods =['POST']) # API allows user to delete an organization to the database: https://llc.onrender.com/delete_organization
 def delete_organization():
     request_data = request.get_json() # stores json input into variables
     org_id = request_data['org_id']
@@ -351,7 +351,7 @@ def delete_organization():
 
 ############# VOLUNTEERS ###############
 
-@app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
+@app.route('/read_volunteers', methods = ['GET']) # https://llc.onrender.com/read_volunteers
 def read_volunteers():
 
     # This query needs to join the volunteer table with the session table by volunteer_id and sum the total hours for each volunteer 
@@ -368,7 +368,7 @@ def read_volunteers():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/read_volunteer_hours
+@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # https://llc.onrender.com/read_volunteer_hours
 def read_volunteers_hours(volunteer_id):   
     query = """select sum(session.total_hours) as total_hours
                 from session
@@ -379,7 +379,7 @@ def read_volunteers_hours(volunteer_id):
     
 
 
-@app.route('/update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/update_volunteer
+@app.route('/update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: https://llc.onrender.com/update_volunteer
 def update_volunteer():
     request_data = request.get_json() # stores json input into variables
     new_id = request_data['volunteer_id']
@@ -404,7 +404,7 @@ def update_volunteer():
 
     return "Update request successful"
 
-@app.route('/admin_update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: http://127.0.0.1:5000/admin_update_volunteer
+@app.route('/admin_update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: https://llc.onrender.com/admin_update_volunteer
 def admin_update_volunteer():
     request_data = request.get_json() # stores json input into variables
     new_id = request_data['volunteer_id']
@@ -435,7 +435,7 @@ def admin_update_volunteer():
 
     return "Update request successful"
 
-@app.route('/delete_volunteer', methods =['POST']) # API allows user to set the volunteer status to inactive in the database: http://127.0.0.1:5000/delete_volunteer
+@app.route('/delete_volunteer', methods =['POST']) # API allows user to set the volunteer status to inactive in the database: https://llc.onrender.com/delete_volunteer
 def delete_volunteer():
     request_data = request.get_json() # stores json input into variables
     id = request_data['volunteer_id']
@@ -449,7 +449,7 @@ def delete_volunteer():
     return "Delete request successful"
 
 # this api will get an volunteer by id
-@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/get_volunteer/1
+@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # https://llc.onrender.com/get_volunteer/1
 def get_volunteer(volunteer_id): 
     query = "SELECT * FROM volunteer WHERE volunteer.volunteer_id = %s" % volunteer_id
     rows = execute_read_query(conn,query)
@@ -464,7 +464,7 @@ def volunteer_phone():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
+@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: https://llc.onrender.com/add_volunteer
 def add_volunteer():
     request_data = request.get_json() # stores json input into variables
     first_name = request_data['first_name']

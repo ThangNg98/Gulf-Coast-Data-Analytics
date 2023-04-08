@@ -77,7 +77,7 @@ export default {
         submitForm() {
         },
         getSession() {
-            axios.get('http://127.0.0.1:5000/read_sessions')
+            axios.get('https://llc.onrender.com/read_sessions')
             .then(response => {
                 // iterate through JSON response and add sessions to sessions array
                 for (var i = 0; i < response.data.length; i++) {

@@ -33,7 +33,7 @@ import axios from 'axios';
         },
         methods: {
             async load() {
-                await axios.get('http://127.0.0.1:5000/get_hist_6')
+                await axios.get('https://llc.onrender.com/get_hist_6')
                 .then(response => {
                     this.monthlyData = response.data;
                 })
