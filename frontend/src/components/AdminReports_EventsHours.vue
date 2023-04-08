@@ -204,4 +204,11 @@ margin: auto;
 padding-left: auto;
 padding-right: auto
 }
+
+.chart-container {
+  position: relative;
+  max-width: 100%;
+  margin: 2rem auto;
+  height: 40vh;
+}
 </style>
