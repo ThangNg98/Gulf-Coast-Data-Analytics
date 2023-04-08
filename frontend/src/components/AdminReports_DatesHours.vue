@@ -141,12 +141,19 @@ export default {
             return dates;
         },
         chartData() {
+            // Sort datesFiltered in ascending order by date
+            const sortedDatesFiltered = this.datesFiltered.slice().sort((a, b) => {
+                const dateA = new Date(a.session_date);
+                const dateB = new Date(b.session_date);
+                return dateA - dateB;
+            });
+
             return {
-                labels: this.datesFiltered.map((date) => date.session_date),
+                labels: sortedDatesFiltered.map((date) => this.formatDate(date.session_date)),
                 datasets: [
                 {
                     label: 'Total Hours per Date',
-                    data: this.datesFiltered.map((date) => parseFloat(date.total_hours)),
+                    data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
