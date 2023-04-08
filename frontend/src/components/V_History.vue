@@ -23,6 +23,7 @@
     import SessionsTable from './V_SessionsTable.vue';
     import UpdateModal from './UpdateModal.vue';
     import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore'
+    import { isProxy, toRaw } from 'vue';
 import axios from 'axios';
 
     export default {
@@ -39,6 +40,7 @@ import axios from 'axios';
                 title: '',
                 message: '',
                 sessions: [], //use axios to get a list of session information
+                hours_data: [],
                 listOfHours: [], //use axios to get list of hours in the same order as months
                 listOfMonths: [], //use axios to get list of months this volunteer has worked in
             }
@@ -72,14 +74,19 @@ import axios from 'axios';
                     console.log(this.listOfHours)
                     this.listOfHours.push(JSON.parse(hours_hist_response.data[i].hours))
                 }*/
-                this.putLists(hours_hist_response.data);
+                this.hours_data = hours_hist_response.data;
+                console.log(this.hours_data);
+                this.putLists(this.hours_data);
             },
-            putLists(data) {
-                console.log(data);
-                for (var i = 0; i < data.length; i++) {
-                    console.log(JSON.parse(data[i].hours));
-                    this.listOfHours.push(1);
+            putLists(datavar) {
+                console.log(datavar);
+                var sample_array = []
+                for (var i = 0; i < datavar.length; i++) {
+                    console.log(JSON.parse(datavar[i].hours));
+                    sample_array.push(1);
                 }
+                this.listOfHours = toRaw(sample_array);
+                console.log(this.listOfHours);
             }
         }
     }

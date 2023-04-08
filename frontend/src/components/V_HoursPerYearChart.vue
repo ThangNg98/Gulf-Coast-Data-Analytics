@@ -3,6 +3,7 @@
 </template>
 <script>
 import Chart from 'chart.js/auto';
+import { isProxy, toRaw } from 'vue';
 export default {
     mounted() {
         const ctx = document.getElementById('hoursPerYear');
@@ -10,10 +11,10 @@ export default {
         new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: this.listOfMonths,
+            labels: toRaw(this.listOfMonths),
             datasets: [{
             label: '# of Hours',
-            data: this.listOfHours,
+            data: toRaw(this.listOfHours),
             borderWidth: 1
             }]
         },
@@ -27,8 +28,8 @@ export default {
         });
     },
     props: {
-        listOfMonths: Object,
-        listOfHours: Object,
+        listOfMonths: Array,
+        listOfHours: Array,
     },
     data() {
         return {
