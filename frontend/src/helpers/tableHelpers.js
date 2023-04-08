@@ -72,8 +72,15 @@ export function filterAndGroupData(data, startDate, endDate, grouping, fillMissi
     const adjustedStartDate = new Date(startDate);
     const adjustedEndDate = new Date(endDate);
     
-    adjustedStartDate.setDate(adjustedStartDate.getDate() + 1);
-    adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+    // Add a 1-month offset when the user searches by month
+    if (grouping === 'month') {
+      adjustedStartDate.setMonth(adjustedStartDate.getMonth() + 1);
+      adjustedEndDate.setMonth(adjustedEndDate.getMonth() + 1);
+    } else {
+        // Add a 1-day offset when the user searches by day
+        adjustedStartDate.setDate(adjustedStartDate.getDate() + 1);
+        adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+    }
   
     const filteredData = data.filter(
       item => new Date(item.session_date) >= adjustedStartDate && new Date(item.session_date) <= adjustedEndDate

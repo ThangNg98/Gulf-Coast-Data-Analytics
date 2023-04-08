@@ -54,9 +54,18 @@
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
                   <tr>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='event_name'">Event</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_event'">Total hours</th>
-                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">Number of Volunteers</th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='event_name'">
+                    Event
+                    <i class="bi bi-sort-alpha-down"></i>
+                  </th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='total_hours_per_event'">
+                    Total hours
+                    <i class="bi bi-sort-numeric-down-alt"></i>
+                  </th>
+                  <th scope="col" style="text-align:left" :style="{ cursor: 'pointer' }" @click="sortBy ='num_volunteers'">
+                    Number of Volunteers
+                    <i class="bi bi-sort-numeric-down-alt"></i>
+                  </th>
                   </tr>
               </thead>
               <tbody>
@@ -69,6 +78,10 @@
               </tbody>
               </table>
       </div>
+
+      <div class="chart-container">
+        <canvas ref="chartCanvas"></canvas>
+      </div>
     </div>
 
     <div>
@@ -80,6 +93,8 @@
 <script>
 import LoadingModal from './LoadingModal.vue'
 import { getEventsHoursVolunteersAPI } from '../api/api.js'
+import Chart from 'chart.js/auto';
+import { shallowRef } from 'vue';
 export default {
   name: 'EventsHoursVolunteers',
   components: {
@@ -95,6 +110,7 @@ export default {
           total_hours: null,
           number_of_volunteers: null,
           eventsFiltered: [],
+          chart: null,
       }
   },
   mounted() {
@@ -115,12 +131,47 @@ export default {
 
         // Sort the array by the specified field and order
         events.sort((a, b) => {
+        if (field === 'total_hours_per_event') {
+            const aHours = parseFloat(a[field]);
+            const bHours = parseFloat(b[field]);
+            if (aHours < bHours) return -1 * order;
+            if (aHours > bHours) return 1 * order;
+        } else if (field === 'num_volunteers') {
             if (a[field] < b[field]) return -1 * order;
             if (a[field] > b[field]) return 1 * order;
-            return 0;
+        } else {
+            if (a[field] && b[field]) {
+            const aValue = a[field].toLowerCase();
+            const bValue = b[field].toLowerCase();
+            if (aValue < bValue) return -1 * order;
+            if (aValue > bValue) return 1 * order;
+            }
+        }
+        return 0;
         });
 
         return events;
+    },
+    chartData() {
+      return {
+        labels: this.eventsFiltered.map((event) => event.event_name),
+        datasets: [
+          {
+            label: 'Total Hours per Event',
+            data: this.eventsFiltered.map((event) => parseFloat(event.total_hours_per_event)),
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Number of Volunteers',
+            data: this.eventsFiltered.map((event) => parseInt(event.num_volunteers)),
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
     },
   },
   methods: {
@@ -131,6 +182,7 @@ export default {
               this.events = response.data;
               console.log('events:', this.events)
               this.setEventsList();
+              this.createChart();
           } catch (error) {
               console.log(error)
           }
@@ -159,14 +211,41 @@ export default {
                     return totalVolunteers >= this.number_of_volunteers;
                 });
             }
+            this.updateChart();
       },
       clearFilter() {
             // Resets all the variables
             this.searchBy = ''
             this.total_hours = ''
             this.number_of_volunteers = ''
-            this.setEventsList()
-        },
+            this.setEventsList();
+            this.updateChart();
+      },
+      createChart() {
+        const ctx = this.$refs.chartCanvas.getContext('2d');
+        this.chart = shallowRef(
+          new Chart(ctx, {
+          type: 'bar',
+          data: this.chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        }));
+      },
+      updateChart() {
+        this.chart.data.labels = this.chartData.labels;
+        console.log('labels updated')
+        this.chart.data.datasets = this.chartData.datasets;
+        console.log('data updated')
+        this.chart.update();
+        console.log('chart updated')
+      },
   },
 }
 </script>
@@ -176,5 +255,12 @@ export default {
 margin: auto;
 padding-left: auto;
 padding-right: auto
+}
+
+.chart-container {
+  position: relative;
+  max-width: 100%;
+  margin: 2rem auto;
+  height: 40vh;
 }
 </style>
