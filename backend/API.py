@@ -7,7 +7,7 @@ from sql import create_connection, execute_query, execute_read_query
 from datetime import datetime
 from flask_cors import CORS
 
-conn = create_connection('llc-database-2.cslgyx4imwmp.us-east-2.rds.amazonaws.com', 'admin', 'ZUy9VNpHWWQrygKCvwDz', 'llc_database') # connection to database
+conn = create_connection('172.26.54.22', 'ADMIN', 'password123!', 'llc_database') # connection to database
 
 # setup application
 app = flask.Flask(__name__)
@@ -47,9 +47,9 @@ def check_most_recent(volunteer_id):
 
 
 
-@app.route('/create_session', methods = ['POST']) # https://llc.onrender.com/
+@app.route('/create_session', methods = ['POST'])
 def create_session():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     print('request_data create session', request_data)
     time_in = request_data['time_in']
     session_date = request_data['session_date']
@@ -70,37 +70,41 @@ def create_session():
                 volunteer_id
             )
             VALUES (
-                '%s', '%s', '%s', '%s', '%s', '%s'
+                %s, %s, %s, %s, %s, %s
             );
-        """ \
-        % (time_in, session_date, session_comment, event_id, session_status_id, volunteer_id)
+        """
+        params = (time_in, session_date, session_comment, event_id, session_status_id, volunteer_id)
     
     else:
-        query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
-            % (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
+        query = "INSERT INTO session (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+        params = (time_in, session_date, session_comment, org_id, event_id, session_status_id, volunteer_id)
     
-    execute_query(conn,query)
+    execute_query(conn, query, params)
     event_name = "event" + str(time_in).replace(":", "")
     
-    query_auto_logout = "CREATE EVENT " + event_name + " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 8 HOUR DO UPDATE session SET time_out = NOW() where time_in = '%s' && time_out is null;" \
-        % (time_in)
-    execute_query(conn,query_auto_logout)
+    query_auto_logout = "CREATE EVENT " + event_name + " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 8 HOUR DO UPDATE session SET time_out = NOW() where time_in = %s && time_out is null;"
+    params = (time_in,)
+    execute_query(conn, query_auto_logout, params)
 
     
     return "Add session request successful"
 
-@app.route('/check_out', methods = ['POST']) # https://llc.onrender.com/check_out
+
+@app.route('/check_out', methods = ['POST'])
 def check_out():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     print('request_data:', request_data)
     session_id = request_data['session_id']
     new_time_out = request_data['time_out']
-    
-    query = "UPDATE session SET time_out='%s'WHERE session_id=%s"%(new_time_out, session_id)
-    execute_query(conn,query)
+
+    query = "UPDATE session SET time_out=%s WHERE session_id=%s"
+    params = (new_time_out, session_id)
+    execute_query(conn, query, params)
+
     return "Add check out time request successful"
 
-@app.route('/read_sessions', methods = ['GET']) # https://llc.onrender.com/read_sessions
+
+@app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
 #API to get Open Sessions
 def read_sessions():
 
@@ -122,7 +126,7 @@ def read_sessions():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/read_closed_sessions', methods = ['GET']) # https://llc.onrender.com/read_closed_sessions
+@app.route('/read_closed_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_closed_sessions
 #API to get Open Sessions
 def read_closed_sessions():
 
@@ -184,7 +188,7 @@ def current_session(session_id):
     print(rows)
     return jsonify(rows)
 
-@app.route('/update_session', methods = ['POST'])
+@app.route('/update_session', methods=['POST'])
 def update_session():
     request_data = request.get_json() # stores json input into variables
     session_id = request_data['session_id']
@@ -195,47 +199,56 @@ def update_session():
     new_org_id = request_data['org_id']
     new_event_id = request_data['event_id']
 
-    if (request_data['time_out'] == None): # if there's not time out
-        query = "UPDATE session SET time_in='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in,  new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
-
+    if new_org_id is None or new_time_out is None:
+        if new_org_id is None and new_time_out is not None: # if org_id is null
+            query = "UPDATE session SET time_in=%s, time_out=%s, session_date=%s, session_comment=%s, org_id=NULL, event_id=%s WHERE session_id=%s"
+            params = (new_time_in, new_time_out, new_session_date, new_session_comment, new_event_id, session_id)
+        elif new_org_id is None and new_time_out is None:
+            query = "UPDATE session SET time_in=%s, time_out=NULL, session_date=%s, session_comment=%s, org_id=NULL, event_id=%s WHERE session_id=%s"
+            params = (new_time_in, new_session_date, new_session_comment, new_event_id, session_id)
+        elif new_org_id is not None and new_time_out is None:
+            query = "UPDATE session SET time_in=%s, time_out=NULL, session_date=%s, session_comment=%s, org_id=%s, event_id=%s WHERE session_id=%s"
+            params = (new_time_in, new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
     else:
-        ### query for updating data ###
-        query = "UPDATE session SET time_in='%s', time_out='%s', session_date='%s', session_comment = '%s', org_id='%s', event_id=%s WHERE session_id=%s"%(new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
+        query = "UPDATE session SET time_in=%s, time_out=%s, session_date=%s, session_comment=%s, org_id=%s, event_id=%s WHERE session_id=%s"
+        params = (new_time_in, new_time_out, new_session_date, new_session_comment, new_org_id, new_event_id, session_id)
 
-    execute_query(conn, query)
+    execute_query(conn, query, params)
 
     return "Update request successful"
 
-@app.route('/delete_session', methods =['POST']) # API allows user to update an event to the database: https://llc.onrender.com/delete_session
+
+
+
+@app.route('/delete_session', methods=['POST'])
 def delete_session():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     session_id = request_data['session_id']
-    new_status_id = 2 
+    new_status_id = 2
+    query = "UPDATE session SET session_status_id=%s WHERE session_id=%s"
+    params = (new_status_id, session_id)
+    execute_query(conn, query, params)
+    return "Delete request successful"
 
-    ### query for updating data ###
-    query = "UPDATE session SET session_status_id=%s WHERE session_id=%s"%(new_status_id,session_id)
-
-    execute_query(conn, query)
-
-    return "Delete request successful"   
 
 ############# EVENTS ###############
 
 @app.route('/create_event', methods=['POST'])
 def create_event():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     event_name = request_data['event_name']
     event_description = request_data['event_description']
 
-    query = "INSERT INTO event (event_name,event_description, event_status_id) values ('%s', '%s', '1')" \
-        % (event_name, event_description) # inserts new entry in event table
+    query = "INSERT INTO event (event_name, event_description, event_status_id) values (%s, %s, '1')"
+    params = (event_name, event_description)
 
-    execute_query(conn, query)
+    execute_query(conn, query, params)
 
     return "Add event successful"
 
+
 # this api will get an event by id
-@app.route('/get_event/<event_id>', methods = ['GET']) # https://llc.onrender.com/get_event/1
+@app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
     query = "select event.event_id, event.event_name, event.event_description, sum(session.total_hours) as total_hours, \
             count(distinct session.volunteer_id) as num_volunteers from event \
@@ -244,7 +257,7 @@ def get_event(event_id): # returns all the events in the events table that have 
     return jsonify(rows)
 
 
-@app.route('/read_events', methods = ['GET']) # https://llc.onrender.com/read_events
+@app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
 def read_events(): # returns all the events in the events table that have active status "1"
     
     query = "SELECT * FROM event WHERE event.event_status_id = 1 ORDER BY event_name" 
@@ -252,54 +265,57 @@ def read_events(): # returns all the events in the events table that have active
     return jsonify(rows)
 
 
-@app.route('/update_event', methods =['POST']) # API allows user to update an event to the database: https://llc.onrender.com/update_event
+@app.route('/update_event', methods =['POST'])
 def update_event():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     event_id = request_data['event_id']
     new_name = request_data['event_name']
     new_description = request_data['event_description']
 
-    ### query for updating data ###
-    query = "UPDATE event SET event_name='%s', event_description='%s' WHERE event_id=%s"%(new_name,new_description,event_id)
-   
-    execute_query(conn, query)
+    query = "UPDATE event SET event_name=%s, event_description=%s WHERE event_id=%s"
+    params = (new_name, new_description, event_id)
+
+    execute_query(conn, query, params)
 
     return "Update request successful"
 
-@app.route('/delete_event', methods =['POST']) # API allows user to update an event to the database: https://llc.onrender.com/delete_event
+
+@app.route('/delete_event', methods =['POST'])
 def delete_event():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     event_id = request_data['event_id']
     new_status_id = 2 
 
-    ### query for updating data ###
-    query = "UPDATE event SET event_status_id=%s WHERE event_id=%s"%(new_status_id,event_id)
-   
-    execute_query(conn, query)
+    query = "UPDATE event SET event_status_id=%s WHERE event_id=%s"
+    params = (new_status_id, event_id)
+
+    execute_query(conn, query, params)
 
     return "Delete request successful"
 
+
 ############# ORGANIZATIONS ###############
 
-@app.route('/create_organization', methods =['POST']) # API allows user to create an organization: https://llc.onrender.com/create_organization
+@app.route('/create_organization', methods =['POST'])
 def create_organization():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     org_name = request_data['org_name']
     address_line_1 = request_data['address_line_1']
     address_line_2 = request_data['address_line_2']
     city = request_data['city']
     state_id = request_data['state_id']
     zip = request_data['zip']
-    
-    query = "INSERT INTO organization (org_name, address_line_1, address_line_2, city, state_id, zip, org_status_id) values ('%s', '%s', '%s', '%s', '%s', '%s', '1')" \
-        % (org_name, address_line_1, address_line_2, city, state_id, zip)
-        
-    execute_query(conn, query)
-    
+
+    query = "INSERT INTO organization (org_name, address_line_1, address_line_2, city, state_id, zip, org_status_id) values (%s, %s, %s, %s, %s, %s, '1')"
+    params = (org_name, address_line_1, address_line_2, city, state_id, zip)
+
+    execute_query(conn, query, params)
+
     return "Create Organization Request Successful"
+
     
 # this api will get an org by id
-@app.route('/get_org/<org_id>', methods = ['GET']) # https://llc.onrender.com/get_org/1
+@app.route('/get_org/<org_id>', methods = ['GET']) # http://127.0.0.1:5000/get_org/1
 def get_org(org_id): # returns all the orgs in the organizations table that have active status "1"
     query = "select organization.org_id, organization.org_name, organization.address_line_1, \
             organization.address_line_2, organization.city, organization.state_id, \
@@ -310,16 +326,16 @@ def get_org(org_id): # returns all the orgs in the organizations table that have
     return jsonify(rows)
 
 
-@app.route('/read_orgs', methods = ['GET']) # https://llc.onrender.com/read_orgs
+@app.route('/read_orgs', methods = ['GET']) # http://127.0.0.1:5000/read_orgs
 def read_orgs():
     
     query = "SELECT * FROM organization WHERE org_status_id = 1 ORDER BY org_name" # query for selecting all active orgs
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/update_organization', methods =['POST']) # API allows user to update an organization to the database: https://llc.onrender.com/update_organization
+@app.route('/update_organization', methods =['POST'])
 def update_organization():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     org_id = request_data['org_id']
     new_name = request_data['org_name']
     new_address_1 = request_data['address_line_1']
@@ -328,30 +344,32 @@ def update_organization():
     new_state_id = request_data['state_id']
     new_zip = request_data['zip']
 
-    ### query for updating data ###
-    query = "UPDATE organization SET org_name='%s', address_line_1='%s', address_line_2='%s',city='%s',state_id=%s,zip=%s WHERE org_id=%s"%(new_name,new_address_1,new_address_2,new_city,new_state_id,new_zip,org_id)
+    query = "UPDATE organization SET org_name=%s, address_line_1=%s, address_line_2=%s, city=%s, state_id=%s, zip=%s WHERE org_id=%s"
+    params = (new_name, new_address_1, new_address_2, new_city, new_state_id, new_zip, org_id)
 
-    execute_query(conn, query)
+    execute_query(conn, query, params)
 
     return "Update request successful"
 
-@app.route('/delete_organization', methods =['POST']) # API allows user to delete an organization to the database: https://llc.onrender.com/delete_organization
+
+@app.route('/delete_organization', methods =['POST'])
 def delete_organization():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     org_id = request_data['org_id']
     new_status_id = 2 
 
-    ### query for updating data ###
-    query = "UPDATE organization SET org_status_id=%s WHERE org_id=%s"%(new_status_id,org_id)
+    query = "UPDATE organization SET org_status_id=%s WHERE org_id=%s"
+    params = (new_status_id, org_id)
 
-    execute_query(conn, query)
+    execute_query(conn, query, params)
 
     return "Delete request successful"
 
 
+
 ############# VOLUNTEERS ###############
 
-@app.route('/read_volunteers', methods = ['GET']) # https://llc.onrender.com/read_volunteers
+@app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
 def read_volunteers():
 
     # This query needs to join the volunteer table with the session table by volunteer_id and sum the total hours for each volunteer 
@@ -368,7 +386,7 @@ def read_volunteers():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # https://llc.onrender.com/read_volunteer_hours
+@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/read_volunteer_hours
 def read_volunteers_hours(volunteer_id):   
     query = """select sum(session.total_hours) as total_hours
                 from session
@@ -379,9 +397,9 @@ def read_volunteers_hours(volunteer_id):
     
 
 
-@app.route('/update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: https://llc.onrender.com/update_volunteer
+@app.route('/update_volunteer', methods =['POST'])
 def update_volunteer():
-    request_data = request.get_json() # stores json input into variables
+    request_data = request.get_json()
     new_id = request_data['volunteer_id']
     new_first_name = request_data['first_name']
     new_last_name = request_data['last_name']
@@ -397,14 +415,15 @@ def update_volunteer():
     new_zip = request_data['zip']
     new_rel_id = request_data['rel_id']
 
-    ### query for updating data ###
-    query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_id)
+    query = "UPDATE volunteer SET first_name=%s, last_name=%s, phone=%s, email=%s, emergency_contact_fname=%s, emergency_contact_lname=%s, emergency_contact_phone=%s, address_line_1=%s, address_line_2=%s, city=%s, state_id=%s, zip=%s, rel_id=%s WHERE volunteer_id=%s"
+    params = (new_first_name, new_last_name, new_phone, new_email, new_emer_con_fname, new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state, new_zip, new_rel_id, new_id)
 
-    execute_query(conn, query)
+    execute_query(conn, query, params)
 
     return "Update request successful"
 
-@app.route('/admin_update_volunteer', methods =['POST']) # API allows user to update an volunteer to the database: https://llc.onrender.com/admin_update_volunteer
+
+@app.route('/admin_update_volunteer', methods=['POST'])
 def admin_update_volunteer():
     request_data = request.get_json() # stores json input into variables
     new_id = request_data['volunteer_id']
@@ -422,34 +441,104 @@ def admin_update_volunteer():
     new_zip = request_data['zip']
     new_rel_id = request_data['rel_id']
     new_waiver_signed = request_data['waiver_signed']
-    new_date_waiver_signed = request_data['date_waiver_signed'] 
+    new_date_waiver_signed = request_data['date_waiver_signed']
+    
+    if new_date_waiver_signed is None:
+        query = """
+            UPDATE volunteer SET 
+                first_name=%s, 
+                last_name=%s, 
+                phone=%s, 
+                email=%s, 
+                emergency_contact_fname=%s,  
+                emergency_contact_lname=%s,  
+                emergency_contact_phone=%s,  
+                address_line_1=%s,  
+                address_line_2=%s,  
+                city=%s,  
+                state_id=%s, 
+                zip=%s, 
+                rel_id=%s, 
+                waiver_signed=%s 
+            WHERE volunteer_id=%s
+        """
+        params = (
+            new_first_name, 
+            new_last_name, 
+            new_phone, 
+            new_email, 
+            new_emer_con_fname, 
+            new_emer_con_lname, 
+            new_emer_con_phone, 
+            new_add_1, 
+            new_add_2, 
+            new_city, 
+            new_state, 
+            new_zip, 
+            new_rel_id, 
+            new_waiver_signed, 
+            new_id
+        )
+    else:
+        query = """
+            UPDATE volunteer SET 
+                first_name=%s, 
+                last_name=%s, 
+                phone=%s, 
+                email=%s, 
+                emergency_contact_fname=%s,  
+                emergency_contact_lname=%s,  
+                emergency_contact_phone=%s,  
+                address_line_1=%s,  
+                address_line_2=%s,  
+                city=%s,  
+                state_id=%s, 
+                zip=%s, 
+                rel_id=%s, 
+                waiver_signed=%s, 
+                date_waiver_signed=STR_TO_DATE(%s, '%%Y-%%m-%%d') 
+            WHERE volunteer_id=%s
+        """
+        params = (
+            new_first_name, 
+            new_last_name, 
+            new_phone, 
+            new_email, 
+            new_emer_con_fname, 
+            new_emer_con_lname, 
+            new_emer_con_phone, 
+            new_add_1, 
+            new_add_2, 
+            new_city, 
+            new_state, 
+            new_zip, 
+            new_rel_id, 
+            new_waiver_signed, 
+            new_date_waiver_signed, 
+            new_id
+        )
 
-    if (request_data['date_waiver_signed'] == None): #if date_waiver_signed = null
-        query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_id)
-
-    else: #if there is a new date waiver signed
-        ### query for updating data ###
-        query = "UPDATE volunteer SET first_name='%s', last_name='%s', phone='%s', email='%s', emergency_contact_fname='%s',  emergency_contact_lname='%s',  emergency_contact_phone='%s',  address_line_1='%s',  address_line_2='%s',  city='%s',  state_id='%s', zip='%s', rel_id=%s, waiver_signed=%s, date_waiver_signed=STR_TO_DATE('%s', '%%Y-%%m-%%d') WHERE volunteer_id=%s"%(new_first_name, new_last_name, new_phone,new_email,new_emer_con_fname,new_emer_con_lname, new_emer_con_phone, new_add_1, new_add_2, new_city, new_state,new_zip, new_rel_id, new_waiver_signed, new_date_waiver_signed,new_id)
-
-    execute_query(conn, query)
+    execute_query(conn, query, params)
 
     return "Update request successful"
 
-@app.route('/delete_volunteer', methods =['POST']) # API allows user to set the volunteer status to inactive in the database: https://llc.onrender.com/delete_volunteer
-def delete_volunteer():
-    request_data = request.get_json() # stores json input into variables
-    id = request_data['volunteer_id']
-    new_status_id = 2 
 
-    ### query for updating data ###
-    query = "UPDATE volunteer SET volunteer_status_id=%s WHERE volunteer_id=%s"%(new_status_id,id)
-   
-    execute_query(conn, query)
+@app.route('/delete_volunteer', methods=['POST'])
+def delete_volunteer():
+    request_data = request.get_json()
+    volunteer_id = request_data['volunteer_id']
+    new_status_id = 2
+
+    query = "UPDATE volunteer SET volunteer_status_id=%s WHERE volunteer_id=%s"
+    params = (new_status_id, volunteer_id)
+    
+    execute_query(conn, query, params)
 
     return "Delete request successful"
 
+
 # this api will get an volunteer by id
-@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # https://llc.onrender.com/get_volunteer/1
+@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/get_volunteer/1
 def get_volunteer(volunteer_id): 
     query = "SELECT * FROM volunteer WHERE volunteer.volunteer_id = %s" % volunteer_id
     rows = execute_read_query(conn,query)
@@ -460,11 +549,12 @@ def volunteer_phone():
     query = """
         SELECT volunteer_id, phone, first_name, waiver_signed
         FROM volunteer
+        WHERE volunteer_status_id = 1
     """
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: https://llc.onrender.com/add_volunteer
+@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
 def add_volunteer():
     request_data = request.get_json() # stores json input into variables
     first_name = request_data['first_name']
@@ -522,9 +612,23 @@ def get_full_history():
         COUNT(session.volunteer_id) as TotalVolunteers, DATE_FORMAT(session.session_date, '%m') as MonthNum
         from session
         JOIN volunteer ON session.volunteer_id=volunteer.volunteer_id
-        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer.volunteer_status_id = 1
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 5 MONTH)  AND session_date <= NOW() and volunteer.volunteer_status_id = 1
         GROUP BY MonthName, MonthNum, YEAR(session_date)
         ORDER BY YEAR(session_date) DESC, MonthNum DESC;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
+#hours per org last 6 months
+@app.route('/get_orgs_6', methods=['GET'])
+def get_orgs_6():
+    query = """
+        select organization.org_name as orgNames, SUM(session.total_hours) as orgHours from session
+        left join organization
+        on session.org_id = organization.org_id
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 5 MONTH)  AND session_date <= NOW()
+        GROUP BY orgNames
+        ORDER BY orgNames;
     """
     rows = execute_read_query(conn, query)
     return jsonify(rows)
@@ -630,6 +734,38 @@ def getDatesHours():
     """
     rows = execute_read_query(conn, query)
     return jsonify(rows)
+
+# Volunteer History Page
+#total session history from the last six months
+@app.route('/get_6months_session_history/<volunteer_id>', methods=['GET'])
+def get_volunteer_session_history(volunteer_id):
+    print('volunteer_id:', volunteer_id)
+    query = """
+        select event.event_name as eventName, organization.org_name as orgName, session.total_hours as hours, session.session_date as dateval from session
+join event 
+on event.event_id = session.event_id
+join organization
+on organization.org_id = session.org_id
+WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer_id = '%s';
+    """ % volunteer_id
+    rows = execute_read_query(conn, query)
+    print(rows)
+    return jsonify(rows)
+
+#hours per month in the last six months
+@app.route('/get_6months_hours_history/<volunteer_id>', methods=['GET'])
+def get_volunteer_hours_history(volunteer_id):
+    print('volunteer_id:', volunteer_id)
+    query = """
+        select SUM(session.total_hours) as hours, MONTH(session.session_date) as monthnum, DATE_FORMAT(session.session_date, '%%M') as month, YEAR(session.session_date) as year from session
+WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer_id = '%s'
+GROUP BY month, MONTH(session.session_date), YEAR(session.session_date)
+ORDER BY YEAR(session.session_date) DESC, MONTH(session.session_date) DESC;
+    """ % volunteer_id
+    rows = execute_read_query(conn, query)
+    print(rows)
+    return jsonify(rows)
+
 
 if __name__ == "__main__":
     app.run()

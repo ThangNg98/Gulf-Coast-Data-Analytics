@@ -6,25 +6,25 @@
     <div class="container"> 
         <form @submit.prevent="submitForm">
             <div style="text-align:left">
-                <div style="margin-top: 1rem; font-weight: bold">
+                <div class="text-danger" style="margin-top: 1rem; font-weight: bold">
                     * Required
                 </div>
-                <label for="orgName" class="form-label">Organization Name *</label>
+                <label for="orgName" class="form-label">Organization Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" ref="orgName" v-model="organization.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.orgName}}</div>
 
-                <label for="address" class="form-label"> Address Line 1 *</label>
+                <label for="address" class="form-label"> Address Line 1 <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" ref="address" v-model="organization.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.address}}</div>
 
                 <label for="address2" class="form-label"> Address Line 2 </label>
                 <input type="text" class="form-control" ref="address2" v-model="organization.address_line_2" :disabled="this.confirmModal">
 
-                <label for="city" class="form-label"> City *</label>
+                <label for="city" class="form-label"> City <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" ref="city" v-model="organization.city" :class="{ 'is-invalid': errors.city }" :maxlength="60" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.city}}</div>
 
-                <label for="state_select" class="form-label"> State *</label>
+                <label for="state_select" class="form-label"> State <span class="text-danger">*</span></label>
                 <div>
                     <select style="width: 50%" class="form-select" ref="state_select" v-model="organization.state_id" :class="{ 'is-invalid': errors.state }" :disabled="this.confirmModal">
                     <option value="">Select a state</option>
@@ -32,7 +32,7 @@
                     </select>
                     <div class="invalid-feedback">{{errors.state}}</div>
                 </div>
-                <label for="zip" class="form-label"> Zip *</label>
+                <label for="zip" class="form-label"> Zip <span class="text-danger">*</span></label>
                 <input style="width: 50%" type="text" class="form-control" ref="zip" v-model="organization.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="this.confirmModal">
                 <div class="invalid-feedback">{{errors.zip}}</div>
             </div>

@@ -15,7 +15,7 @@
                     <td>{{session.eventName}}</td>
                     <td>{{session.orgName}}</td>
                     <td>{{session.hours}}</td>
-                    <td>{{ formatDate(session.date) }}</td>
+                    <td>{{formatDate(session.dateval) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -23,28 +23,15 @@
 </template>
 <script>
     export default {
-        data() {
-            return {
-                sessions: [ //use axios to get a list of session information
-                {
-                    eventName: 'Sample Event',
-                    orgName: 'Sample Organization',
-                    hours: 5,
-                    date: new Date(),
-                },
-                {
-                    eventName: 'Sample Event 2',
-                    orgName: 'Sample Organization 2',
-                    hours: 10,
-                    date: new Date(2023, 1, 5),
-                }
-            ]
-            }
+        props: {
+            sessions: Object
         },
         methods: {
-            formatDate(current) { //assuming Date method, returns formatted date string
-                const newDate = `${current.getMonth()+1}/${current.getDate()}/${current.getFullYear()}`;
-                return newDate;
+            formatDate(current) { //assuming Date method, returns formatted date string m/d/yyyy
+                var myDate = new Date(current);
+                var output = (myDate.getMonth()+1) + "/" + myDate.getDate() + "/" +  myDate.getFullYear();
+                return output;
+                //return output
             },
             test() {
                 const text = 'test';

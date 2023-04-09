@@ -5,11 +5,11 @@
     </div>
     <div class="container" style="text-align:left"> 
         <form @submit.prevent="submitForm">
-            <div style="margin-top: 1rem; font-weight: bold">
+            <div class="text-danger" style="margin-top: 1rem; font-weight: bold">
                 * Required
             </div>
             <div>
-                <label for="eventName" class="form-label">Event Name *</label>
+                <label for="eventName" class="form-label">Event Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" ref="eventName" v-model="event_info.event_name" :class="{ 'is-invalid': errors.eventName }" :maxlength="100" :disabled="confirmModal">
                 <div class="invalid-feedback">{{errors.eventName}}</div>
 

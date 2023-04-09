@@ -1,53 +1,56 @@
 <template>
-    <div class="container">
-    <div class="d-flex justify-content-center">
-        <div class="d-inline-flex flex-column w-25 text-start" style="min-width:300px">
-            <div v-if="errors.eventSelect" style="color: #dc3545;">
-                Event is required
-            </div>
-            <!--event selection-->
-            <div class="mb-3 d-flex justify-content-between">
-                <label for="eventSelect" class="text-start"><h4>Event</h4></label>
-                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Event Select" name="eventSelect" ref="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn || confirmModal" :class="{ 'is-invalid': errors.eventSelect }">
-                <option v-for="event in events" :value="event.event_id" :key="event.event_id">
-                    {{ event.event_name }}
-                </option>
-                </select>
-            </div>
-            <!--org selection-->
-            <div class="mb-3 d-flex justify-content-between">
-                <label for="orgSelect"><h4>Organization</h4></label>
-                <select class="form-select border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn || confirmModal">
-                    <option :value=null></option>
-                    <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
-                </select>
-            </div>
+    <div v-if="!isLoading">
+        <div class="d-flex justify-content-center">
+            <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
+                <div v-if="errors.eventSelect" style="color: #dc3545;">
+                    Event is required
+                </div>
+                <!--event selection-->
+                <div class="mb-3 d-flex flex-column">
+                    <label for="eventSelect" class="text-start"><h4>Event</h4></label>
+                    <select class="form-select border-2 border-dark rounded-0 w-100 d-inline-block" aria-label="Event Select" name="eventSelect" ref="eventSelect" v-model="session.event_id" :disabled="alreadyCheckedIn || confirmModal" :class="{ 'is-invalid': errors.eventSelect }">
+                    <option v-for="event in events" :value="event.event_id" :key="event.event_id">
+                        {{ event.event_name }}
+                    </option>
+                    </select>
+                </div>
+                <!--org selection-->
+                <div class="mb-3 d-flex flex-column">
+                    <label for="orgSelect"><h4>Organization</h4></label>
+                    <select class="form-select border-2 border-dark rounded-0 w-100 d-inline-block" aria-label="Org Select" name="orgSelect" v-model="session.org_id" :disabled="alreadyCheckedIn || confirmModal">
+                        <option :value=null></option>
+                        <option v-for="org in orgs" :value="org.org_id" :key="org.org_id">{{ org.org_name }}</option>
+                    </select>
+                </div>
 
-            <div class="d-flex justify-content-between">
-                <label for="orgSelect"><h4>Comments</h4></label>
-                <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 ms-2 w-50 d-inline-block" :disabled="alreadyCheckedIn || confirmModal" v-model="session.session_comment">  </textarea>
+                <div class="d-flex flex-column">
+                    <label for="orgSelect"><h4>Comments</h4></label>
+                    <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 w-100 d-inline-block" rows="3" :disabled="alreadyCheckedIn || confirmModal" v-model="session.session_comment">  </textarea>
+                </div>
             </div>
         </div>
-    </div>
-    <br>
-    <!--checkin checkout-->
-    <div class="d-flex justify-content-center mb-4">
-        <div class="d-inline-flex flex-column border border-dark" style="width:300px;">
-                <div :class="{ 'text-muted': alreadyCheckedIn }" class="p-2 float-start">
-                    <div class="d-inline-block float-start p-2">You are checked out</div><div 
-                    class="d-inline-block float-end h-100" 
-                    style="width:100px"><button class="w-100 h-100" type="button" 
-                    @click="checkedInButton = true; getTime(); create_session();" 
-                    :disabled="alreadyCheckedIn || confirmModal">Check In</button></div>
-                </div>
-                <div :class="{ 'text-muted': !alreadyCheckedIn }" class="p-2 float-end">
-                    <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios();" :disabled="!alreadyCheckedIn || confirmModal">Check Out</button></div>
-                </div>
+        <br>
+        <!--checkin checkout-->
+        <div class="d-flex justify-content-center mb-4">
+            <div class="d-inline-flex flex-column border border-dark" style="width:300px;">
+                    <div :class="{ 'text-muted-custom': alreadyCheckedIn }" class="p-2 float-start">
+                        <div class="d-inline-block float-start p-2">You are checked out</div><div 
+                        class="d-inline-block float-end h-100" 
+                        style="width:100px"><button class="w-100 h-100" style="background-color:#E2BE1D" type="button" 
+                        @click="checkedInButton = true; getTime(); create_session();" 
+                        :disabled="alreadyCheckedIn || confirmModal">Check In</button></div>
+                    </div>
+                    <div :class="{ 'text-muted-custom': !alreadyCheckedIn }" class="p-2 float-end">
+                        <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" style="background-color:#FFF08D" type="button" @click="checkedOutButton = true; getTime(); update_session_axios();" :disabled="!alreadyCheckedIn || confirmModal">Check Out</button></div>
+                    </div>
+            </div>
         </div>
-    </div>
-    <div class="container" v-if="alreadyCheckedIn">
-        <h2 style="text-align: center"> Current Session</h2>
-        <table class="table table-bordered" style="margin:auto; text-align: center; margin-top: 2rem;">
+        <!--current session-->
+        <div class="d-flex justify-content-center" v-if="alreadyCheckedIn">
+            <div class="d-inline-flex flex-column w-75 text-start mt-1" style="min-width:300px">
+            <h2 style="text-align: center"> Current Session</h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered" style="margin:auto; text-align: start; margin-top: 1rem; min-width: 300px;">
                     <thead>
                         <tr>
                         <th scope="col">Event Name</th>
@@ -60,12 +63,14 @@
                         <tr>
                             <td> {{ this.current_event_name }}</td>
                             <td> {{ this.current_org_name }}</td>
-                            <td> {{ this.session.time_in }}</td>
+                            <td> {{ this.timeInDisplay }}</td>
                             <td> {{ this.session.session_comment }}</td>
                         </tr>
                     </tbody>
                 </table>
-    </div>
+            </div>
+            </div>
+        </div>
     </div>    
 
     <Transition name="bounce">
@@ -103,7 +108,7 @@ export default {
                 org_id: null, 
                 event_id: null, 
                 session_status_id: "1",
-                volunteer_id: useVolunteerPhoneStore().volunteerID // volunteer id needs to be stored and pulled
+                volunteer_id: useVolunteerPhoneStore().volunteerID // volunteer id stored and pulled
             },
             checkedInButton: false,
             checkedOutButton: false,
@@ -115,6 +120,7 @@ export default {
             errors: {},
             submitPressed: false,
             confirmModal: false,
+            timeInDisplay: null,
         }
     },
     watch: {
@@ -243,6 +249,15 @@ export default {
             } else {
                 this.current_org_name = ''
             }
+            //format datetime
+            const timeParts = this.session.time_in.split(':');
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const time = new Date();
+            time.setHours(hours);
+            time.setMinutes(minutes);
+            const options = { hour12: true, hour: 'numeric', minute: 'numeric' };
+            this.timeInDisplay = time.toLocaleTimeString(navigator.language, options);
         },
         update_session_axios() {
             this.confirmModal = true
@@ -288,11 +303,6 @@ export default {
             return today.toJSON().slice(0, 10)
         },
         getTime() {
-            // var today = new Date();
-            // today.setHours( today.getHours()+(today.getTimezoneOffset()/-60) );
-            // var firstHalf = today.toJSON().slice(0,10);
-            // var secondHalf = today.toJSON().slice(11,19);
-            // var full = firstHalf + " " + secondHalf;
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
@@ -311,33 +321,8 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-@media only screen and (min-width: 768px) {
-    .container {
-      margin: auto;
-      padding-left: auto;
-      padding-right: auto;
-      width: 50%
-    }
-    }
-
-@media only screen and (min-width: 992px) {
-.container {
-    margin: auto;
-    padding-left: auto;
-    padding-right: auto;
-    width: 40%
-}
-}
-
-@media only screen and (min-width: 1200px) {
-.container {
-    margin: auto;
-    padding-left: auto;
-    padding-right: auto;
-    width: 35%
-}
+<style>
+.text-muted-custom {
+    color: #ddd;
 }
 </style>

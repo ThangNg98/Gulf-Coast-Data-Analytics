@@ -5,7 +5,7 @@
                 Select Report
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Dates by Total Hours Report</button></li>
+                <li><button class="dropdown-item" type="button" @click="clearComponents(); showDatesHours = !showDatesHours">Total Hours by Dates Report</button></li>
                 <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHours = !showOrgsHours">Organizations - Hours Report</button></li>
                 <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsVolunteers = !showOrgsVolunteers">Organizations - Volunteers Report</button></li>
                 <li><button class="dropdown-item" type="button" @click="clearComponents(); showOrgsHoursVolunteers = !showOrgsHoursVolunteers">Organizations - Hours and Volunteers Report</button></li>
@@ -15,6 +15,8 @@
             </ul>
         </div>
     </div>
+
+    <div v-if="!showOrgsHours && !showOrgsHoursVolunteers && !showEventsHours && !showEventsVolunteers && !showEventsHoursVolunteers && !showDatesHours"><h6>Please select a report</h6></div>
 
     <OrgsHours v-if="showOrgsHours"/>
     

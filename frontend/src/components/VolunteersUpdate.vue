@@ -4,27 +4,27 @@
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
     </div>
     <div class="container" style="text-align:left"> 
-        <div style="margin-top: 1rem; font-weight: bold">
+        <div class="text-danger" style="margin-top: 1rem; font-weight: bold">
             * Required
         </div>
         <h3> Volunteer</h3>
         <form @submit.prevent="submitForm">
             <div>
                 <div class="row">
-                    <div class="col"> 
-                        <label for="volFirstName" class="form-label">First Name *</label>
+                    <div class="col-5"> 
+                        <label for="volFirstName" class="form-label">First Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volFirstName" v-model="volunteer_info.first_name" :class="{ 'is-invalid': errors.volFirstName }" :maxlength="50" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volFirstName}}</div>
                     </div>
                     <div class="col"> 
-                        <label for="volLastName" class="form-label">Last Name *</label>
+                        <label for="volLastName" class="form-label">Last Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volLastName" v-model="volunteer_info.last_name" :class="{ 'is-invalid': errors.volLastName }" :maxlength="50" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volLastName}}</div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col"> 
-                        <label for="volPhone" class="form-label">Phone Number *</label>
+                    <div class="col-5"> 
+                        <label for="volPhone" class="form-label">Phone Number <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volPhone" v-model="volunteer_info.phone" :class="{ 'is-invalid': errors.volPhone }" :maxlength="14" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volPhone}}</div>
                     </div>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="row">
                     <div class="col"> 
-                        <label for="volAddress" class="form-label">Address Line 1 *</label>
+                        <label for="volAddress" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volAddress" v-model="volunteer_info.address_line_1" :class="{ 'is-invalid': errors.volAddress }" :maxlength="255" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volAddress}}</div>
                     </div>
@@ -47,12 +47,12 @@
                 </div>
                 <div class="row">
                     <div class="col"> 
-                        <label for="volCity" class="form-label">City *</label>
+                        <label for="volCity" class="form-label">City <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volCity" v-model="volunteer_info.city" :class="{ 'is-invalid': errors.volCity }" :maxlength="60" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volCity}}</div>
                     </div>
                     <div class="col"> 
-                        <label for="volState" class="form-label">State *</label>
+                        <label for="volState" class="form-label">State <span class="text-danger">*</span></label>
                         <div>
                             <div>
                             <select class="form-select" v-model="volunteer_info.state_id" ref="volState" :class="{ 'is-invalid': errors.volState }" :disabled="confirmModal">
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="col"> 
-                        <label for="volZip" class="form-label">Zip *</label>
+                        <label for="volZip" class="form-label">Zip <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="volZip" v-model="volunteer_info.zip" :class="{ 'is-invalid': errors.volZip }" :maxlength="5" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.volZip}}</div>
                     </div>
@@ -75,25 +75,25 @@
             <h3> Emergency Contact</h3>
             <div>
                 <div class="row">
-                    <div class="col"> 
-                        <label for="emFirstName" class="form-label">First Name *</label>
+                    <div class="col-5"> 
+                        <label for="emFirstName" class="form-label">First Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="emFirstName" v-model="volunteer_info.emergency_contact_fname" :class="{ 'is-invalid': errors.emFirstName }" :maxlength="45" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.emFirstName}}</div>
                     </div>
                     <div class="col"> 
-                        <label for="emLastName" class="form-label">Last Name *</label>
+                        <label for="emLastName" class="form-label">Last Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="emLastName" v-model="volunteer_info.emergency_contact_lname" :class="{ 'is-invalid': errors.emLastName }" :maxlength="45" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.emLastName}}</div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col"> 
-                        <label for="emPhone" class="form-label">Phone Number *</label>
+                    <div class="col-5"> 
+                        <label for="emPhone" class="form-label">Phone Number <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" ref="emPhone" v-model="volunteer_info.emergency_contact_phone" :class="{ 'is-invalid': errors.emPhone }" :maxlength="14" :disabled="confirmModal">
                         <div class="invalid-feedback">{{errors.emPhone}}</div>
                     </div>
                     <div class="col"> 
-                        <label for="emRel" class="form-label">Relationship *</label>
+                        <label for="emRel" class="form-label">Relationship <span class="text-danger">*</span></label>
                         <div>
                             <div>
                             <select class="form-select" v-model="volunteer_info.rel_id" ref="emRel" :class="{ 'is-invalid': errors.emRel }" :disabled="confirmModal">
@@ -246,8 +246,12 @@ export default {
                 {name: 'Friend', id: 5},
                 {name: 'Spouse', id: 6},
                 {name: 'Partner', id: 7},
-                {name: 'Acquiantance', id: 8},
-                {name: 'Other', id: 9}
+                {name: 'Acquaintance', id: 8},
+                {name: 'Uncle', id: 9},
+                {name: 'Aunt', id: 10},
+                {name: 'Grandparent', id: 11},
+                {name: 'Legal Guardian', id: 12},
+                {name: 'Other', id: 13}
             ],
             errors: {},
             submitPressed: false,

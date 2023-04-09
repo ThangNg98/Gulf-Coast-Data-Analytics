@@ -6,7 +6,8 @@ export const useVolunteerPhoneStore = defineStore('volunteerphone', {
   //session state that determines whether user is logged in
   state: () => ({
     volunteerPhone: null,
-    volunteerID: null
+    volunteerID: null,
+    volunteer_first_name: null
   }),
   //actions that can be called by Vue components to log the user in and log them out
   actions: {

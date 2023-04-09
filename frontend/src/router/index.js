@@ -36,8 +36,7 @@ const router = createRouter({
         const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
         console.log('volunteerLoggedIn: ', volunteerLoggedIn)
         if (volunteerLoggedIn == null) {
-          alert('You do not have access to view this')
-          next('/')
+          next('/404notfound?volunteer=true')
         } else {
           // continue to the requested route if user is logged in
           next()
@@ -52,8 +51,7 @@ const router = createRouter({
             const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
             console.log('volunteerLoggedIn: ', volunteerLoggedIn)
             if (volunteerLoggedIn == null) {
-              alert('You do not have access to view this')
-              next('/')
+              next('/404notfound?volunteer=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -68,8 +66,7 @@ const router = createRouter({
             const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
             console.log('volunteerLoggedIn: ', volunteerLoggedIn)
             if (volunteerLoggedIn == null) {
-              alert('You do not have access to view this')
-              next('/')
+              next('/404notfound?volunteer=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -83,9 +80,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const volunteerLoggedIn = useVolunteerPhoneStore().volunteerPhone
             console.log('volunteerLoggedIn: ', volunteerLoggedIn)
-            if (volunteerLoggedIn == null) {
-              alert('You do not have access to view this')
-              next('/')
+            if (volunteerLoggedIn == null) {              
+              next('/404notfound?volunteer=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -108,8 +104,7 @@ const router = createRouter({
         const isLoggedIn = useAdminLoginStore().isLoggedIn
         console.log('isLoggedIn: ', isLoggedIn)
         if (!isLoggedIn) {
-          alert('You do not have access to view this')
-          next('/adminlogin')
+          next('/404notfound?admin=true')
         } else {
           // continue to the requested route if user is logged in
           next()
@@ -125,8 +120,7 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -141,9 +135,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
-            if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+            if (!isLoggedIn) {              
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -158,9 +151,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('redirect to admin/orgs: ')
-            if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+            if (!isLoggedIn) {              
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -175,9 +167,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
-            if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+            if (!isLoggedIn) {              
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -193,8 +184,7 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -209,9 +199,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
-            if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+            if (!isLoggedIn) {              
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -227,8 +216,7 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -244,8 +232,7 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -260,9 +247,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
-            if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+            if (!isLoggedIn) {              
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -277,9 +263,8 @@ const router = createRouter({
           beforeEnter: (to, from, next) => {
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
-            if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+            if (!isLoggedIn) {              
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -295,8 +280,7 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -312,8 +296,7 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
@@ -329,15 +312,19 @@ const router = createRouter({
             const isLoggedIn = useAdminLoginStore().isLoggedIn
             console.log('isLoggedIn: ', isLoggedIn)
             if (!isLoggedIn) {
-              alert('You do not have access to view this')
-              next('/adminlogin')
+              next('/404notfound?admin=true')
             } else {
               // continue to the requested route if user is logged in
               next()
             }
           }
-        }
-      ]}
+        },
+      ]},
+      {
+        path: '/404notfound',
+        name: '404NotFound',
+        component: () => import ('../Views/404NotFound.vue')
+      }
     ]
 })
 
