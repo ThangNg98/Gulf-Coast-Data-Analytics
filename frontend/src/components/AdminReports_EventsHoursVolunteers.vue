@@ -1,54 +1,62 @@
 <template>
-    <div class="container1"> 
-          <div style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6">
+        <div class="row">
+          <div class="col-12 text-center mb-3">
+            <h2>
               Events by Hours and Volunteers
+              <small class="text-muted">Report</small>
+            </h2>
           </div>
-          <div style="margin:auto; text-align: left; max-width: 30%; margin-top: 2rem">
-            Filter By:
+          <div class="col-12 mb-3">
+            <div class="text-start">
+              <h5>Filter by:</h5>
+            </div>
             <select
-              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              class="form-select"
               v-model="searchBy"
             >
               <option value="Total Hours">Total Hours</option>
               <option value="Number of Volunteers">Number of Volunteers</option>
             </select>
           </div>
-          <div class="flex flex-col" v-if="searchBy === 'Total Hours'">
-            <label class="block">
+          <div v-if="searchBy === 'Total Hours'" class="col-12 mb-3">
               <input
                 type="number"
+                class="form-control"
                 v-model="total_hours"
                 v-on:keyup.enter="handleFilter"
-                placeholder="Enter number of hours"
+                placeholder="Enter the minimum number of hours:"
               />
-            </label>
           </div>
-          
-          <div class="flex flex-col" v-if="searchBy === 'Number of Volunteers'">
-            <label class="block">
-              <input
+          <div v-if="searchBy === 'Number of Volunteers'" class="col-12 mb-3">
+            <input
                 type="number"
+                class="form-control"
                 v-model="number_of_volunteers"
                 v-on:keyup.enter="handleFilter"
-                placeholder="Enter number of volunteers"
+                placeholder="Enter the minimum number of volunteers:"
               />
-            </label>
           </div>
-
-          <div class="mt-5 grid-cols-2">
-            <!--Clear Search button-->
+          <div class="col-12 d-flex justify-content-end gap-2">
             <button
+              class="btn btn-outline-secondary"
               @click="clearFilter"
             >
               Clear Filter
             </button>
-            <!--Search Organization button-->
             <button
+              class="btn btn-primary"
               @click="handleFilter"
             >
               Apply Filter
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
           <div class="table-responsive-md">
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
@@ -82,7 +90,7 @@
       <div class="chart-container">
         <canvas ref="chartCanvas"></canvas>
       </div>
-    </div>
+    
 
     <div>
       <LoadingModal v-if="isLoading"></LoadingModal>
@@ -159,15 +167,15 @@ export default {
           {
             label: 'Total Hours per Event',
             data: this.eventsFiltered.map((event) => parseFloat(event.total_hours_per_event)),
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.4)',
+            borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1,
           },
           {
             label: 'Number of Volunteers',
             data: this.eventsFiltered.map((event) => parseInt(event.num_volunteers)),
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-            borderColor: 'rgba(153, 102, 255, 1)',
+            backgroundColor: 'rgba(103, 58, 183, 0.4)',
+            borderColor: 'rgba(103, 58, 183, 1)',
             borderWidth: 1,
           },
         ],
@@ -251,7 +259,7 @@ export default {
 </script>
 
 <style>
-.container1 {
+.container {
 margin: auto;
 padding-left: auto;
 padding-right: auto
@@ -259,7 +267,7 @@ padding-right: auto
 
 .chart-container {
   position: relative;
-  max-width: 100%;
+  max-width: 70%;
   margin: 2rem auto;
   height: 40vh;
 }

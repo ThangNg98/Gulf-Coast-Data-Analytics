@@ -39,12 +39,34 @@
         </div>
     </div>
     </main>
+
+    <div>
+      <LoadingModal v-if="isLoading"></LoadingModal>
+    </div>
+
+    <Transition name="bounce">
+        <UpdateModal v-if="updateModal" @close="closeUpdateModal" :title="title" :message="message" />
+    </Transition>
+
+    <Transition name="bounce">
+        <DeleteModal v-if="deleteModal" @close="closeDeleteModal" :title="title" :message="message" />
+    </Transition>
+
 </template>
 
 <script>
 import axios from "axios";
+import LoadingModal from './LoadingModal.vue'
+import UpdateModal from './UpdateModal.vue'
+import DeleteModal from './DeleteModal.vue'
+import { getSessionAPI } from '../api/api.js'
 export default {
     name: 'SessionsList',
+    components: {
+        LoadingModal,
+        UpdateModal,
+        DeleteModal,
+    },
     data() {
         return {
             msg : "Open",
@@ -52,7 +74,10 @@ export default {
             sessions:[],
             hoverId: null,
             sortBy: 'volunteer_name',
-            sortDesc: false
+            sortDesc: false,
+            isLoading: false,
+            updateModal: false,
+            deleteModal: false,
         };
     },
     computed: {
@@ -61,41 +86,87 @@ export default {
             const order = this.sortDesc ? -1 : 1;
 
             // Make a copy of the original array to avoid modifying the original data
-            const sessions = this.sessions;
+            const sessions = [...this.sessions];
 
-            // Sort the array by the specified field and order
-            sessions.sort((a, b) => {
+            // Custom sorting function
+            const customSort = (a, b) => {
+            // Check if the field is one of the fields that require alphabetical ordering
+            if (['volunteer_name', 'event_name', 'org_name'].includes(field)) {
+                const aValue = a[field].toLowerCase();
+                const bValue = b[field].toLowerCase();
+
+                if (aValue < bValue) return -1 * order;
+                if (aValue > bValue) return 1 * order;
+                return 0;
+            }
+            // Check if the field is 'session_date'
+            else if (field === 'session_date') {
+                const aValue = Date.parse(a[field]);
+                const bValue = Date.parse(b[field]);
+                const dateOrder = -1 * order;
+
+                if (aValue < bValue) return -1 * dateOrder;
+                if (aValue > bValue) return 1 * dateOrder;
+                return 0;
+            } else {
                 if (a[field] < b[field]) return -1 * order;
                 if (a[field] > b[field]) return 1 * order;
                 return 0;
-      });
+            }
+            };
 
-      return sessions;
-    }
-},
-    methods: {
-        submitForm() {
+
+
+            // Sort the array by the specified field and order using the custom sorting function
+            sessions.sort(customSort);
+
+            return sessions;
         },
-        getSession() {
-            axios.get('http://127.0.0.1:5000/read_sessions')
-            .then(response => {
-                // iterate through JSON response and add sessions to sessions array
+        },
+        mounted() {
+            this.loadData();
+            const query = new URLSearchParams(this.$route.query);
+            if (query.get('update') === 'true') {
+                console.log('update is true')
+                this.updateModal = true;
+                this.title = "Updated!"
+                this.message = "Session successfully updated."
+            }
+            if (query.get('delete') === 'true') {
+                console.log('delete is true')
+                this.deleteModal = true;
+                this.title = "Deleted!"
+                this.message = "Session successfully deleted."
+            }
+        },
+    methods: {
+        async loadData() {
+            this.isLoading = true;
+            try {
+                const response = await getSessionAPI();
                 for (var i = 0; i < response.data.length; i++) {
                     this.sessions.push(response.data[i]);
                 }
-            })
-            .catch(error => {
-                console.log(error);
-            });
+            } catch (error) {
+                console.log(error)
+            }
+            this.isLoading = false;
         },
         editSessions(session_id) {
             this.$router.push({ name: 'SessionsUpdate', params: 
             { session_id: session_id } });
-        }
+        },
+        closeUpdateModal() {
+            this.updateModal = false;
+            this.title = '';
+            this.message = '';
+        },
+        closeDeleteModal() {
+            this.deleteModal = false;
+            this.title = '';
+            this.message = '';
+        },
     },
-    mounted() {
-        this.getSession();
-    }
 }
 </script>
 

@@ -3,20 +3,32 @@
 <div class="main-container">
   <div class="form-container">
     <div class="row mb-3">
+        <h2>
+            Total Hours by Date
+            <small class="text-muted">Report</small>
+        </h2>
+    </div>
+    <div class="row mb-3">
       <div class="col-12 col-md-6">
-        <label for="start-date" class="form-label">Start Date:</label>
+        <div class="text-start">
+            <label for="start-date" class="form-label">Start Date:</label>
+        </div>
         <input type="date" ref="start-date" v-model="startDate" :disabled="currentlySearched" class="form-control" :class="{ 'is-invalid': errors.Start }">
         <div class="invalid-feedback">{{errors.Start}}</div>
       </div>
       <div class="col-12 col-md-6">
-        <label for="end-date" class="form-label">End Date:</label>
+        <div class="text-start">
+            <label for="end-date" class="form-label">End Date:</label>
+        </div>
         <input type="date" ref="end-date" v-model="endDate" :disabled="currentlySearched" class="form-control" :class="{ 'is-invalid': errors.End }">
         <div class="invalid-feedback">{{errors.End}}</div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-12 col-md-6">
-        <label for="grouping" class="form-label">Group by:</label>
+        <div class="text-start">
+            <label for="grouping" class="form-label">Group by:</label>
+        </div>
         <select id="grouping" v-model="tempGrouping" :disabled="currentlySearched" class="form-select">
           <option value="day">Daily</option>
           <option value="week">Weekly</option>
@@ -26,15 +38,19 @@
         </select>
       </div>
       <div class="col-12 col-md-6 d-flex align-items-center">
-        <div>
-          <label for="fill-missing-dates" class="form-check-label ms-2">Include Time Periods with 0 Hours:</label>
-          <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched" class="form-check-input">
+        <div class="d-md-flex">
+            <div class="text-start">
+                <label for="fill-missing-dates" class="form-check-label ms-2">Include Time Periods with 0 Hours:</label>
+            </div>
+            <div class="form-check ms-md-3">
+                <input type="checkbox" id="fill-missing-dates" v-model="fillMissingDates" :disabled="currentlySearched" class="form-check-input">
+            </div>
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-12">
-        <div class="button-container mt-2 d-flex justify-content-center gap-3">
+        <div class="button-container mt-2 d-flex justify-content-end gap-3">
           <button @click="clearFilter" class="btn btn-outline-secondary">
             Clear Search
           </button>
@@ -47,10 +63,7 @@
   </div>
 </div>
 
-
-
-
-    <div class="container1" v-if="showTable">
+<div class="container1" v-if="showTable">
         <div class="table-container">
             <div class="table-responsive-md">
                 <table class="table table-striped table-hover" style="margin:auto; text-align: center; max-width: 50%;">
@@ -81,6 +94,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="chart-container" v-show="showTable">
         <canvas ref="chartCanvas"></canvas>
@@ -176,8 +190,8 @@ export default {
                     {
                         label: 'Total Hours per Date',
                         data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        borderColor: 'rgb(54, 162, 235, 0.5)',
                         borderWidth: 1,
                     },
                 ],
@@ -341,6 +355,11 @@ export default {
                 beginAtZero: true,
               },
             },
+            plugins: {
+              legend: {
+                display: false, // set the display property to false
+              },
+            },
           },
         }));
       },
@@ -380,6 +399,7 @@ export default {
 }
 
 .container1 {
+  justify-content: center;
   margin: auto;
   padding-left: auto;
   padding-right: auto;
@@ -398,7 +418,7 @@ export default {
 
 .chart-container {
   position: relative;
-  max-width: 100%;
+  max-width: 70%;
   margin: 2rem auto;
   height: 40vh;
 }

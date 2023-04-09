@@ -1,35 +1,46 @@
 <template>
-    <div class="container1"> 
-          <div style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
-              Events by Hours
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-12 text-center mb-3">
+          <h2>
+            Events by Hours
+            <small class="text-muted">Report</small>
+          </h2>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="text-start">
+            <label for="totalHours" class="form-label"><h5>Filter by Total Hours</h5></label>
           </div>
-          <div style="margin:auto; text-align: left; max-width: 30%; margin-top: 2rem">
-            Filter By Total Hours
-          </div>
-          <div class="flex flex-col">
-            <label class="block">
-              <input
-                type="number"
-                v-model="total_hours"
-                v-on:keyup.enter="handleFilter"
-                placeholder="Enter number of hours"
-              />
-            </label>
-            <div class="mt-5 grid-cols-2">
-                <!--Clear Search button-->
-                <button
-                @click="clearFilter"
-                >
-                Clear Filter
-                </button>
+          <input
+            type="number"
+            class="form-control"
+            id="totalHours"
+            v-model="total_hours"
+            v-on:keyup.enter="handleFilter"
+            placeholder="Enter the minimum number of hours:"
+          />
+        </div>
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button
+            class="btn btn-outline-secondary"
+            @click="clearFilter"
+          >
+            Clear Filter
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="handleFilter"
+          >
+            Apply Filter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-                <button
-                @click="handleFilter"
-                >
-                Apply Filter
-                </button>
-          </div>
-          </div>
           <div class="table-responsive-md">
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
@@ -57,7 +68,7 @@
       <div class="chart-container">
         <canvas ref="chartCanvas"></canvas>
       </div>
-    </div>
+    
 
     <div>
       <LoadingModal v-if="isLoading"></LoadingModal>
@@ -129,8 +140,8 @@ export default {
           {
             label: 'Total Hours per Event',
             data: this.eventsFiltered.map((event) => parseFloat(event.total_hours_per_event)),
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.4)',
+            borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1,
           },
         ],
@@ -183,6 +194,11 @@ export default {
                 beginAtZero: true,
               },
             },
+            plugins: {
+              legend: {
+                display: false, // set the display property to false
+              },
+            },
           },
         }));
       },
@@ -199,7 +215,7 @@ export default {
 </script>
 
 <style>
-.container1 {
+.container {
 margin: auto;
 padding-left: auto;
 padding-right: auto
@@ -207,7 +223,7 @@ padding-right: auto
 
 .chart-container {
   position: relative;
-  max-width: 100%;
+  max-width: 70%;
   margin: 2rem auto;
   height: 40vh;
 }

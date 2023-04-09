@@ -307,3 +307,52 @@ export async function getDatesHoursAPI() {
     throw (error);
   }
 };
+
+export async function getSessionAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/read_sessions');
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getClosedSessionsAPI() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/read_closed_sessions');
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getSpecificSessionAPI(session_id) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/read_session/${session_id}`);
+    return response
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function updateSessionAPI(session_info) {
+  try {
+    console.log('PHIL session_info', session_info)
+    await axios.post('http://127.0.0.1:5000/update_session', session_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function deleteSessionAPI(session_info) {
+  try {
+    await axios.post('http://127.0.0.1:5000/delete_session', session_info)
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
