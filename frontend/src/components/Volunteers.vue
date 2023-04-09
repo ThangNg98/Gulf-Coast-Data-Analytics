@@ -42,9 +42,10 @@
           <input
             type="text"
             class="form-control"
-            v-model="phone"
+            v-model="formattedPhone"
             v-on:keyup.enter="handleSubmitForm"
             placeholder="Enter volunteer's phone number"
+            maxlength="14"
           />
         </div>
         <div class="form-check" v-if="searchBy === 'Waiver Signed'">
@@ -183,6 +184,17 @@ export default {
             this.isMounted = true
         }
     },
+    computed: {
+      formattedPhone: {
+        get() {
+          if (!this.phone) return '';
+          return this.formatPhoneNumber(this.phone);
+        },
+        set(value) {
+          this.phone = value.replace(/[^\d]/g, '');
+        },
+      },
+    },
     mounted() {
         this.loadData();
     },
@@ -195,11 +207,23 @@ export default {
           for (var i = 0; i < response.data.length; i++) {
               this.volunteers.push(response.data[i]);
           }
-          this.setVolunteersList()
+          this.setVolunteersList();
         } catch (error) {
           console.log(error)
         };
         this.isLoading = false;
+      },
+        formatPhoneNumber(value) {
+        const number = value.replace(/[^\d]/g, '');
+        const len = number.length;
+
+        if (len < 4) {
+          return `(${number}`;
+        } else if (len < 7) {
+          return `(${number.slice(0, 3)}) ${number.slice(3)}`;
+        } else {
+          return `(${number.slice(0, 3)}) ${number.slice(3, 6)}-${number.slice(6)}`;
+        }
       },
         closeUpdateModal() {
             this.updateModal = false;
@@ -211,17 +235,6 @@ export default {
             this.title = '';
             this.message = '';
         },
-            // axios.get('http://127.0.0.1:5000/read_volunteers')
-            // .then(response => {
-            //     // iterate through JSON response and add volunteers to the volunteer array
-            //     for (var i = 0; i < response.data.length; i++) {
-            //         this.volunteers.push(response.data[i]);
-            //     }
-            //     this.setVolunteersList()
-            // })
-            // .catch(error => {
-            //     console.log(error);
-            // });
         setVolunteersList() {
             this.volunteersFiltered = this.volunteers
         },

@@ -154,7 +154,7 @@ export default {
                 address_line_1:'',
                 address_line_2:'',
                 city:'',
-                state_id:'',
+                state_id: 44,
                 date_created: this.getDate(),//new Date().toJSON("en-US", {timeZone: "America/Chicago"}).slice(0,10),
                 volunteer_status_id: '2',
                 zip: '',
@@ -224,8 +224,12 @@ export default {
                 {name: 'Friend', id: 5},
                 {name: 'Spouse', id: 6},
                 {name: 'Partner', id: 7},
-                {name: 'Acquiantance', id: 8},
-                {name: 'Other', id: 9}
+                {name: 'Acquaintance', id: 8},
+                {name: 'Uncle', id: 9},
+                {name: 'Aunt', id: 10},
+                {name: 'Grandparent', id: 11},
+                {name: 'Legal Guardian', id: 12},
+                {name: 'Other', id: 13}
             ],
             errors: {},
             submitPressed: false,

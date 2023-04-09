@@ -60,7 +60,7 @@
               <tbody>
                   <tr v-for="org in sortedItems" :key="org.org_id" style="text-align:left">
                       <td style="text-align:left"> {{ org.org_name }}</td>
-                      <td style="text-align:left"> {{ org.total_hours_per_org }}</td>
+                      <td style="text-align:left"> {{ org.total_hours_per_org}}</td>
                   </tr>
 
               </tbody>

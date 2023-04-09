@@ -79,7 +79,7 @@
               <tbody>
                   <tr v-for="event in sortedItems" :key="event.event_id" style="text-align:left">
                       <td style="text-align:left"> {{ event.event_name }}</td>
-                      <td style="text-align:left"> {{ event.total_hours_per_event }}</td>
+                      <td style="text-align:left"> {{ event.total_hours_per_event}}</td>
                       <td style="text-align:left"> {{ event.num_volunteers }}</td>
                   </tr>
 

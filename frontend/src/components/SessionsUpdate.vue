@@ -1,9 +1,6 @@
 <template>
     <div>
     <main>
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ session_info.full_name }}'s Active Session</h1>
-    </div>
     <div class="container" style="text-align:left"> 
         <form @submit.prevent="submitForm">
             <div>

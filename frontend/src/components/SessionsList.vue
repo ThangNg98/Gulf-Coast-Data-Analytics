@@ -2,8 +2,73 @@
     <main>
     <div>
         <h2 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> <router-link class="" to="/admin/sessions_list">{{ msg }}</router-link> | <router-link class="" to="/admin/closed_sessions">{{ msg2 }}</router-link> </h2>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Open Sessions</h1>
     </div>
+
+    <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-12 text-center mb-3">
+            <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Open Sessions</h1>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="text-start">
+            <h4>Search Session By</h4>
+          </div>
+          <select
+            class="form-select"
+            v-model="searchBy"
+          >
+            <option value="Volunteer Name">Volunteer Name</option>
+            <option value="Volunteer Number">Volunteer Phone Number</option>
+            <option value="Session Date">Session Date</option>
+          </select>
+        </div>
+        <div v-if="searchBy === 'Volunteer Name'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="volunteerName"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter volunteer's name"
+          />
+        </div>
+        <div v-if="searchBy === 'Volunteer Number'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="formattedPhone"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter volunteer's phone number"
+            maxlength="14"
+          />
+        </div>
+        <div class="col-12 mb-3" v-if="searchBy === 'Session Date'">
+          <input class="form-control" type="date" name="sessionDate" ref="sessionDate" v-model="sessionDate">
+          <div class="text-start">
+          </div>
+        </div>
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button
+            class="btn btn-outline-secondary"
+            @click="clearSearch"
+            type="submit"
+          >
+            Clear Search
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="handleSubmitForm"
+            type="submit"
+          >
+            Search Sessions
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
     <div class="container">     
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
@@ -37,6 +102,7 @@
                     </tbody>
                 </table>
         </div>
+
     </div>
     </main>
 
@@ -78,15 +144,41 @@ export default {
             isLoading: false,
             updateModal: false,
             deleteModal: false,
+            sessionsFiltered: [],
+            searchBy: null,
+            volunteerName: null,
+            phone: null,
+            sessionDate: null, 
         };
     },
     computed: {
+        formattedPhone: {
+            get() {
+            if (!this.phone) return '';
+            return this.formatPhoneNumber(this.phone);
+            },
+            set(value) {
+            this.phone = value.replace(/[^\d]/g, '');
+            },
+        },
+        formattedSessionDate() {
+            if (!this.sessionDate) return '';
+
+            const [year, month, day] = this.sessionDate.split('-');
+            const date = new Date(year, month - 1, Number(day)); // Add 1 to the day
+
+            const formattedDay = String(date.getDate()).padStart(2, '0');
+            const formattedMonth = String(date.getMonth() + 1).padStart(2, '0');
+            const formattedYear = date.getFullYear();
+
+            return `${formattedMonth}/${formattedDay}/${formattedYear}`;
+        },
         sortedItems() {
             const field = this.sortBy;
             const order = this.sortDesc ? -1 : 1;
 
             // Make a copy of the original array to avoid modifying the original data
-            const sessions = [...this.sessions];
+            const sessions = this.sessionsFiltered.slice();
 
             // Custom sorting function
             const customSort = (a, b) => {
@@ -147,10 +239,14 @@ export default {
                 for (var i = 0; i < response.data.length; i++) {
                     this.sessions.push(response.data[i]);
                 }
+                this.setSessionsList();
             } catch (error) {
                 console.log(error)
             }
             this.isLoading = false;
+        },
+        setSessionsList() {
+            this.sessionsFiltered = this.sessions
         },
         editSessions(session_id) {
             this.$router.push({ name: 'SessionsUpdate', params: 
@@ -165,6 +261,41 @@ export default {
             this.deleteModal = false;
             this.title = '';
             this.message = '';
+        },
+        formatPhoneNumber(value) {
+            const number = value.replace(/[^\d]/g, '');
+            const len = number.length;
+
+            if (len < 4) {
+            return `(${number}`;
+            } else if (len < 7) {
+            return `(${number.slice(0, 3)}) ${number.slice(3)}`;
+            } else {
+            return `(${number.slice(0, 3)}) ${number.slice(3, 6)}-${number.slice(6)}`;
+            }
+        },
+        handleSubmitForm() {
+        //if user searches by Volunteer name
+            if (this.searchBy === 'Volunteer Name') {
+                this.sessionsFiltered = this.sessions.filter((session) => session.volunteer_name.toLowerCase().includes(this.volunteerName.toLowerCase()));
+            
+            } else if (this.searchBy === 'Volunteer Number') {
+            //filter the client list by phone number
+                this.sessionsFiltered = this.sessions.filter((session) => session.phone.includes(this.phone));
+            } else if (this.searchBy === 'Session Date') {
+                this.sessionsFiltered = this.sessions.filter(
+                    (session) => session.session_date === this.formattedSessionDate
+                );
+            };
+        },
+        //method called when user clicks "Clear Search" button
+        clearSearch() {
+            // Resets all the variables
+            this.searchBy = null
+            this.volunteerName = null
+            this.phone = null
+            this.sessionDate = null
+            this.setSessionsList();
         },
     },
 }
