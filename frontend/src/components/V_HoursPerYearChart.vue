@@ -8,7 +8,7 @@ export default {
     mounted() {
         const ctx = document.getElementById('hoursPerYear');
         new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: toRaw(this.listOfMonths),
             datasets: [{

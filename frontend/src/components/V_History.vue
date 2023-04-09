@@ -2,13 +2,12 @@
     <div>
         <div class="d-flex justify-content-center">
             <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
-                <h6>Hours per Month in the Last Six Months</h6>
-                <!--named 'HoursPerYear' but data is sessions per month in the last six months-->
-                <div><HoursPerYear :listOfMonths="this.listOfMonths" :listOfHours="this.listOfHours"></HoursPerYear></div>
+                <!--graph: named 'HoursPerYear' but data is sessions per month in the last six months-->
+                <div v-if="isLoaded">
+                <h6>Hours per Month in the Last Six Months</h6><HoursPerYear :listOfMonths="this.listOfMonths" :listOfHours="this.listOfHours"></HoursPerYear></div>
                 <br>
-                <!--session history from the last six months-->
-                <h6>Session History From the Last Six Months</h6>
-                <div><SessionsTable :sessions="this.sessions"></SessionsTable></div>
+                <!--table: session history from the last six months-->
+                <div><h6>Session History From the Last Six Months</h6><SessionsTable :sessions="this.sessions"></SessionsTable></div>
             </div>
         </div>
     </div>
@@ -43,6 +42,7 @@ import axios from 'axios';
                 hours_data: [],
                 listOfHours: [], //use axios to get list of hours in the same order as months
                 listOfMonths: [], //use axios to get list of months this volunteer has worked in
+                isLoaded: false,
             }
         },
         created() {
@@ -75,7 +75,7 @@ import axios from 'axios';
                     //months
                     this.listOfMonths.push(hours_hist_response.data[i].month);
                 }
-                
+                this.isLoaded = true;
             }
         }
     }

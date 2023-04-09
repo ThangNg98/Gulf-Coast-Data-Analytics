@@ -522,7 +522,7 @@ def get_full_history():
         COUNT(session.volunteer_id) as TotalVolunteers, DATE_FORMAT(session.session_date, '%m') as MonthNum
         from session
         JOIN volunteer ON session.volunteer_id=volunteer.volunteer_id
-        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)  AND session_date <= NOW() and volunteer.volunteer_status_id = 1
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 5 MONTH)  AND session_date <= NOW() and volunteer.volunteer_status_id = 1
         GROUP BY MonthName, MonthNum, YEAR(session_date)
         ORDER BY YEAR(session_date) DESC, MonthNum DESC;
     """

@@ -1,19 +1,26 @@
 <!--'/admindashview'-->
 <template>
-        <div class="container">
+    <div class="container">
         <div class="text-center">
             <h1 style="margin-top: 2rem; margin-bottom: 2rem">Admin Dashboard</h1>
         </div>
-        <div class="d-flex flex-wrap">
+        <div class="d-flex flex-row">
             <!--monthly history table-->
             <div class="mb-3 w-50 p-5">
                 <h6 class="text-center">Monthly History in the Last 6 Months</h6>
                 <MonthlyTable ref="componentA"></MonthlyTable>
             </div>
-            <!--last year's total unique volunteers-->
+            <!--graphs-->
             <div class="mb-3 w-50 p-5">
-                <h6 class="text-center">Number of Volunteers per Month in the Last 6 Months</h6>
-                <MonthlyUniqueVolunteersChart ref="componentB" v-if="componentBVisible"></MonthlyUniqueVolunteersChart>
+                <!--unique volunteers-->
+                <div class="w-100 h-auto">
+                    <h6 class="text-center">Number of Volunteers per Month in the Last 6 Months</h6>
+                    <MonthlyUniqueVolunteersChart ref="componentB" v-if="componentBVisible"></MonthlyUniqueVolunteersChart>
+                </div>
+                <!--org donut-->
+                <div class="mt-3">
+                    donut here
+                </div>
             </div>
         </div>
     </div>

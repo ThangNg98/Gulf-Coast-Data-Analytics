@@ -1,7 +1,7 @@
 <template>
-    <div class="table-responsive">
-            <table class="table w-100">
-                <thead>
+        <div class="table-responsive-md table-wrapper">
+            <table class="table table-bordered text-start" style="margin:auto;">
+                    <thead class="theadsticky" style="background-color: #e6e7eb !important;">
                     <tr>
                     <th scope="col">Month, Year</th>
                     <th scope="col">Total Hours Worked</th>
@@ -11,7 +11,7 @@
                     <!--use axios data to print rows of monthly data-->
                     <tr v-for="month in monthlyData">
                         <td>{{month.MonthName}}, {{month.YearName}}</td>
-                        <td>{{month.TotalHours}}</td>
+                        <td class="text-end">{{month.TotalHours}}</td>
                     </tr>
                 </tbody>
             </table>
