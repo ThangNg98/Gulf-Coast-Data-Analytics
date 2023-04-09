@@ -5,7 +5,6 @@
 </template>
 <script>
 import Chart from 'chart.js/auto';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
     export default {
         props: {
             orgNames: Array,

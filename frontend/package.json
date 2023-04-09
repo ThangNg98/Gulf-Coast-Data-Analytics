@@ -12,6 +12,7 @@
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "chart.js": "^4.2.1",
+    "chart.js-plugin-labels-dv": "^4.0.0",
     "cors": "^2.8.5",
     "moment": "^2.29.4",
     "pinia": "^2.0.33",
