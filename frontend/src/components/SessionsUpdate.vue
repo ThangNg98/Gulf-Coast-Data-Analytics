@@ -5,6 +5,11 @@
         <form @submit.prevent="submitForm">
             <div>
                 <div class="row">
+                    <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem">
+                        {{ session_info.full_name }}'s {{ closedSession ? 'Closed' : 'Open' }} Session
+                    </h1>
+                </div>
+                <div class="row">
                     <div class="col"> 
                         <label for="exampleFormControlInput1" class="form-label">Session Date</label>
                         <br>
