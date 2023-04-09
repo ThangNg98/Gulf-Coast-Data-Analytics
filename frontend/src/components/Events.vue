@@ -58,7 +58,7 @@
           </div>
     <div class="container1 table-wrapper"> 
         <div class="table-responsive-md">
-            <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
+            <table class="table table-bordered text-start" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
                     <thead class="theadsticky">
                         <tr>
                         <th scope="col">Event Name</th>

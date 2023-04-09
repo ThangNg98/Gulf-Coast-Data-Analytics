@@ -4,7 +4,7 @@
         <div class="text-center">
             <h1 style="margin-top: 2rem; margin-bottom: 2rem">Admin Dashboard</h1>
         </div>
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row" v-if="isLoaded">
             <!--monthly history table-->
             <div class="mb-3 w-50 p-4">
                 <div>
@@ -25,6 +25,9 @@
                 </div>
             </div>
         </div>
+        <div>
+            <LoadingModal v-if="!isLoaded"></LoadingModal>
+        </div>
     </div>
 </template>
 <script>
@@ -32,6 +35,7 @@ import MonthlyTable from "@/components/AdminMonthlyHistoryTable.vue"
 import MonthlyUniqueVolunteersChart from "@/components/AdminChartOfUniqueVolunteers.vue"
 import MonthlyOrgsChart from "@/components/AdminChartOfOrgs.vue"
 import { useAdminLoginStore } from '@/stores/AdminLoginStore'
+import LoadingModal from './LoadingModal.vue'
 import axios from 'axios';
 
     export default {
@@ -40,6 +44,7 @@ import axios from 'axios';
             MonthlyTable,
             MonthlyUniqueVolunteersChart,
             MonthlyOrgsChart,
+            LoadingModal,
         },
         data() {
             return {

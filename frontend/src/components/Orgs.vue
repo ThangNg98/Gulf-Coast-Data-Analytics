@@ -61,7 +61,7 @@
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
-                    <thead class="theadsticky">
+                    <thead class="theadsticky text-start">
                         <tr>
                         <th scope="col">Organization Name</th>
                         <th scope="col">Address</th>

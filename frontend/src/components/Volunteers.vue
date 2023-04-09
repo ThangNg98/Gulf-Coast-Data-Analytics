@@ -99,7 +99,7 @@
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
-                    <thead class="theadsticky">
+                    <thead class="theadsticky text-start">
                         <tr>
                         <th scope="col">Volunteer Name</th>
                         <th style="width:5%" scope="col">Phone Number</th>
@@ -119,8 +119,8 @@
                             <td style="text-align:left">{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
                             <td style="text-align:left">{{ formatPhone(volunteer.phone) }}</td>
                             <!-- This v-if statement needs to check if the value is null and if it is display a 0 if it isnt then display the value-->
-                            <td v-if="volunteer.total_hours == null">0</td>
-                            <td v-else>{{ volunteer.total_hours }}</td>
+                            <td class="text-end" v-if="volunteer.total_hours == null">0.00</td>
+                            <td class="text-end" v-else>{{ volunteer.total_hours }}</td>
                         </tr>
                     </tbody>
                 </table>

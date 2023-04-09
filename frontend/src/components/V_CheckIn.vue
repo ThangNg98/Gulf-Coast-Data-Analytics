@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div v-if="!isLoading">
         <div class="d-flex justify-content-center">
             <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
                 <div v-if="errors.eventSelect" style="color: #dc3545;">
@@ -33,14 +33,14 @@
         <!--checkin checkout-->
         <div class="d-flex justify-content-center mb-4">
             <div class="d-inline-flex flex-column border border-dark" style="width:300px;">
-                    <div :class="{ 'text-muted': alreadyCheckedIn }" class="p-2 float-start">
+                    <div :class="{ 'text-muted-custom': alreadyCheckedIn }" class="p-2 float-start">
                         <div class="d-inline-block float-start p-2">You are checked out</div><div 
                         class="d-inline-block float-end h-100" 
                         style="width:100px"><button class="w-100 h-100" type="button" 
                         @click="checkedInButton = true; getTime(); create_session();" 
                         :disabled="alreadyCheckedIn || confirmModal">Check In</button></div>
                     </div>
-                    <div :class="{ 'text-muted': !alreadyCheckedIn }" class="p-2 float-end">
+                    <div :class="{ 'text-muted-custom': !alreadyCheckedIn }" class="p-2 float-end">
                         <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios();" :disabled="!alreadyCheckedIn || confirmModal">Check Out</button></div>
                     </div>
             </div>
@@ -311,3 +311,8 @@ export default {
     }
 }
 </script>
+<style>
+.text-muted-custom {
+    color: #ddd;
+}
+</style>

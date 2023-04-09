@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="isLoaded">
         <div class="d-flex justify-content-center">
             <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
                 <!--graph: named 'HoursPerYear' but data is sessions per month in the last six months-->
@@ -11,6 +11,10 @@
             </div>
         </div>
     </div>
+    
+    <div>
+            <LoadingModal v-if="!isLoaded"></LoadingModal>
+        </div>
 
     <Transition name="bounce">
         <UpdateModal v-if="updateModal" @close="closeUpdateModal" :title="title" :message="message" />
@@ -22,14 +26,15 @@
     import SessionsTable from './V_SessionsTable.vue';
     import UpdateModal from './UpdateModal.vue';
     import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore'
-    import { isProxy, toRaw } from 'vue';
-import axios from 'axios';
+    import LoadingModal from './LoadingModal.vue'
+    import axios from 'axios';
 
     export default {
         components: {
             HoursPerYear,
             SessionsTable,
-            UpdateModal
+            UpdateModal,
+            LoadingModal,
         },
         data() {
             return {
