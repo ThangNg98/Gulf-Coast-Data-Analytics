@@ -6,26 +6,26 @@
         <div class="container"> 
             <form @submit.prevent="submitForm">
                 <div style="text-align:left">
-                    <div style="margin-top: 1rem; font-weight: bold">
+                    <div class="text-danger" style="margin-top: 1rem; font-weight: bold">
                     * Required
                     </div>
-                    <label for="orgName" class="form-label">Organization Name *</label>
+                    <label for="orgName" class="form-label">Organization Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" ref="orgName" v-model="org_info.org_name" :class="{ 'is-invalid': errors.orgName }" :maxlength="50" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.orgName}}</div>
 
-                    <label for="address" class="form-label"> Address Line 1 *</label>
+                    <label for="address" class="form-label"> Address Line 1 <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" ref="address" v-model="org_info.address_line_1" :class="{ 'is-invalid': errors.address }" :maxlength="255" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.address}}</div>
 
                     <label for="address2" class="form-label"> Address Line 2</label>
                     <input type="text" class="form-control" ref="address2" v-model="org_info.address_line_2" :disabled="confirmModal">
 
-                    <label for="city" class="form-label"> City *</label>
+                    <label for="city" class="form-label"> City <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" ref="city" v-model="org_info.city" :class="{ 'is-invalid': errors.city }" :maxlength="60" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.city}}</div>
 
                     <div>
-                        <label for="state_select" class="form-label">State *</label>
+                        <label for="state_select" class="form-label">State <span class="text-danger">*</span></label>
                         <select style="width: 50%" class="form-select" id="state_select" v-model="org_info.state_id" :class="{ 'is-invalid': errors.state }" :disabled="confirmModal">
                             <option value="">Select a state</option>
                             <option v-for="state in filteredStates" :key="state.id" :value="state.id">{{ state.name }}</option>
@@ -33,7 +33,7 @@
                         <div class="invalid-feedback">{{errors.state}}</div>
                     </div>
 
-                    <label for="exampleFormControlInput1" class="form-label"> Zip *</label>
+                    <label for="exampleFormControlInput1" class="form-label"> Zip <span class="text-danger">*</span></label>
                     <input style="width: 50%" type="text" class="form-control" id="exampleFormControlInput1" v-model="org_info.zip" :class="{ 'is-invalid': errors.zip }" :maxlength="5" :disabled="confirmModal">
                     <div class="invalid-feedback">{{errors.zip}}</div>
 
