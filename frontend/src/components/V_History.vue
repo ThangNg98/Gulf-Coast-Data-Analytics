@@ -70,9 +70,9 @@
                 this.message = '';
             },
             async getInfo() {
-                const session_hist_response = await axios.get(`http://127.0.0.1:5000/get_6months_session_history/${this.volunteer_id}`);
+                const session_hist_response = await axios.get(`https://llc.onrender.com/get_6months_session_history/${this.volunteer_id}`);
                 this.sessions = session_hist_response.data;
-                const hours_hist_response = await axios.get(`http://127.0.0.1:5000/get_6months_hours_history/${this.volunteer_id}`);
+                const hours_hist_response = await axios.get(`https://llc.onrender.com/get_6months_hours_history/${this.volunteer_id}`);
                 //console.log(hours_hist_response.data);
                 for (var i = 0; i < hours_hist_response.data.length; i++) {
                     //hours

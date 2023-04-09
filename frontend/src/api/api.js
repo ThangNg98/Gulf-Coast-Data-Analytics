@@ -310,7 +310,7 @@ export async function getDatesHoursAPI() {
 
 export async function getSessionAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/read_sessions');
+    const response = await axios.get('https://llc.onrender.com/read_sessions');
     return response
   } catch (error) {
     console.log(error);
@@ -320,7 +320,7 @@ export async function getSessionAPI() {
 
 export async function getClosedSessionsAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/read_closed_sessions');
+    const response = await axios.get('https://llc.onrender.com/read_closed_sessions');
     return response
   } catch (error) {
     console.log(error);
@@ -330,7 +330,7 @@ export async function getClosedSessionsAPI() {
 
 export async function getSpecificSessionAPI(session_id) {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/read_session/${session_id}`);
+    const response = await axios.get(`https://llc.onrender.com/read_session/${session_id}`);
     return response
   } catch (error) {
     console.log(error);
@@ -341,7 +341,7 @@ export async function getSpecificSessionAPI(session_id) {
 export async function updateSessionAPI(session_info) {
   try {
     console.log('PHIL session_info', session_info)
-    await axios.post('http://127.0.0.1:5000/update_session', session_info)
+    await axios.post('https://llc.onrender.com/update_session', session_info)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -350,7 +350,7 @@ export async function updateSessionAPI(session_info) {
 
 export async function deleteSessionAPI(session_info) {
   try {
-    await axios.post('http://127.0.0.1:5000/delete_session', session_info)
+    await axios.post('https://llc.onrender.com/delete_session', session_info)
   } catch (error) {
     console.log(error);
     throw (error);
