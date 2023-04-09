@@ -1,61 +1,62 @@
 <template>
     <main>
-        <h2 class="text-2xl font-bold">Search Organization By</h2>
-          <!-- Displays Organization Name and Address selection -->
-          <div class="flex flex-col">
-            <select
-              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              v-model="searchBy"
-            >
-              <option value="Organization Name">Organization Name</option>
-              <option value="Organization Address">Organization Address</option>
-            </select>
+      <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-12 text-center mb-3">
+          <h1>{{ msg }}</h1>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="text-start">
+            <h4>Search Organization By</h4>
           </div>
-          <!--Display Organization name search field-->
-          <div class="flex flex-col" v-if="searchBy === 'Organization Name'">
-            <label class="block">
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="name"
-                v-on:keyup.enter="handleSubmitForm"
-                placeholder="Enter organization name"
-              />
-            </label>
-          </div>
-          <!--Display Organization address search field-->
-          <div class="flex flex-col" v-if="searchBy === 'Organization Address'">
-            <label class="block">
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="address"
-                v-on:keyup.enter="handleSubmitForm"
-                placeholder="Enter organization address"
-              />
-            </label>
-          </div>
-          <div class="mt-5 grid-cols-2">
-            <!--Clear Search button-->
-            <button
-              class="mr-10 border border-red-700 bg-white text-red-700 rounded"
-              @click="clearSearch"
-              type="submit"
-            >
-              Clear Search
-            </button>
-            <!--Search Organization button-->
-            <button
-              class="bg-red-700 text-white rounded"
-              @click="handleSubmitForm"
-              type="submit"
-            >
-              Search Organization
-            </button>
-          </div>
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+          <select
+            class="form-select"
+            v-model="searchBy"
+          >
+            <option value="Organization Name">Organization Name</option>
+            <option value="Organization Address">Organization Address</option>
+          </select>
+        </div>
+        <div v-if="searchBy === 'Organization Name'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="name"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter organization name"
+          />
+        </div>
+        <div v-if="searchBy === 'Organization Address'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="address"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter organization address"
+          />
+        </div>
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button
+            class="btn btn-outline-secondary"
+            @click="clearSearch"
+            type="submit"
+          >
+            Clear Search
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="handleSubmitForm"
+            type="submit"
+          >
+            Search Organizations
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">

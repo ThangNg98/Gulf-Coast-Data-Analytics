@@ -42,6 +42,8 @@
         <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
 
+
+
   </main>
 </template>
   
@@ -113,7 +115,7 @@
           console.log('register is true')
           this.successModal = true;
           this.title = "You are registered!"
-          this.message = "Please wait until you have been approved."
+          this.message = "Please see an administrator and wait until you have been approved."
       }
       this.loadData();
       // axios
@@ -140,7 +142,7 @@
       showAlertModal() {
       this.showModal = true;
       this.title = 'Login Failed';
-      this.message = 'Please wait until you are approved by an administrator.';
+      this.message = 'Please see an administrator, then wait until you are approved.';
       },
       closeAlertModal() {
         this.showModal = false;

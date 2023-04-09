@@ -1,101 +1,90 @@
 <template>
     <main>
-
-      <div class="px-10 pt-20">
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
-        >
-        <!--Search Volunteer By selection-->
-          <h2 class="text-2xl font-bold">Search Volunteer By</h2>
-          <!-- Displays Volunteer Name search field -->
-          <div class="flex flex-col">
-            <select
-              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              v-model="searchBy"
-            >
-              <option value="Volunteer Name">Volunteer Name</option>
-              <option value="Volunteer Number">Volunteer Number</option>
-              <option value="Waiver Signed">Waiver Signed</option>
-            </select>
+      <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-12 text-center mb-3">
+          <h1>{{ msg }}</h1>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="text-start">
+            <h4>Search Volunteer By</h4>
           </div>
-          <!--Input box for searching by Volunteer First Name-->
-          <div class="flex flex-col" v-if="searchBy === 'Volunteer Name'">
-            <label class="block">
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="firstName"
-                v-on:keyup.enter="handleSubmitForm"
-                placeholder="Enter first name"
-              />
-            </label>
-          </div>
-          <!--Input box for searching by Volunteer Last Name-->
-          <div class="flex flex-col" v-if="searchBy === 'Volunteer Name'">
-            <label class="block">
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="lastName"
-                v-on:keyup.enter="handleSubmitForm"
-                placeholder="Enter last name"
-              />
-            </label>
-          </div>
-          <!-- Displays Volunteer Number search field -->
-          <div class="flex flex-col" v-if="searchBy === 'Volunteer Number'">
-            <input
-              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              type="text"
-              v-model="phone"
-              v-on:keyup.enter="handleSubmitForm"
-              placeholder="Enter Volunteer Phone Number"
-            />
-          </div>
-          <div class="flex flex-col" v-if="searchBy === 'Waiver Signed'">
-          <div>
-            <label>
-              <input type="radio" v-model="waiverSigned" value="true">
-              Volunteers who have signed
-            </label>
-          </div>
-          <div>
-            <label>
-              <input type="radio" v-model="waiverSigned" value="false">
-              Volunteers who have not signed
+          <select
+            class="form-select"
+            v-model="searchBy"
+          >
+            <option value="Volunteer Name">Volunteer Name</option>
+            <option value="Volunteer Number">Volunteer Phone Number</option>
+            <option value="Waiver Signed">Waiver Signed</option>
+          </select>
+        </div>
+        <div v-if="searchBy === 'Volunteer Name'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="firstName"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter volunteer's first name"
+          />
+        </div>
+        <div v-if="searchBy === 'Volunteer Name'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="lastName"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter volunteer's last name"
+          />
+        </div>
+        <div v-if="searchBy === 'Volunteer Number'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="formattedPhone"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter volunteer's phone number"
+            maxlength="14"
+          />
+        </div>
+        <div class="form-check" v-if="searchBy === 'Waiver Signed'">
+          <input class="form-check-input" type="radio" name="waiverSigned" id="signed" v-model="waiverSigned" value="true">
+          <div class="text-start">
+            <label class="form-check-label" for="signed">
+              Volunteers who have signed the waiver.
             </label>
           </div>
         </div>
-        </div>
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
-        >
-          <div></div>
-          <div></div>
-          <!--Clear Search button-->
-          <div class="mt-5 grid-cols-2">
-            <button
-              class="mr-10 border border-red-700 bg-white text-red-700 rounded"
-              @click="clearSearch"
-              type="submit"
-            >
-              Clear Search
-            </button>
-            <!--Search Client button-->
-            <button
-              class="bg-red-700 text-white rounded"
-              @click="handleSubmitForm"
-              type="submit"
-            >
-              Search Client
-            </button>
+        <div class="form-check" v-if="searchBy === 'Waiver Signed'">
+          <input class="form-check-input" type="radio" name="waiverSigned" id="not-signed" v-model="waiverSigned" value="false">
+          <div class="text-start">
+            <label class="form-check-label" for="not-signed">
+              Volunteers who have not signed the waiver.
+            </label>
           </div>
         </div>
-      </div>   
-
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button
+            class="btn btn-outline-secondary"
+            @click="clearSearch"
+            type="submit"
+          >
+            Clear Search
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="handleSubmitForm"
+            type="submit"
+          >
+            Search Volunteers
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
@@ -138,9 +127,6 @@
     <div>
         <LoadingModal v-if="isLoading"></LoadingModal>
     </div>
-
-    <p>waiverSigned: {{ waiverSigned }}</p>
-
 
     </main>
 </template>
@@ -198,6 +184,17 @@ export default {
             this.isMounted = true
         }
     },
+    computed: {
+      formattedPhone: {
+        get() {
+          if (!this.phone) return '';
+          return this.formatPhoneNumber(this.phone);
+        },
+        set(value) {
+          this.phone = value.replace(/[^\d]/g, '');
+        },
+      },
+    },
     mounted() {
         this.loadData();
     },
@@ -210,11 +207,23 @@ export default {
           for (var i = 0; i < response.data.length; i++) {
               this.volunteers.push(response.data[i]);
           }
-          this.setVolunteersList()
+          this.setVolunteersList();
         } catch (error) {
           console.log(error)
         };
         this.isLoading = false;
+      },
+        formatPhoneNumber(value) {
+        const number = value.replace(/[^\d]/g, '');
+        const len = number.length;
+
+        if (len < 4) {
+          return `(${number}`;
+        } else if (len < 7) {
+          return `(${number.slice(0, 3)}) ${number.slice(3)}`;
+        } else {
+          return `(${number.slice(0, 3)}) ${number.slice(3, 6)}-${number.slice(6)}`;
+        }
       },
         closeUpdateModal() {
             this.updateModal = false;
@@ -226,17 +235,6 @@ export default {
             this.title = '';
             this.message = '';
         },
-            // axios.get('http://127.0.0.1:5000/read_volunteers')
-            // .then(response => {
-            //     // iterate through JSON response and add volunteers to the volunteer array
-            //     for (var i = 0; i < response.data.length; i++) {
-            //         this.volunteers.push(response.data[i]);
-            //     }
-            //     this.setVolunteersList()
-            // })
-            // .catch(error => {
-            //     console.log(error);
-            // });
         setVolunteersList() {
             this.volunteersFiltered = this.volunteers
         },
@@ -267,12 +265,15 @@ export default {
             //filter the client list by phone number
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.phone.includes(this.phone));
             } else if (this.searchBy === 'Waiver Signed') {
-              if (this.waiverSigned == true) {
+              console.log('waiver signed button pressed')
+              if (this.waiverSigned) {
                 console.log('waiverSigned selected')
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 1)
-              } else if (this.waiverSigned == false) {
+                this.waiverSigned = false;
+              } else if (!this.waiverSigned) {
                 console.log('not waiverSigned selected')
                 this.volunteersFiltered = this.volunteers.filter((volunteer) => volunteer.waiver_signed === 2)
+                this.waiverSigned = false;
               }
             };
         },
@@ -322,5 +323,19 @@ export default {
   overflow: auto;
   display:inline-block;
   width: 90%;
+}
+
+.form-check-label {
+  margin-left: 1.5rem;
+  font-weight: 400;
+}
+
+.form-check-input:checked ~ .form-check-label::before {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.form-check-input:focus ~ .form-check-label::before {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 </style>

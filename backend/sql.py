@@ -17,10 +17,13 @@ def create_connection(host_name, user_name, user_password, db_name):
     return connection
 
 
-def execute_query(connection, query):
+def execute_query(connection, query, params=None):
     cursor = connection.cursor()
     try:
-        cursor.execute(query)
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
         connection.commit()
         print("Query executed successfully")
     except Error as e:
