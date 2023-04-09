@@ -69,24 +69,13 @@ import axios from 'axios';
                 this.sessions = session_hist_response.data;
                 const hours_hist_response = await axios.get(`http://127.0.0.1:5000/get_6months_hours_history/${this.volunteer_id}`);
                 //console.log(hours_hist_response.data);
-                /*for (var i = 0; i < hours_hist_response.data.length; i++) {
-                    console.log(JSON.parse(hours_hist_response.data[i].hours));
-                    console.log(this.listOfHours)
-                    this.listOfHours.push(JSON.parse(hours_hist_response.data[i].hours))
-                }*/
-                this.hours_data = hours_hist_response.data;
-                console.log(this.hours_data);
-                this.putLists(this.hours_data);
-            },
-            putLists(datavar) {
-                console.log(datavar);
-                var sample_array = []
-                for (var i = 0; i < datavar.length; i++) {
-                    console.log(JSON.parse(datavar[i].hours));
-                    sample_array.push(1);
+                for (var i = 0; i < hours_hist_response.data.length; i++) {
+                    //hours
+                    this.listOfHours.push(JSON.parse(hours_hist_response.data[i].hours));
+                    //months
+                    this.listOfMonths.push(hours_hist_response.data[i].month);
                 }
-                this.listOfHours = toRaw(sample_array);
-                console.log(this.listOfHours);
+                
             }
         }
     }

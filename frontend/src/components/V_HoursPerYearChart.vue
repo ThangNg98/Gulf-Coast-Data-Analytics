@@ -7,7 +7,6 @@ import { isProxy, toRaw } from 'vue';
 export default {
     mounted() {
         const ctx = document.getElementById('hoursPerYear');
-
         new Chart(ctx, {
         type: 'bar',
         data: {
@@ -28,8 +27,8 @@ export default {
         });
     },
     props: {
-        listOfMonths: Array,
-        listOfHours: Array,
+        listOfMonths: Object,
+        listOfHours: Object,
     },
     data() {
         return {
