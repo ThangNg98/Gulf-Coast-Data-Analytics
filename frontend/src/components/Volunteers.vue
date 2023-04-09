@@ -1,6 +1,9 @@
 <template>
     <main>
 
+      <div>
+        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+    </div>
       <div class="px-10 pt-20">
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
@@ -93,9 +96,6 @@
         </div>
       </div>   
 
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
-    </div>
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">

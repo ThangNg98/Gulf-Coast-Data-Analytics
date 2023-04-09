@@ -1,5 +1,8 @@
 <template>
     <main>
+      <div>
+        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+    </div>
         <h2 class="text-2xl font-bold">Search Organization By</h2>
           <!-- Displays Organization Name and Address selection -->
           <div class="flex flex-col">
@@ -53,9 +56,7 @@
               Search Organization
             </button>
           </div>
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
-    </div>
+    
 
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">

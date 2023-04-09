@@ -4,7 +4,7 @@
             <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
                 <!--graph: named 'HoursPerYear' but data is sessions per month in the last six months-->
                 <div v-if="isLoaded">
-                <h6>Hours per Month in the Last Six Months</h6><HoursPerYear :listOfMonths="this.listOfMonths" :listOfHours="this.listOfHours"></HoursPerYear></div>
+                <h6>Hours per Month in the Last Six Months</h6><HoursPerYear :listOfMonths="this.listOfMonths.reverse()" :listOfHours="this.listOfHours.reverse()"></HoursPerYear></div>
                 <br>
                 <!--table: session history from the last six months-->
                 <div><h6>Session History From the Last Six Months</h6><SessionsTable :sessions="this.sessions"></SessionsTable></div>

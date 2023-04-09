@@ -529,6 +529,20 @@ def get_full_history():
     rows = execute_read_query(conn, query)
     return jsonify(rows)
 
+#hours per org last 6 months
+@app.route('/get_orgs_6', methods=['GET'])
+def get_orgs_6():
+    query = """
+        select organization.org_name as orgNames, SUM(session.total_hours) as orgHours from session
+        left join organization
+        on session.org_id = organization.org_id
+        WHERE session_date >= DATE_SUB(NOW(), INTERVAL 5 MONTH)  AND session_date <= NOW()
+        GROUP BY orgNames
+        ORDER BY orgNames;
+    """
+    rows = execute_read_query(conn, query)
+    return jsonify(rows)
+
 # Admin Reports
 @app.route('/getOrgsHours', methods=['GET'])
 def getOrgsHours():

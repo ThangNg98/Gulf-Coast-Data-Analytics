@@ -1,7 +1,7 @@
 <template>
     <main>
     <div>
-        <h2 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> <router-link class="" to="/admin/sessions_list">{{ msg }}</router-link> | <router-link class="" to="/admin/closed_sessions">{{ msg2 }}</router-link> </h2>
+        <h2 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> <router-link  class="text-decoration-none" to="/admin/sessions_list">{{ msg }}</router-link> | <router-link  class="text-decoration-none" to="/admin/closed_sessions">{{ msg2 }}</router-link> </h2>
         <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> Open Sessions</h1>
     </div>
     <div class="container">     

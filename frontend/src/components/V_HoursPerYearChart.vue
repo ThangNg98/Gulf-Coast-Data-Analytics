@@ -3,17 +3,16 @@
 </template>
 <script>
 import Chart from 'chart.js/auto';
-import { isProxy, toRaw } from 'vue';
 export default {
     mounted() {
         const ctx = document.getElementById('hoursPerYear');
         new Chart(ctx, {
         type: 'line',
         data: {
-            labels: toRaw(this.listOfMonths),
+            labels: this.listOfMonths,
             datasets: [{
             label: '# of Hours',
-            data: toRaw(this.listOfHours),
+            data: this.listOfHours,
             borderWidth: 1
             }]
         },

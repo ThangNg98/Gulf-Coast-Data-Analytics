@@ -18,31 +18,16 @@
         </div>
 </template>
 <script lang="ts">
-import axios from 'axios';
     export default {
-        data() {
-            return {
-                monthlyData: [ //use axios to get the data
-                    {
-                        MonthName: '',
-                        YearName: null,
-                        TotalHours: null
-                    }
-                ]
+        props: {
+            monthlyData: {
+                type: Object,
+                keys: {
+                    MonthName: String,
+                    YearName: Number,
+                    TotalHours: Number,
+                }
             }
-        },
-        methods: {
-            async load() {
-                await axios.get('http://127.0.0.1:5000/get_hist_6')
-                .then(response => {
-                    this.monthlyData = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            }
-        },
-        created() {
         }
     }
 </script>
