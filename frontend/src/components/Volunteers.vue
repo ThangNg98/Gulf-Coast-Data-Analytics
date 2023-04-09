@@ -1,15 +1,58 @@
 <template>
     <main>
-      <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-6">
-      <div class="row">
-        <div class="col-12 text-center mb-3">
-          <h1>{{ msg }}</h1>
-        </div>
-        <div class="col-12 mb-3">
-          <div class="text-start">
-            <h4>Search Volunteer By</h4>
+      <div>
+        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+    </div>
+      <div class="px-10 pt-20">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
+        <!--Search Volunteer By selection-->
+          <h2 class="text-2xl font-bold">Search Volunteer By</h2>
+          <!-- Displays Volunteer Name search field -->
+          <div class="flex flex-col">
+            <select
+              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              v-model="searchBy"
+            >
+              <option value="Volunteer Name">Volunteer Name</option>
+              <option value="Volunteer Number">Volunteer Number</option>
+              <option value="Waiver Signed">Waiver Signed</option>
+            </select>
+          </div>
+          <!--Input box for searching by Volunteer First Name-->
+          <div class="flex flex-col" v-if="searchBy === 'Volunteer Name'">
+            <label class="block">
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="firstName"
+                v-on:keyup.enter="handleSubmitForm"
+                placeholder="Enter first name"
+              />
+            </label>
+          </div>
+          <!--Input box for searching by Volunteer Last Name-->
+          <div class="flex flex-col" v-if="searchBy === 'Volunteer Name'">
+            <label class="block">
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="lastName"
+                v-on:keyup.enter="handleSubmitForm"
+                placeholder="Enter last name"
+              />
+            </label>
+          </div>
+          <!-- Displays Volunteer Number search field -->
+          <div class="flex flex-col" v-if="searchBy === 'Volunteer Number'">
+            <input
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              type="text"
+              v-model="phone"
+              v-on:keyup.enter="handleSubmitForm"
+              placeholder="Enter Volunteer Phone Number"
+            />
           </div>
           <select
             class="form-select"
@@ -80,15 +123,36 @@
             Search Volunteers
           </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
+          <div></div>
+          <div></div>
+          <!--Clear Search button-->
+          <div class="mt-5 grid-cols-2">
+            <button
+              class="mr-10 border border-red-700 bg-white text-red-700 rounded"
+              @click="clearSearch"
+              type="submit"
+            >
+              Clear Search
+            </button>
+            <!--Search Client button-->
+            <button
+              class="bg-red-700 text-white rounded"
+              @click="handleSubmitForm"
+              type="submit"
+            >
+              Search Client
+            </button>
+          </div>
+        </div>
+      </div>   
 
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">
             <table class="table table-bordered" style="margin:auto; text-align: center; max-width: 25%; margin-top: 2rem">
-                    <thead class="theadsticky">
+                    <thead class="theadsticky text-start">
                         <tr>
                         <th scope="col">Volunteer Name</th>
                         <th style="width:5%" scope="col">Phone Number</th>
@@ -108,8 +172,8 @@
                             <td style="text-align:left">{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
                             <td style="text-align:left">{{ formatPhone(volunteer.phone) }}</td>
                             <!-- This v-if statement needs to check if the value is null and if it is display a 0 if it isnt then display the value-->
-                            <td v-if="volunteer.total_hours == null">0</td>
-                            <td v-else>{{ volunteer.total_hours }}</td>
+                            <td class="text-end" v-if="volunteer.total_hours == null">0.00</td>
+                            <td class="text-end" v-else>{{ volunteer.total_hours }}</td>
                         </tr>
                     </tbody>
                 </table>

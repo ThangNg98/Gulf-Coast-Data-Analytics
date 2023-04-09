@@ -16,6 +16,8 @@
         </div>
     </div>
 
+    <div v-if="!showOrgsHours && !showOrgsHoursVolunteers && !showEventsHours && !showEventsVolunteers && !showEventsHoursVolunteers && !showDatesHours"><h6>Please select a report</h6></div>
+
     <OrgsHours v-if="showOrgsHours"/>
     
     <OrgsVolunteers v-if="showOrgsVolunteers"/>
