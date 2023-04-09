@@ -39,6 +39,7 @@
             <router-view></router-view>
         </div>
     </main>
+    
 </template>
 <script>
 import { useVolunteerPhoneStore } from '@/stores/VolunteerPhoneStore.js'
@@ -51,27 +52,14 @@ import axios from 'axios';
             }
         },
         mounted() {
-           //this.getVolunteerName()
-
+            console.log('useVolunteerPhoneStore', useVolunteerPhoneStore().volunteer_first_name)
+            this.first_name = useVolunteerPhoneStore().volunteer_first_name
         },
         methods: {
-            async getVolunteerName() {
-                const phone = useVolunteerPhoneStore().volunteerPhone
-                axios
-                    .get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`)
-                    .then((response) => {
-                        this.first_name = response.data[0].first_name
-                        console.log(this.first_name)
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-            },
             logout() {
                 console.log('logout called')
                 useVolunteerPhoneStore().clearVolunteerPhone()
             }
-
         }
     }
 </script>

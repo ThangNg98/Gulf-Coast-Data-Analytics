@@ -56,7 +56,6 @@
               Search Organization
             </button>
           </div>
-    
 
     <div class="container1"> 
         <div class="table-responsive-md table-wrapper">

@@ -63,7 +63,7 @@
                         <tr>
                             <td> {{ this.current_event_name }}</td>
                             <td> {{ this.current_org_name }}</td>
-                            <td> {{ this.session.time_in }}</td>
+                            <td> {{ this.timeInDisplay }}</td>
                             <td> {{ this.session.session_comment }}</td>
                         </tr>
                     </tbody>
@@ -120,6 +120,7 @@ export default {
             errors: {},
             submitPressed: false,
             confirmModal: false,
+            timeInDisplay: null,
         }
     },
     watch: {
@@ -248,6 +249,15 @@ export default {
             } else {
                 this.current_org_name = ''
             }
+            //format datetime
+            const timeParts = this.session.time_in.split(':');
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const time = new Date();
+            time.setHours(hours);
+            time.setMinutes(minutes);
+            const options = { hour12: true, hour: 'numeric', minute: 'numeric' };
+            this.timeInDisplay = time.toLocaleTimeString(navigator.language, options);
         },
         update_session_axios() {
             this.confirmModal = true

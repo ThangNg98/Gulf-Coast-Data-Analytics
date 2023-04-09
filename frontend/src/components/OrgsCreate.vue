@@ -80,7 +80,7 @@ export default {
                 address_line_1: '',
                 address_line_2: '',
                 city: '',
-                state_id: '',
+                state_id: 44,
                 zip: ''
             },
             searchQuery: '',

@@ -146,7 +146,7 @@ export default {
                 volunteer_id: null,
                 first_name: null,
                 last_name: null,
-                phone:  useVolunteerPhoneStore().volunteerPhone,
+                phone:  null,
                 email: null,
                 emergency_contact_fname: null,
                 emergency_contact_lname: null,
@@ -225,6 +225,7 @@ export default {
                 {name: 'Friend', id: 10},
                 {name: 'Acquiantance', id: 11},
                 {name: 'Other', id: 12}
+
             ],
             errors: {},
             submitPressed: false,
@@ -378,6 +379,7 @@ export default {
             try {
                 const response = await getVolunteerAPI(this.volunteer_info.volunteer_id)
                 this.volunteer_info = response.data[0]
+                console.log('this.volunteer info after getVolunteerData', this.volunteer_info)
             } catch (error) {
                 console.log(error)
             }

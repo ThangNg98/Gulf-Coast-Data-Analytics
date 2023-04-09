@@ -1,68 +1,72 @@
 <template>
     <main>
-    <div>
-        <h1 style="text-align: center; margin-top: 2rem; margin-bottom: 2rem"> {{ msg }}</h1>
+      <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-12 text-center mb-3">
+          <h1>{{ msg }}</h1>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="text-start">
+            <h4>Search Event By</h4>
+          </div>
+          <select
+            class="form-select"
+            v-model="searchBy"
+          >
+            <option value="Event Name">Event Name</option>
+            <option value="Event Description">Event Description</option>
+          </select>
+        </div>
+        <div v-if="searchBy === 'Event Name'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="name"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter event name"
+          />
+        </div>
+        <div v-if="searchBy === 'Event Description'" class="col-12 mb-3">
+          <input
+            type="text"
+            class="form-control"
+            v-model="desc"
+            v-on:keyup.enter="handleSubmitForm"
+            placeholder="Enter event description"
+          />
+        </div>
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button
+            class="btn btn-outline-secondary"
+            @click="clearSearch"
+            type="submit"
+          >
+            Clear Search
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="handleSubmitForm"
+            type="submit"
+          >
+            Search Events
+          </button>
+        </div>
+      </div>
     </div>
-    <h2 class="text-2xl font-bold">Search Event By</h2>
-          <!-- Displays Event Name and Description selection -->
-          <div class="flex flex-col">
-            <select
-              class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              v-model="searchBy"
-            >
-              <option value="Event Name">Event Name</option>
-              <option value="Event Description">Event Description</option>
-            </select>
-          </div>
-          <!--Display Event name search field-->
-          <div class="flex flex-col" v-if="searchBy === 'Event Name'">
-            <label class="block">
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="name"
-                v-on:keyup.enter="handleSubmitForm"
-                placeholder="Enter event name"
-              />
-            </label>
-          </div>
-          <!--Display event description search field-->
-          <div class="flex flex-col" v-if="searchBy === 'Event Description'">
-            <label class="block">
-              <input
-                type="text"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="desc"
-                v-on:keyup.enter="handleSubmitForm"
-                placeholder="Enter event description"
-              />
-            </label>
-          </div>
-          <div class="mt-5 grid-cols-2">
-            <!--Clear Search button-->
-            <button
-              class="mr-10 border border-red-700 bg-white text-red-700 rounded"
-              @click="clearSearch"
-              type="submit"
-            >
-              Clear Search
-            </button>
-            <!--Search Event button-->
-            <button
-              class="bg-red-700 text-white rounded"
-              @click="handleSubmitForm"
-              type="submit"
-            >
-              Search Event
-            </button>
-          </div>
+  </div>
+</div>
+
+
+
     <div class="container1 table-wrapper"> 
         <div class="table-responsive-md">
             <table class="table table-bordered text-start" style="margin:auto; text-align: center; max-width: 30%; margin-top: 2rem">
                     <thead class="theadsticky">
                         <tr>
-                        <th scope="col">Event Name</th>
-                        <th scope="col">Description</th>
+                        <th scope="col" style="width: 30%;">Event Name</th>
+                        <th scope="col" style="width: 70%;">Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,7 +136,8 @@ export default {
             name: '',
             desc: '',
             eventsFiltered: [],
-            isLoading: false
+            isLoading: false,
+            isMounted: false,
         }
     },
     updated() {

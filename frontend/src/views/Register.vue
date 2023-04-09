@@ -157,7 +157,7 @@ export default {
                 address_line_1:'',
                 address_line_2:'',
                 city:'',
-                state_id:'',
+                state_id: 44,
                 date_created: this.getDate(),//new Date().toJSON("en-US", {timeZone: "America/Chicago"}).slice(0,10),
                 volunteer_status_id: '2',
                 zip: '',
@@ -232,6 +232,7 @@ export default {
                 {name: 'Friend', id: 10},
                 {name: 'Acquiantance', id: 11},
                 {name: 'Other', id: 12}
+
             ],
             errors: {},
             submitPressed: false,
