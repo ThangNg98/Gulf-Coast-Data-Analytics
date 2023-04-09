@@ -21,7 +21,7 @@ axios.interceptors.response.use((response) => {
 
 export async function checkMostRecentAPI(volunteerId) {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/check_most_recent/${volunteerId}`)
+      const response = await axios.get(`https://llc.onrender.com/check_most_recent/${volunteerId}`)
       const result = {
         alreadyCheckedIn: false,
         session: null
@@ -49,7 +49,7 @@ export async function checkMostRecentAPI(volunteerId) {
 
 export async function getEventsAPI() {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/read_events');
+      const response = await axios.get('https://llc.onrender.com/read_events');
       console.log('response from getEventsAPI:', response)
       return response
     } catch (error) {
@@ -60,7 +60,7 @@ export async function getEventsAPI() {
 
 export async function getOrgsAPI() {
     try {
-        const response = await axios.get('http://127.0.0.1:5000/read_orgs');
+        const response = await axios.get('https://llc.onrender.com/read_orgs');
         console.log('response from getOrgsAPI:', response)
         return response
     } catch (error) {
@@ -71,7 +71,7 @@ export async function getOrgsAPI() {
 
 export async function createSessionAPI(session) {
     try {
-        await axios.post('http://127.0.0.1:5000/create_session', session)
+        await axios.post('https://llc.onrender.com/create_session', session)
     } catch (error) {
         console.log(error);
         throw error;
@@ -80,7 +80,7 @@ export async function createSessionAPI(session) {
 
 export async function checkOutAPI(session) {
     try {
-        await axios.post('http://127.0.0.1:5000/check_out', session);
+        await axios.post('https://llc.onrender.com/check_out', session);
     } catch (error) {
         console.log(error);
         throw error;
@@ -89,7 +89,7 @@ export async function checkOutAPI(session) {
 
 export async function getPhoneListAPI() {
     try {
-        const response = await axios.get('http://127.0.0.1:5000/volunteer_phone/');
+        const response = await axios.get('https://llc.onrender.com/volunteer_phone/');
         return response
     } catch (error) {
       console.log(error);
@@ -99,7 +99,7 @@ export async function getPhoneListAPI() {
 
 export async function getVolunteerIDAPI(phone) {
   try {
-      const response = await axios.get(`http://127.0.0.1:5000/get_volunteer_id/${phone}`);
+      const response = await axios.get(`https://llc.onrender.com/get_volunteer_id/${phone}`);
       return response;
   } catch (error) {
     console.log(error);
@@ -109,7 +109,7 @@ export async function getVolunteerIDAPI(phone) {
 
 export async function getVolunteerAPI(id) {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/get_volunteer/${id}`);
+    const response = await axios.get(`https://llc.onrender.com/get_volunteer/${id}`);
     return response;
   } catch (error) {
     console.log(error);
@@ -119,7 +119,7 @@ export async function getVolunteerAPI(id) {
 
 export async function updateVolunteerAPI(volunteer_info) {
   try {
-    await axios.post('http://127.0.0.1:5000/update_volunteer', volunteer_info)
+    await axios.post('https://llc.onrender.com/update_volunteer', volunteer_info)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -128,7 +128,7 @@ export async function updateVolunteerAPI(volunteer_info) {
 
 export async function createEventAPI(event_info) {
   try {
-    await axios.post('http://127.0.0.1:5000/create_event', event_info)
+    await axios.post('https://llc.onrender.com/create_event', event_info)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -137,7 +137,7 @@ export async function createEventAPI(event_info) {
 
 export async function getEventAPI(event_id) {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/get_event/${event_id}`);
+    const response = await axios.get(`https://llc.onrender.com/get_event/${event_id}`);
     return response
   } catch (error) {
     console.log(error);
@@ -147,7 +147,7 @@ export async function getEventAPI(event_id) {
 
 export async function updateEventAPI(events) {
   try {
-    await axios.post('http://127.0.0.1:5000/update_event', events)
+    await axios.post('https://llc.onrender.com/update_event', events)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -156,7 +156,7 @@ export async function updateEventAPI(events) {
 
 export async function deleteEventAPI(events) {
   try {
-    await axios.post('http://127.0.0.1:5000/delete_event', events)
+    await axios.post('https://llc.onrender.com/delete_event', events)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -165,7 +165,7 @@ export async function deleteEventAPI(events) {
 
 export async function createOrgAPI(org_info) {
   try {
-    await axios.post('http://127.0.0.1:5000/create_organization', org_info)
+    await axios.post('https://llc.onrender.com/create_organization', org_info)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -174,7 +174,7 @@ export async function createOrgAPI(org_info) {
 
 export async function getOrgAPI(org_id) {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/get_org/${org_id}`);
+    const response = await axios.get(`https://llc.onrender.com/get_org/${org_id}`);
     return response;
   } catch (error) {
     console.log(error);
@@ -184,7 +184,7 @@ export async function getOrgAPI(org_id) {
 
 export async function updateOrgAPI(organization) {
   try {
-    await axios.post('http://127.0.0.1:5000/update_organization', organization);
+    await axios.post('https://llc.onrender.com/update_organization', organization);
   } catch (error) {
     console.log(error);
     throw (error);
@@ -193,7 +193,7 @@ export async function updateOrgAPI(organization) {
 
 export async function deleteOrgAPI(organization) {
   try {
-    await axios.post('http://127.0.0.1:5000/delete_organization', organization)
+    await axios.post('https://llc.onrender.com/delete_organization', organization)
   } catch (error) {
     console.log(error);
     throw (error);
@@ -202,7 +202,7 @@ export async function deleteOrgAPI(organization) {
 
 export async function getVolunteersAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/read_volunteers');
+    const response = await axios.get('https://llc.onrender.com/read_volunteers');
     return response;
   } catch (error) {
     console.log(error);
@@ -212,7 +212,7 @@ export async function getVolunteersAPI() {
 
 export async function getVolunteerHoursAPI(id) {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/read_volunteer_hours/${id}`);
+    const response = await axios.get(`https://llc.onrender.com/read_volunteer_hours/${id}`);
     return response;
   } catch (error) {
     console.log(error);
@@ -222,7 +222,7 @@ export async function getVolunteerHoursAPI(id) {
 
 export async function adminUpdateVolunteerAPI(volunteer_info) {
   try {
-    await axios.post('http://127.0.0.1:5000/admin_update_volunteer', volunteer_info);
+    await axios.post('https://llc.onrender.com/admin_update_volunteer', volunteer_info);
   } catch (error) {
     console.log(error);
     throw (error);
@@ -231,7 +231,7 @@ export async function adminUpdateVolunteerAPI(volunteer_info) {
 
 export async function adminDeleteVolunteerAPI(volunteer_info) {
   try {
-    await axios.post('http://127.0.0.1:5000/delete_volunteer', volunteer_info);
+    await axios.post('https://llc.onrender.com/delete_volunteer', volunteer_info);
   } catch (error) {
     console.log(error);
     throw (error);
@@ -240,7 +240,7 @@ export async function adminDeleteVolunteerAPI(volunteer_info) {
 
 export async function getOrgsHoursAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getOrgsHours');
+    const response = await axios.get('https://llc.onrender.com/getOrgsHours');
     return response
   } catch (error) {
     console.log(error);
@@ -250,7 +250,7 @@ export async function getOrgsHoursAPI() {
 
 export async function getOrgsVolunteersAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getOrgsVolunteers');
+    const response = await axios.get('https://llc.onrender.com/getOrgsVolunteers');
     return response
   } catch (error) {
     console.log(error);
@@ -260,7 +260,7 @@ export async function getOrgsVolunteersAPI() {
 
 export async function getOrgsHoursVolunteersAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getOrgsHoursVolunteers');
+    const response = await axios.get('https://llc.onrender.com/getOrgsHoursVolunteers');
     return response
   } catch (error) {
     console.log(error);
@@ -270,7 +270,7 @@ export async function getOrgsHoursVolunteersAPI() {
 
 export async function getEventsHoursAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getEventsHours');
+    const response = await axios.get('https://llc.onrender.com/getEventsHours');
     return response
   } catch (error) {
     console.log(error);
@@ -280,7 +280,7 @@ export async function getEventsHoursAPI() {
 
 export async function getEventsVolunteersAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getEventsVolunteers');
+    const response = await axios.get('https://llc.onrender.com/getEventsVolunteers');
     return response
   } catch (error) {
     console.log(error);
@@ -290,7 +290,7 @@ export async function getEventsVolunteersAPI() {
 
 export async function getEventsHoursVolunteersAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getEventsHoursVolunteers');
+    const response = await axios.get('https://llc.onrender.com/getEventsHoursVolunteers');
     return response
   } catch (error) {
     console.log(error);
@@ -300,7 +300,7 @@ export async function getEventsHoursVolunteersAPI() {
 
 export async function getDatesHoursAPI() {
   try {
-    const response = await axios.get('http://127.0.0.1:5000/getDatesHours');
+    const response = await axios.get('https://llc.onrender.com/getDatesHours');
     return response
   } catch (error) {
     console.log(error);

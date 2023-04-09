@@ -15,7 +15,7 @@
         },
         methods: {
             async load() {
-                await axios.get('http://127.0.0.1:5000/get_past_year')
+                await axios.get('https://llc.onrender.com/get_past_year')
                 .then(response => {
                     for (var i = 0; i < response.data.length; i++) {
                         this.months.push(response.data[i].MonthName);
