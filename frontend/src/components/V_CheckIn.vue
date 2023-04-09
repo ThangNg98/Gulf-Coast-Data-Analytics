@@ -36,12 +36,12 @@
                     <div :class="{ 'text-muted-custom': alreadyCheckedIn }" class="p-2 float-start">
                         <div class="d-inline-block float-start p-2">You are checked out</div><div 
                         class="d-inline-block float-end h-100" 
-                        style="width:100px"><button class="w-100 h-100" type="button" 
+                        style="width:100px"><button class="w-100 h-100" style="background-color:#E2BE1D" type="button" 
                         @click="checkedInButton = true; getTime(); create_session();" 
                         :disabled="alreadyCheckedIn || confirmModal">Check In</button></div>
                     </div>
                     <div :class="{ 'text-muted-custom': !alreadyCheckedIn }" class="p-2 float-end">
-                        <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" type="button" @click="checkedOutButton = true; getTime(); update_session_axios();" :disabled="!alreadyCheckedIn || confirmModal">Check Out</button></div>
+                        <div class="d-inline-block float-start p-2">You are checked in</div><div class="d-inline-block float-end h-100" style="width:100px"><button class="w-100 h-100" style="background-color:#FFF08D" type="button" @click="checkedOutButton = true; getTime(); update_session_axios();" :disabled="!alreadyCheckedIn || confirmModal">Check Out</button></div>
                     </div>
             </div>
         </div>
