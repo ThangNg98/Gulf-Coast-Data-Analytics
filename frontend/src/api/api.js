@@ -221,6 +221,7 @@ export async function getVolunteerHoursAPI(id) {
 };
 
 export async function adminUpdateVolunteerAPI(volunteer_info) {
+  console.log('ADMIN UPDATE', volunteer_info)
   try {
     await axios.post('http://127.0.0.1:5000/admin_update_volunteer', volunteer_info);
   } catch (error) {
