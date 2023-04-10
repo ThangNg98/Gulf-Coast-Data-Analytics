@@ -29,7 +29,8 @@
         methods: {
             formatDate(current) { //assuming Date method, returns formatted date string m/d/yyyy
                 var myDate = new Date(current);
-                var output = (myDate.getMonth()+1) + "/" + myDate.getDate() + "/" +  myDate.getFullYear();
+                
+                var output = (myDate.getMonth()+1) + "/" + (myDate.getDate()+1) + "/" +  myDate.getFullYear();
                 return output;
                 //return output
             },

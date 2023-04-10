@@ -70,6 +70,11 @@
                 this.message = '';
             },
             async getInfo() {
+                try {
+                    this.getSessionHistory();
+                } catch(error) {
+                    console.log(error)
+                }
                 const session_hist_response = await axios.get(`http://127.0.0.1:5000/get_6months_session_history/${this.volunteer_id}`);
                 this.sessions = session_hist_response.data;
                 const hours_hist_response = await axios.get(`http://127.0.0.1:5000/get_6months_hours_history/${this.volunteer_id}`);
