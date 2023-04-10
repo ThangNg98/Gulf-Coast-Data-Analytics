@@ -440,7 +440,7 @@ def admin_update_volunteer():
     new_state = request_data['state_id']
     new_zip = request_data['zip']
     new_rel_id = request_data['rel_id']
-    new_waiver_signed = request_data['waiver_signed']
+    new_waiver_signed = request_data['waiver_signed']    
     new_date_waiver_signed = request_data['date_waiver_signed']
     
     if new_date_waiver_signed is None:
@@ -459,7 +459,8 @@ def admin_update_volunteer():
                 state_id=%s, 
                 zip=%s, 
                 rel_id=%s, 
-                waiver_signed=%s 
+                waiver_signed=%s,
+                date_waiver_signed=NULL
             WHERE volunteer_id=%s
         """
         params = (
@@ -480,6 +481,7 @@ def admin_update_volunteer():
             new_id
         )
     else:
+        new_date_waiver_signed = datetime.strptime(new_date_waiver_signed, "%Y-%m-%d")
         query = """
             UPDATE volunteer SET 
                 first_name=%s, 
@@ -496,7 +498,7 @@ def admin_update_volunteer():
                 zip=%s, 
                 rel_id=%s, 
                 waiver_signed=%s, 
-                date_waiver_signed=STR_TO_DATE(%s, '%%Y-%%m-%%d') 
+                date_waiver_signed=%s
             WHERE volunteer_id=%s
         """
         params = (
@@ -517,6 +519,9 @@ def admin_update_volunteer():
             new_date_waiver_signed, 
             new_id
         )
+
+        print("DEBUG: Query:", query)
+        print("DEBUG: Params:", params)
 
     execute_query(conn, query, params)
 

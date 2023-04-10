@@ -221,6 +221,7 @@ export async function getVolunteerHoursAPI(id) {
 };
 
 export async function adminUpdateVolunteerAPI(volunteer_info) {
+  console.log('ADMIN UPDATE', volunteer_info)
   try {
     await axios.post('https://llc.onrender.com/admin_update_volunteer', volunteer_info);
   } catch (error) {

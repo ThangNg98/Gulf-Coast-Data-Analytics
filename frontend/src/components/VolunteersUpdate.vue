@@ -516,6 +516,11 @@ export default {
             }
         },
         async updateVolunteer() {
+            console.log('update Volunteer called', this.volunteer_info.date_waiver_signed)
+            if (this.volunteer_info.date_waiver_signed) {
+                this.volunteer_info.date_waiver_signed = this.volunteer_info.date_waiver_signed.slice(0, 10);
+                console.log('PHIL lOOK, this.volunteer_info.date_waiver_signed', this.volunteer_info.date_waiver_signed)
+            }
             try {
                 await adminUpdateVolunteerAPI(this.volunteer_info);
                 this.volunteer_info={}
@@ -604,6 +609,7 @@ export default {
             }
 
             if (Object.keys(this.errors).length === 0) {
+                console.log('SUBMIT FORM this.volunteer_info', this.volunteer_info)
                 if (this.updateButtonClicked == true) {
                     this.updateButtonClicked = false
                     this.confirmModal = true
