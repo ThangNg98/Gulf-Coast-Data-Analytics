@@ -1,25 +1,27 @@
 <template>
-    <div class="table-responsive">
+    <div class="container1 table-wrapper"> 
+    <div class="table-responsive-md">
         <table class="table table-hover">
             <thead>
                 <tr>
+                    <th scope="col">Date</th>
                     <th scope="col">Event</th>
                     <th scope="col">Organization</th>
                     <th scope="col">Total Hours</th>
-                    <th scope="col">Date</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- for each session, print event name, org name, hours, and formatted date-->
                 <tr v-for="session in this.sessions">
+                    <td>{{formatDate(session.dateval) }}</td>
                     <td>{{session.eventName}}</td>
                     <td>{{session.orgName}}</td>
                     <td>{{session.hours}}</td>
-                    <td>{{formatDate(session.dateval) }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
+</div>
 </template>
 <script>
     export default {
@@ -41,3 +43,19 @@
         }
     }
 </script>
+
+<style scoped>
+.table-wrapper {
+  max-height: 500px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
+}
+
+.container1 {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto
+}
+
+</style>

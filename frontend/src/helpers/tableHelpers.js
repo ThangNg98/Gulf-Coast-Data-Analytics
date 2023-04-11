@@ -71,25 +71,68 @@ function fillMissingDatesInData(groupedData, startDate, endDate, grouping) {
 export function filterAndGroupData(data, startDate, endDate, grouping, fillMissingDates) {
     const adjustedStartDate = new Date(startDate);
     const adjustedEndDate = new Date(endDate);
+    adjustedStartDate.setHours(0, 0, 0, 0);
+    adjustedEndDate.setHours(0, 0, 0, 0);
+
+    console.log('original adjustedStartDate', adjustedStartDate)
+    console.log('original adjustedEndDate', adjustedEndDate)
+    adjustedStartDate.setDate(adjustedStartDate.getDate() + 1);
+    adjustedEndDate.setDate(adjustedEndDate.getDate() + 2);
     
     // Add a 1-month offset when the user searches by month
     if (grouping === 'month') {
-      adjustedStartDate.setMonth(adjustedStartDate.getMonth() + 1);
-      adjustedEndDate.setMonth(adjustedEndDate.getMonth() + 1);
-    } else {
-        // Add a 1-day offset when the user searches by day
-        adjustedStartDate.setDate(adjustedStartDate.getDate() + 1);
-        adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
-    }
+      adjustedStartDate.setDate(1);
+      const now = new Date();
+      const year = now.getUTCFullYear();
+      const month = now.getUTCMonth() + 1; // Note that months are zero-indexed, so we add 1 to get the correct month
+      const lastDayOfMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      adjustedEndDate.setUTCDate(lastDayOfMonth);
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 2); 
+    } else if (grouping === 'quarter') {
+      const startQuarter = Math.floor(adjustedStartDate.getUTCMonth() / 3);
+      const endQuarter = Math.floor(adjustedEndDate.getUTCMonth() / 3);
+    
+      const firstDayOfStartQuarter = new Date(Date.UTC(adjustedStartDate.getUTCFullYear(), startQuarter * 3, 1));
+      const lastDayOfEndQuarter = new Date(Date.UTC(adjustedEndDate.getUTCFullYear(), (endQuarter + 1) * 3, 0));
+    
+      adjustedStartDate.setTime(firstDayOfStartQuarter.getTime());
+      adjustedEndDate.setTime(lastDayOfEndQuarter.getTime());
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+      adjustedStartDate.setDate(adjustedStartDate.getDate() + 1);
+    } else if (grouping === 'year') {
+      const firstDayOfStartYear = new Date(Date.UTC(adjustedStartDate.getUTCFullYear(), 0, 1));
+      const lastDayOfEndYear = new Date(Date.UTC(adjustedEndDate.getUTCFullYear(), 11, 31));
+    
+      adjustedStartDate.setTime(firstDayOfStartYear.getTime());
+      adjustedEndDate.setTime(lastDayOfEndYear.getTime());
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 2);
+    } else if (grouping === 'week') {
+      const startWeek = moment.utc(adjustedStartDate).startOf('week').toDate();
+      const endWeek = moment.utc(adjustedEndDate).endOf('week').toDate();
+    
+      adjustedStartDate.setTime(startWeek.getTime());
+      adjustedEndDate.setTime(endWeek.getTime());
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 2);
+      adjustedStartDate.setDate(adjustedStartDate.getDate() + 2);
+    };
+    
+    console.log('new adjustedStartDate', adjustedStartDate)
+    console.log('new adjustedEndDate', adjustedEndDate)
   
-    const filteredData = data.filter(
-      item => new Date(item.session_date) >= adjustedStartDate && new Date(item.session_date) <= adjustedEndDate
-    );
+    const filteredData = data.filter(item => {
+      const itemDate = new Date(item.session_date);
+      itemDate.setDate(itemDate.getDate() + 1);
+    
+      return itemDate >= adjustedStartDate && itemDate <= adjustedEndDate;
+    });
+    
+    console.log('filteredData', filteredData)
 
   const grouped = {};
 
   filteredData.forEach(item => {
-    const date = moment(item.session_date);
+    const date = moment.utc(item.session_date);
+    console.log('date', date)
     let key;
 
     switch (grouping) {
@@ -124,6 +167,8 @@ export function filterAndGroupData(data, startDate, endDate, grouping, fillMissi
   if (fillMissingDates) {
     return fillMissingDatesInData(groupedData, adjustedStartDate, adjustedEndDate, grouping);
   }
+
+  console.log('groupedData', groupedData)
 
   return groupedData;
 

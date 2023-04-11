@@ -58,6 +58,7 @@
     </div>
   </div>
 
+  <div class="container1 table-wrapper"> 
           <div class="table-responsive-md">
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
@@ -86,6 +87,7 @@
               </tbody>
               </table>
       </div>
+    </div>
 
       <div class="chart-container">
         <canvas ref="chartCanvas"></canvas>
@@ -270,5 +272,18 @@ padding-right: auto
   max-width: 70%;
   margin: 2rem auto;
   height: 40vh;
+}
+
+.container1 {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto
+}
+
+.table-wrapper {
+  max-height: 400px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
 }
 </style>

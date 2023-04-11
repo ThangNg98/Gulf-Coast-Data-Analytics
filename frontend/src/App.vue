@@ -20,7 +20,7 @@
     <div id="_container" class="h-auto w-100 position-absolute bottom-0 text-start">
       <footer class="w-full">
         <section style="margin-top: .5rem">
-          <div class="ms-0 " style="color:grey;">The Living Legacy Center is a 501(c)(3) tax-exempt charity. <br>Copyright © 2021 All Rights Reserved</div>
+          <div class="float-end me-3 " style="color:white;">Web Application Produced by Gulf Coast Data Analytics</div>
         </section>
 
 
