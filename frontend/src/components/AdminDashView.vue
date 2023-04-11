@@ -71,7 +71,7 @@ import axios from 'axios';
         },
         methods: {
             async getInfo() {
-                await axios.get('http://127.0.0.1:5000/get_hist_6')
+                await axios.get('https://llc.onrender.com/get_hist_6')
                     .then(response => {
                         this.monthlyData = response.data;
                         for (var i = 0; i < response.data.length; i++) {
@@ -80,7 +80,7 @@ import axios from 'axios';
                             this.totalVolunteers.push(response.data[i].TotalVolunteers);
                         }
                 })
-                await axios.get('http://127.0.0.1:5000/get_orgs_6')
+                await axios.get('https://llc.onrender.com/get_orgs_6')
                     .then(response => {
                         for (var i = 0; i < response.data.length; i++) {
                             if (response.data[i].orgNames) {

@@ -7,7 +7,7 @@ from sql import create_connection, execute_query, execute_read_query
 from datetime import datetime
 from flask_cors import CORS
 
-conn = create_connection('172.26.54.22', 'ADMIN', 'password123!', 'llc_database') # connection to database
+conn = create_connection('llc-database-2.cslgyx4imwmp.us-east-2.rds.amazonaws.com', 'admin', 'ZUy9VNpHWWQrygKCvwDz', 'llc_database') # connection to database
 
 # setup application
 app = flask.Flask(__name__)
@@ -105,7 +105,7 @@ def check_out():
     return "Add check out time request successful"
 
 
-@app.route('/read_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_sessions
+@app.route('/read_sessions', methods = ['GET']) # https://llc.onrender.com/read_sessions
 #API to get Open Sessions
 def read_sessions():
 
@@ -127,7 +127,7 @@ def read_sessions():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/read_closed_sessions', methods = ['GET']) # http://127.0.0.1:5000/read_closed_sessions
+@app.route('/read_closed_sessions', methods = ['GET']) # https://llc.onrender.com/read_closed_sessions
 #API to get Open Sessions
 def read_closed_sessions():
 
@@ -249,7 +249,7 @@ def create_event():
 
 
 # this api will get an event by id
-@app.route('/get_event/<event_id>', methods = ['GET']) # http://127.0.0.1:5000/get_event/1
+@app.route('/get_event/<event_id>', methods = ['GET']) # https://llc.onrender.com/get_event/1
 def get_event(event_id): # returns all the events in the events table that have active status "1"
     query = "select event.event_id, event.event_name, event.event_description, sum(session.total_hours) as total_hours, \
             count(distinct session.volunteer_id) as num_volunteers from event \
@@ -258,7 +258,7 @@ def get_event(event_id): # returns all the events in the events table that have 
     return jsonify(rows)
 
 
-@app.route('/read_events', methods = ['GET']) # http://127.0.0.1:5000/read_events
+@app.route('/read_events', methods = ['GET']) # https://llc.onrender.com/read_events
 def read_events(): # returns all the events in the events table that have active status "1"
     
     query = "SELECT * FROM event WHERE event.event_status_id = 1 ORDER BY event_name" 
@@ -316,7 +316,7 @@ def create_organization():
 
     
 # this api will get an org by id
-@app.route('/get_org/<org_id>', methods = ['GET']) # http://127.0.0.1:5000/get_org/1
+@app.route('/get_org/<org_id>', methods = ['GET']) # https://llc.onrender.com/get_org/1
 def get_org(org_id): # returns all the orgs in the organizations table that have active status "1"
     query = "select organization.org_id, organization.org_name, organization.address_line_1, \
             organization.address_line_2, organization.city, organization.state_id, \
@@ -327,7 +327,7 @@ def get_org(org_id): # returns all the orgs in the organizations table that have
     return jsonify(rows)
 
 
-@app.route('/read_orgs', methods = ['GET']) # http://127.0.0.1:5000/read_orgs
+@app.route('/read_orgs', methods = ['GET']) # https://llc.onrender.com/read_orgs
 def read_orgs():
     
     query = "SELECT * FROM organization WHERE org_status_id = 1 ORDER BY org_name" # query for selecting all active orgs
@@ -370,7 +370,7 @@ def delete_organization():
 
 ############# VOLUNTEERS ###############
 
-@app.route('/read_volunteers', methods = ['GET']) # http://127.0.0.1:5000/read_volunteers
+@app.route('/read_volunteers', methods = ['GET']) # https://llc.onrender.com/read_volunteers
 def read_volunteers():
 
     # This query needs to join the volunteer table with the session table by volunteer_id and sum the total hours for each volunteer 
@@ -387,7 +387,7 @@ def read_volunteers():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/read_volunteer_hours
+@app.route('/read_volunteer_hours/<volunteer_id>', methods = ['GET']) # https://llc.onrender.com/read_volunteer_hours
 def read_volunteers_hours(volunteer_id):   
     query = """select sum(session.total_hours) as total_hours
                 from session
@@ -544,7 +544,7 @@ def delete_volunteer():
 
 
 # this api will get an volunteer by id
-@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # http://127.0.0.1:5000/get_volunteer/1
+@app.route('/get_volunteer/<volunteer_id>', methods = ['GET']) # https://llc.onrender.com/get_volunteer/1
 def get_volunteer(volunteer_id): 
     query = "SELECT * FROM volunteer WHERE volunteer.volunteer_id = %s" % volunteer_id
     rows = execute_read_query(conn,query)
@@ -560,7 +560,7 @@ def volunteer_phone():
     rows = execute_read_query(conn,query)
     return jsonify(rows)
 
-@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: http://127.0.0.1:5000/add_volunteer
+@app.route('/add_volunteer', methods =['POST']) # API allows user to add a new volunteer to the database: https://llc.onrender.com/add_volunteer
 def add_volunteer():
     request_data = request.get_json() # stores json input into variables
     first_name = request_data['first_name']
