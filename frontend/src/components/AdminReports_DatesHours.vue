@@ -203,6 +203,8 @@ export default {
                 sortedDatesFiltered.reverse();
             }
 
+            sortedDatesFiltered.reverse();
+
             console.log('sortedDatesFiltered', sortedDatesFiltered)
 
             return {
@@ -447,7 +449,6 @@ export default {
 }
 
 .table-container {
-  height: 50vh;
   overflow: auto;
 }
 
