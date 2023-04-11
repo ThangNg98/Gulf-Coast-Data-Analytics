@@ -4,14 +4,14 @@
                     <thead class="theadsticky" style="background-color: #e6e7eb !important;">
                     <tr>
                     <th scope="col">Month, Year</th>
-                    <th scope="col">Total Hours Worked</th>
+                    <th style="text-align:right" scope="col">Total Hours</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!--use axios data to print rows of monthly data-->
                     <tr v-for="month in monthlyData">
-                        <td>{{month.MonthName}}, {{month.YearName}}</td>
-                        <td class="text-end">{{month.TotalHours}}</td>
+                        <td >{{month.MonthName}}, {{month.YearName}}</td>
+                        <td style="width:30%" class="text-end">{{month.TotalHours}}</td>
                     </tr>
                 </tbody>
             </table>

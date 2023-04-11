@@ -214,12 +214,12 @@
 
           // check if phoneNumber is already in the volunteerPhoneList array
           const volunteer = this.volunteerPhoneList.find(v => v.phone === this.phoneNumber)
-
+          console.log('test: ',volunteer)
           if (volunteer) {
             console.log('Volunteer found in list')
-            if (volunteer.waiver_signed == '2') {
+            if (volunteer.waiver_signed == '2' || volunteer.date_waiver_signed == null) {
               this.showAlertModal();
-            } else if (volunteer.waiver_signed == '1') {
+            } else if (volunteer.waiver_signed == '1' && volunteer.date_waiver_signed != null) {
               console.log('setVolunteerPhone before: ', useVolunteerPhoneStore().volunteerPhone)
               console.log('setVolunteerID before: ', useVolunteerPhoneStore().volunteerID)
               useVolunteerPhoneStore().setVolunteerPhone(this.phoneNumber, volunteer.volunteer_id, volunteer.first_name)

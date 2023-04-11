@@ -1,7 +1,7 @@
 <template>
     <div v-if="!isLoading">
         <div class="d-flex justify-content-center">
-            <div class="d-inline-flex flex-column w-75 text-start" style="min-width:300px">
+            <div class="d-inline-flex flex-column text-start container" style="min-width:300px">
                 <div v-if="errors.eventSelect" style="color: #dc3545;">
                     Event is required
                 </div>
@@ -25,7 +25,7 @@
 
                 <div class="d-flex flex-column">
                     <label for="orgSelect"><h4>Comments</h4></label>
-                    <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 w-100 d-inline-block" rows="3" :disabled="alreadyCheckedIn || confirmModal" v-model="session.session_comment">  </textarea>
+                    <textarea style="resize:none; border-width:1px" class="border-2 border-dark rounded-0 w-100 d-inline-block" rows="3" v-model="session.session_comment">  </textarea>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                     <div :class="{ 'text-muted-custom': alreadyCheckedIn }" class="p-2 float-start">
                         <div class="d-inline-block float-start p-2">You are checked out</div><div 
                         class="d-inline-block float-end h-100" 
-                        style="width:100px"><button class="w-100 h-100" style="background-color:#E2BE1D" type="button" 
+                        style="width:100px"><button class="w-100 h-100" style="background-color:#E2BE1D;" type="button" 
                         @click="checkedInButton = true; getTime(); create_session();" 
                         :disabled="alreadyCheckedIn || confirmModal">Check In</button></div>
                     </div>
@@ -46,11 +46,11 @@
             </div>
         </div>
         <!--current session-->
-        <div class="d-flex justify-content-center" v-if="alreadyCheckedIn">
-            <div class="d-inline-flex flex-column w-75 text-start mt-1" style="min-width:300px">
+        <div class="d-flex justify-content-center container" v-if="alreadyCheckedIn">
+            <div class="d-inline-flex flex-column text-start mt-1" style="min-width:300px">
             <h2 style="text-align: center"> Current Session</h2>
             <div class="table-responsive">
-                <table class="table table-hover table-bordered" style="margin:auto; text-align: start; margin-top: 1rem; min-width: 300px;">
+                <table class="table table-hover table-bordered" style="margin:auto; text-align: start; margin-top: 1rem; min-width:300px;">
                     <thead>
                         <tr>
                         <th scope="col">Event Name</th>
@@ -321,8 +321,37 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .text-muted-custom {
     color: #ddd;
 }
+
+@media only screen and (min-width: 768px) {
+    .container {
+      margin: auto;
+      padding-left: auto;
+      padding-right: auto;
+      width: 50%
+    }
+    }
+
+@media only screen and (min-width: 992px) {
+.container {
+    margin: auto;
+    padding-left: auto;
+    padding-right: auto;
+    width: 50%
+}
+}
+
+@media only screen and (min-width: 1200px) {
+.container {
+    margin: auto;
+    padding-left: auto;
+    padding-right: auto;
+    width: 25%
+}
+}
+
+
 </style>

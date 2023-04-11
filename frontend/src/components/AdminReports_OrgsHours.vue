@@ -42,7 +42,7 @@
 </div>
 
 
-
+      <div class="container1 table-wrapper"> 
           <div class="table-responsive-md">
           <table class="table table-striped table-hover"  style="margin:auto; text-align: center; max-width: 50%; margin-top: 2rem">
               <thead class="theadsticky">
@@ -66,6 +66,7 @@
               </tbody>
               </table>
       </div>
+    </div>
 
       
     <div class="chart-container">
@@ -229,6 +230,19 @@ export default {
 margin: auto;
 padding-left: auto;
 padding-right: auto
+}
+
+.container1 {
+  margin: auto;
+  padding-left: auto;
+  padding-right: auto
+}
+
+.table-wrapper {
+  max-height: 400px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
 }
 
 .chart-container {

@@ -8,18 +8,20 @@
             <!--monthly history table-->
             <div class="mb-3 w-50 p-4">
                 <div>
-                <h6 class="text-center">Monthly History in the Last 6 Months</h6>
+                <h6 style="font-weight:bold" class="text-center">Monthly History in the Last 6 Months</h6>
                 <MonthlyTable :monthlyData="this.monthlyData" v-if="isLoaded"></MonthlyTable></div>
             </div>
             <!--graphs-->
             <div class="mb-3 w-50 p-4">
                 <!--unique volunteers-->
-                <div>
-                    <h6 class="text-center">Number of Volunteers per Month in the Last 6 Months</h6>
+                <div style="width: 110%">
+                    <h6 style="font-weight:bold" class="text-center">Number of Volunteers per Month in the Last 6 Months</h6>
                     <MonthlyUniqueVolunteersChart :months="this.months" :volunteers="this.volunteers" :totalVolunteers="this.totalVolunteers" v-if="isLoaded"></MonthlyUniqueVolunteersChart>
                 </div>
+            </div>
+            <div>
                 <!--org donut-->
-                <div class="mt-5">
+                <div style="width:90%; margin:auto">
                     <h6 class="text-center">Number of Hours per Organization in the Last 6 Months</h6>
                     <MonthlyOrgsChart :orgNames="this.orgNames" :orgHours="this.orgHours" v-if="isLoaded"></MonthlyOrgsChart>
                 </div>

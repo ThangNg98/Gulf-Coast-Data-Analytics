@@ -63,7 +63,7 @@
   </div>
 </div>
 
-<div class="container1" v-if="showTable">
+<div class="container1 table-wrapper" v-if="showTable">
         <div class="table-container">
             <div class="table-responsive-md">
                 <table class="table table-striped table-hover" style="margin:auto; text-align: center; max-width: 50%;">
@@ -86,8 +86,8 @@
                     </thead>
                     <tbody>
                         <tr v-for="date in sortedItems" :key="date.session_date" style="text-align:left">
-                            <td style="text-align:left"> {{ formatDate(date.session_date) }}</td>
-                            <td style="text-align:left"> {{ date.total_hours }}</td>
+                            <td style="text-align:left"> {{ formatDate(date.session_date) }}</td> 
+                            <td style="text-align:left"> {{ date.total_hours.toFixed(2) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -113,6 +113,8 @@ import { getDatesHoursAPI } from '../api/api.js'
 import { filterAndGroupData } from '../helpers/tableHelpers';
 import Chart from 'chart.js/auto';
 import { shallowRef } from 'vue';
+import moment from 'moment';
+
 export default {
     name: 'DatesHours',
     components: {
@@ -165,6 +167,10 @@ export default {
                 }
             });
 
+            if (this.grouping === 'year') {
+                dates.reverse();
+            }
+
             return dates;
         },
         chartData() {
@@ -178,11 +184,26 @@ export default {
                     const [yearB, quarterB] = dateB.split('-');
                     const valueA = parseInt(yearA) * 10 + parseInt(quarterA[1]);
                     const valueB = parseInt(yearB) * 10 + parseInt(quarterB[1]);
-                    return valueA - valueB;
+                    const sortOrder = this.grouping === 'quarter' ? -1 : 1;
+                    return sortOrder * (valueA - valueB);
                 }
 
-                return new Date(dateA) - new Date(dateB);
+                if (this.grouping === 'year') {
+                    const yearA = parseInt(dateA);
+                    const yearB = parseInt(dateB);
+                    return -1 * (yearA - yearB);
+                }
+
+                const sortOrder = this.grouping === 'month' ? -1 : 1;
+                return sortOrder * (new Date(dateA) - new Date(dateB));
             });
+
+            if (this.grouping === 'day' || 'week') {
+                console.log('THANG this is called')
+                sortedDatesFiltered.reverse();
+            }
+
+            console.log('sortedDatesFiltered', sortedDatesFiltered)
 
             return {
                 labels: sortedDatesFiltered.map((date) => this.formatDate(date.session_date)),
@@ -249,7 +270,9 @@ export default {
             if (!this.startDate || !this.endDate || !this.grouping) {
                 this.datesFiltered = this.dates;
                 return;
-            }            
+            }           
+            
+            console.log('this.grouping', this.grouping)
 
             this.datesFiltered = filterAndGroupData(this.dates, this.startDate, this.endDate, this.grouping, this.fillMissingDates);
             console.log('this.datesFiltered', this.datesFiltered)
@@ -290,7 +313,7 @@ export default {
             this.showTable = false;
         },
         formatDate(dateString) {
-
+            console.log('dateString', dateString)
             if (this.grouping === 'day') {
                 this.dateLabel = 'Day'
             } else if (this.grouping === 'week') {
@@ -310,7 +333,11 @@ export default {
                 date = new Date(year, (parseInt(quarter[1]) - 1) * 3);
                 return `${quarter}-${year}`; // Return the formatted quarter string
             } else if (dateString.includes('-')) {
-                date = new Date(dateString);
+                if (this.grouping === 'month') {
+                    date = moment.utc(dateString, 'YYYY-MM').add(1, 'months').toDate(); // Parse the date string using moment.utc for month grouping and add 1 month for month grouping
+                } else {
+                date = moment.utc(dateString, 'MM-DD-YYYY').add(1, 'days').toDate(); // Parse the date string using moment.utc for other groupings and add 1 day
+                }
             } else {
                 return dateString;
             }
@@ -337,8 +364,15 @@ export default {
                 return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year} - ${monthNames[endMonth]} ${endDay.toString().padStart(2, '0')}, ${endYear}`;
             }
 
+            // Add this line to handle the 'day' grouping
+            if (this.grouping === 'day') {
+                return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year}`;
+            }
+
             return `${monthNames[month]} ${day.toString().padStart(2, '0')}, ${year}`;
         },
+
+
         createChart() {
         console.log('create chart called')
         console.log('this.$refs.chartCanvas', this.$refs.chartCanvas)
@@ -403,6 +437,13 @@ export default {
   margin: auto;
   padding-left: auto;
   padding-right: auto;
+}
+
+.table-wrapper {
+  max-height: 400px;
+  overflow: auto;
+  display:inline-block;
+  width: 90%;
 }
 
 .table-container {

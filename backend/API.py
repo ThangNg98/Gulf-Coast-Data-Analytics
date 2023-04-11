@@ -59,7 +59,7 @@ def create_session():
     session_status_id = request_data['session_status_id']
     volunteer_id = request_data['volunteer_id']
 
-    if (org_id == None or session_comment == None):
+    if (org_id == None and session_comment == None):
         query = """
             INSERT INTO session (
                 time_in,
@@ -96,9 +96,10 @@ def check_out():
     print('request_data:', request_data)
     session_id = request_data['session_id']
     new_time_out = request_data['time_out']
+    new_session_comment = request_data['session_comment']
 
-    query = "UPDATE session SET time_out=%s WHERE session_id=%s"
-    params = (new_time_out, session_id)
+    query = "UPDATE session SET time_out=%s, session_comment=%s WHERE session_id=%s"
+    params = (new_time_out, new_session_comment, session_id)
     execute_query(conn, query, params)
 
     return "Add check out time request successful"
@@ -144,7 +145,7 @@ def read_closed_sessions():
             JOIN event ON session.event_id = event.event_id
             LEFT OUTER JOIN organization ON session.org_id = organization.org_id
             JOIN session_status ON session.session_status_id = session_status.session_status_id
-            WHERE session.session_status_id = 1 AND session.time_out IS NOT NULL
+            WHERE session.session_status_id = 1 AND session.time_out IS NOT NULL AND volunteer.volunteer_status_id = 1
              """ 
     rows = execute_read_query(conn,query)
     return jsonify(rows)    
@@ -552,7 +553,7 @@ def get_volunteer(volunteer_id):
 @app.route('/volunteer_phone/', methods = ['GET'])
 def volunteer_phone():
     query = """
-        SELECT volunteer_id, phone, first_name, waiver_signed
+        SELECT volunteer_id, phone, first_name, waiver_signed, date_waiver_signed
         FROM volunteer
         WHERE volunteer_status_id = 1
     """

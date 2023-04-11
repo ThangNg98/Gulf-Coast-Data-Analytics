@@ -20,9 +20,10 @@
     <div id="_container" class="h-auto w-100 position-absolute bottom-0 text-start">
       <footer class="w-full">
         <section style="margin-top: .5rem">
-          <img class="img-fluid d-inline-block" style="width: 10rem; max-width: 100%; margin-bottom: .5rem" src="@\assets\llc_logo.png" />
-          <div class="d-inline-block ms-5" style="color:grey;">@ Copyright Gulf Coast Data Analytics</div>
+          <div class="float-end me-3 " style="color:white;">Web Application Produced by Gulf Coast Data Analytics</div>
         </section>
+
+
       </footer>
     </div>
   </main>

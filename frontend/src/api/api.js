@@ -357,3 +357,23 @@ export async function deleteSessionAPI(session_info) {
     throw (error);
   }
 };
+
+export async function getSessionHistoryAPI(volunteer_id) {
+  try {
+    const response = await axios.get(`https://llc.onrender.com/get_6months_session_history/${volunteer_id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};
+
+export async function getHoursHistoryAPI(volunteer_id) {
+  try {
+    const response = await axios.get(`https://llc.onrender.com/get_6months_hours_history/${volunteer_id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw (error);
+  }
+};

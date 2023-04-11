@@ -213,17 +213,17 @@ export default {
                 { name: 'Wyoming', id: 51 }
             ],
             relationships: [
-                {name: 'Parent', id: 1},
-                {name: 'Legal Guardian', id: 2},
+                {name: 'Acquaintance', id: 1},
+                {name: 'Aunt', id: 2},
                 {name: 'Child', id: 3},
-                {name: 'Sibling', id: 4},
-                {name: 'Aunt', id: 5},
-                {name: 'Uncle', id: 6},
-                {name: 'Grandparent', id: 7},
-                {name: 'Spouse', id: 8},
-                {name: 'Partner', id: 9},
-                {name: 'Friend', id: 10},
-                {name: 'Acquiantance', id: 11},
+                {name: 'Friend', id: 4},
+                {name: 'Grandparent', id: 5},
+                {name: 'Legal Guardian', id: 6},
+                {name: 'Parent', id: 7},
+                {name: 'Partner', id: 8},
+                {name: 'Sibling', id: 9},
+                {name: 'Spouse', id: 10},
+                {name: 'Uncle', id: 11},
                 {name: 'Other', id: 12}
 
             ],

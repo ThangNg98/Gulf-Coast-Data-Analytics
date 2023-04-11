@@ -84,9 +84,9 @@
                     </tbody>
                 </table>
         </div>
-        <div style="margin-top: 2rem;margin-left: 30%">
-            <router-link class="nav-link" to="/admin/create_event"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Create New Event</button> </router-link>
     </div>
+    <div style="margin-top: 2rem;margin-left: 30%">
+            <router-link class="nav-link" to="/admin/create_event"> <button type="submit" class="btn btn-success" style="margin-right:0.5rem" >Create New Event</button> </router-link>
     </div>
 
     <Transition name="bounce">
