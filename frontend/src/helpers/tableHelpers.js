@@ -19,52 +19,68 @@ function getDateFormat(grouping) {
 
 
 function fillMissingDatesInData(groupedData, startDate, endDate, grouping) {
-    const result = [];
-    const currentDate = moment(startDate).startOf(grouping);
-    const lastDate = moment(endDate).startOf(grouping);
+  const result = [];
+  let currentDate = moment.utc(startDate).startOf(grouping);
+  let lastDate = moment.utc(endDate).startOf(grouping);
+
+  // Apply the day and month offsets
+  if (grouping === 'day') {
+    lastDate.subtract(1, 'day');
+  } else if (grouping === 'month') {
+    currentDate.add(1, 'month');
+    }else if (grouping === 'week') {
+      currentDate.subtract(1, 'day').startOf('isoWeek');
+      lastDate.subtract(1, 'day').startOf('isoWeek');
+      lastDate.subtract(1, 'week');
+    }
   
-    while (currentDate.isSameOrBefore(lastDate)) {
-      let key;
   
-      switch (grouping) {
-        case 'day':
-          key = currentDate.format('MM-DD-YYYY');
-          break;
-        case 'week':
-          key = currentDate.startOf('isoWeek').format('MM-DD-YYYY');
-          break;
-        case 'month':
-          key = currentDate.startOf('month').format('YYYY-MM');
-          break;
-        case 'quarter':
-          key = currentDate.startOf('quarter').format('YYYY-[Q]Q');
-          break;
-        case 'year':
-          key = currentDate.startOf('year').format('YYYY');
-          break;
-        default:
-          key = currentDate.format('YYYY-MM-DD');
-      }
   
-      const foundData = groupedData.find(data => data.session_date === key);
-      if (foundData) {
-        result.push(foundData);
-      } else {
-        result.push({ session_date: key, total_hours: 0 });
-      }
-  
-      currentDate.add(1, grouping);
+  console.log('PHIL HERE currentDate', currentDate);
+  console.log('PHIL HERE lastDate', lastDate);
+
+  while (currentDate.isSameOrBefore(lastDate)) {
+    let key;
+
+    switch (grouping) {
+      case 'day':
+        key = currentDate.format('MM-DD-YYYY');
+        break;
+      case 'week':
+        key = currentDate.startOf('isoWeek').format('MM-DD-YYYY');
+        break;
+      case 'month':
+        key = currentDate.startOf('month').format('YYYY-MM');
+        break;
+      case 'quarter':
+        key = currentDate.startOf('quarter').format('YYYY-[Q]Q');
+        break;
+      case 'year':
+        key = currentDate.startOf('year').format('YYYY');
+        break;
+      default:
+        key = currentDate.format('YYYY-MM-DD');
     }
 
-    result.sort((a, b) => {
-      const dateA = moment(a.session_date, getDateFormat(grouping));
-      const dateB = moment(b.session_date, getDateFormat(grouping));
-      return dateB.isBefore(dateA) ? -1 : 1;
-    });
-    
-  
-    return result;
+    const foundData = groupedData.find(data => data.session_date === key);
+    if (foundData) {
+      result.push(foundData);
+    } else {
+      result.push({ session_date: key, total_hours: 0 });
+    }
+
+    currentDate.add(1, grouping);
   }
+
+  result.sort((a, b) => {
+    const dateA = moment(a.session_date, getDateFormat(grouping));
+    const dateB = moment(b.session_date, getDateFormat(grouping));
+    return dateB.isBefore(dateA) ? -1 : 1;
+  });
+
+  return result;
+}
+
 
   
 

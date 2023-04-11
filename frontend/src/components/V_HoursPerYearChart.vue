@@ -5,15 +5,16 @@
 import Chart from 'chart.js/auto';
 export default {
     mounted() {
+        console.log('mounted HoursPerYear')
         const ctx = document.getElementById('hoursPerYear');
         new Chart(ctx, {
         type: 'line',
         data: {
             labels: this.listOfMonths,
             datasets: [{
-            label: '# of Hours',
-            data: this.listOfHours,
-            borderWidth: 1
+                label: '# of Hours',
+                data: this.listOfHours,
+                borderWidth: 1
             }]
         },
         options: {
