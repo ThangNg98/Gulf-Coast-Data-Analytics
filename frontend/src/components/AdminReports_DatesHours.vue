@@ -145,81 +145,102 @@ export default {
         }
     },
     computed: {
-        sortedItems() {
-            const field = this.sortBy;
-            const order = this.sortOrder[field];
+     sortedItems() {
+        const field = this.sortBy;
+        const order = this.sortOrder[field];
 
-            // Make a copy of the original array to avoid modifying the original data
-            const dates = this.datesFiltered.slice();
+        // Make a copy of the original array to avoid modifying the original data
+        const dates = this.datesFiltered.slice();
 
-            // Sort the array by the specified field and order
-            dates.sort((a, b) => {
-                if (field === 'date') {
-                    const dateA = new Date(a[field]);
-                    const dateB = new Date(b[field]);
+        // Sort the array by the specified field and order
+        dates.sort((a, b) => {
+            if (field === 'date') {
+                // When grouping is 'year', compare just the year part
+                if (this.grouping === 'year') {
+                    const yearA = parseInt(a.session_date, 10);
+                    const yearB = parseInt(b.session_date, 10);
+
+                    if (yearA < yearB) return 1 * order;
+                    if (yearA > yearB) return -1 * order;
+                    return 0;
+                } else {
+                    const dateA = new Date(a.session_date);
+                    const dateB = new Date(b.session_date);
+
+                    if (dateA < dateB) return 1 * order;
+                    if (dateA > dateB) return -1 * order;
+                    return 0;
+                }
+            } else {
+                if (a[field] < b[field]) return -1 * order;
+                if (a[field] > b[field]) return 1 * order;
+                return 0;
+            }
+        });
+
+        console.log('PHIL dates', dates)
+
+        return dates;
+    },
+    chartData() {
+        const field = this.sortBy;
+        const order = this.sortOrder[field];
+
+        // Make a copy of the original array to avoid modifying the original data
+        const dates = this.datesFiltered.slice();
+
+        // Sort the array by the specified field and order
+        dates.sort((a, b) => {
+            if (field === 'date') {
+                // When grouping is 'year', compare just the year part
+                if (this.grouping === 'year') {
+                    const yearA = parseInt(a.session_date, 10);
+                    const yearB = parseInt(b.session_date, 10);
+
+                    if (yearA < yearB) return -1 * order;
+                    if (yearA > yearB) return 1 * order;
+                    return 0;
+                } else if (this.grouping === 'quarter') {
+                    const yearA = parseInt(a.session_date.substr(0, 4), 10);
+                    const quarterA = parseInt(a.session_date.substr(6), 10);
+                    const yearB = parseInt(b.session_date.substr(0, 4), 10);
+                    const quarterB = parseInt(b.session_date.substr(6), 10);
+
+                    if (yearA < yearB) return -1 * order;
+                    if (yearA > yearB) return 1 * order;
+                    if (quarterA < quarterB) return -1 * order;
+                    if (quarterA > quarterB) return 1 * order;
+                    return 0;
+                } else {
+                    const dateA = new Date(a.session_date);
+                    const dateB = new Date(b.session_date);
+
                     if (dateA < dateB) return -1 * order;
                     if (dateA > dateB) return 1 * order;
                     return 0;
-                } else {
-                    if (a[field] < b[field]) return -1 * order;
-                    if (a[field] > b[field]) return 1 * order;
-                    return 0;
                 }
-            });
-
-            if (this.grouping === 'year') {
-                dates.reverse();
+            } else {
+                if (a[field] < b[field]) return 1 * order;
+                if (a[field] > b[field]) return -1 * order;
+                return 0;
             }
+        });
 
-            return dates;
-        },
-        chartData() {
-            // Sort datesFiltered in ascending order by date
-            const sortedDatesFiltered = this.datesFiltered.slice().sort((a, b) => {
-                const dateA = a.session_date;
-                const dateB = b.session_date;
+        console.log('PHIL dates', dates)
 
-                if (dateA.includes('-Q') && dateB.includes('-Q')) {
-                    const [yearA, quarterA] = dateA.split('-');
-                    const [yearB, quarterB] = dateB.split('-');
-                    const valueA = parseInt(yearA) * 10 + parseInt(quarterA[1]);
-                    const valueB = parseInt(yearB) * 10 + parseInt(quarterB[1]);
-                    const sortOrder = this.grouping === 'quarter' ? -1 : 1;
-                    return sortOrder * (valueA - valueB);
-                }
-
-                if (this.grouping === 'year') {
-                    const yearA = parseInt(dateA);
-                    const yearB = parseInt(dateB);
-                    return -1 * (yearA - yearB);
-                }
-
-                const sortOrder = this.grouping === 'month' ? -1 : 1;
-                return sortOrder * (new Date(dateA) - new Date(dateB));
-            });
-
-            if (this.grouping === 'day' || 'week') {
-                console.log('THANG this is called')
-                sortedDatesFiltered.reverse();
-            }
-
-            sortedDatesFiltered.reverse();
-
-            console.log('sortedDatesFiltered', sortedDatesFiltered)
-
-            return {
-                labels: sortedDatesFiltered.map((date) => this.formatDate(date.session_date)),
-                datasets: [
-                    {
-                        label: 'Total Hours per Date',
-                        data: sortedDatesFiltered.map((date) => parseFloat(date.total_hours)),
-                        backgroundColor: 'rgb(54, 162, 235)',
-                        borderColor: 'rgb(54, 162, 235, 0.5)',
-                        borderWidth: 1,
-                    },
-                ],
-            };
-        },
+        return {
+            labels: dates.map((date) => this.formatDate(date.session_date)),
+            datasets: [
+                {
+                    label: 'Total Hours per Date',
+                    data: dates.map((date) => parseFloat(date.total_hours)),
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    borderColor: 'rgb(54, 162, 235, 0.5)',
+                    borderWidth: 1,
+                },
+            ],
+        };
+    },
 
     },
     watch: {
